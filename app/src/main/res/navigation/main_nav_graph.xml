@@ -6,12 +6,21 @@
     app:startDestination="@id/homeFragment2">
     <fragment
         android:id="@+id/homeFragment2"
-        android:name="com.example.reconstructv2.HomeFragment"
+        android:name="com.example.reconstructv2.View.Fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home"/>
+
     <fragment
         android:id="@+id/singleListingFragment"
-        android:name="com.example.reconstructv2.SingleListingFragment"
+        android:name="com.example.reconstructv2.View.Fragments.SingleListingFragment"
         android:label="fragment_single_listing"
-        tools:layout="@layout/fragment_single_listing" />
+        tools:layout="@layout/fragment_single_listing" >
+        <argument
+            android:name="listingArgument"
+            app:argType="com.example.reconstructv2.Models.Listing" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_singleListingFragment"
+        app:destination="@id/singleListingFragment" />
+
 </navigation>
