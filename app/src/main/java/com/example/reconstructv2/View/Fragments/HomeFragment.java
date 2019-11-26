@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,8 @@ import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.R;
 import com.example.reconstructv2.View.Adapters.ListingAdapter;
 import com.example.reconstructv2.ViewModels.HomeViewModel;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +46,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public  void onActivityCreated(Bundle savedInstaceState) {
+    public void onActivityCreated(Bundle savedInstaceState) {
         super.onActivityCreated(savedInstaceState);
         final View view = getView();
 
@@ -53,7 +56,17 @@ public class HomeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 homeViewModel.deleteAll();
-                homeViewModel.insert(new Listing("refreshed listing id","Randpom Autrhor id","refreshed TITLE", "refreshed body 1 2 3", "2002-07-15T10:30:05.000Z","2002-07-15T10:30:05.000Z","some Address",true));
+
+                int randomNum = 1 + (int)(Math.random() * ((9) + 1));
+
+                for (int i = 0; i < randomNum; i++) {
+                    int listingRand = 1 + (int)(Math.random() * ((99999) + 1));
+                    homeViewModel.insert(new Listing("id" + listingRand,"Randpom Autrhor id","TITLE  = " + i, "refreshed body" + listingRand, "2002-07-15T10:30:05.000Z","2002-07-15T10:30:05.000Z","some Address",true));
+
+                }
+
+                Toast toast =  Toast.makeText(view.getContext(),Integer.toString(randomNum),Toast.LENGTH_SHORT);
+                toast.show();
                 refreshLayout.setRefreshing(false);
             }
         });
@@ -90,12 +103,10 @@ public class HomeFragment extends Fragment {
 
                 MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(listing);
                 Navigation.findNavController(getView()).navigate(action);
-                // figure out how to create an action
-//                Bundle bundle = new Bundle();
-//                bundle.("listingArgument",listing);
-//
             }
         });
+
+
 
 
     }
