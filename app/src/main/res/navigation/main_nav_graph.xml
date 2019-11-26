@@ -22,5 +22,10 @@
     <action
         android:id="@+id/action_global_singleListingFragment"
         app:destination="@id/singleListingFragment" />
+    <fragment
+        android:id="@+id/accountViewFragment"
+        android:name="com.example.reconstructv2.View.Fragments.AccountViewFragment"
+        android:label="fragment_account_view"
+        tools:layout="@layout/fragment_account_view" />
 
 </navigation>

@@ -62,7 +62,6 @@ public class HomeFragment extends Fragment {
                 for (int i = 0; i < randomNum; i++) {
                     int listingRand = 1 + (int)(Math.random() * ((99999) + 1));
                     homeViewModel.insert(new Listing("id" + listingRand,"Randpom Autrhor id","TITLE  = " + i, "refreshed body" + listingRand, "2002-07-15T10:30:05.000Z","2002-07-15T10:30:05.000Z","some Address",true));
-
                 }
 
                 Toast toast =  Toast.makeText(view.getContext(),Integer.toString(randomNum),Toast.LENGTH_SHORT);
