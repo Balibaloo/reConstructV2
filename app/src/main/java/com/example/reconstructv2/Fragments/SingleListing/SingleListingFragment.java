@@ -1,4 +1,4 @@
-package com.example.reconstructv2.View.Fragments;
+package com.example.reconstructv2.Fragments.SingleListing;
 
 import android.content.Context;
 import android.net.Uri;

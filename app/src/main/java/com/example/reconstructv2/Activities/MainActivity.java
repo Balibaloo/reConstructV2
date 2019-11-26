@@ -1,4 +1,4 @@
-package com.example.reconstructv2.View.Activities;
+package com.example.reconstructv2.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +14,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.reconstructv2.R;
-import com.example.reconstructv2.View.Fragments.AccountViewFragment;
-import com.example.reconstructv2.View.Fragments.HomeFragment;
-import com.example.reconstructv2.View.Fragments.SingleListingFragment;
+import com.example.reconstructv2.Fragments.AccountView.AccountViewFragment;
+import com.example.reconstructv2.Fragments.Home.HomeFragment;
+import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity
@@ -36,12 +36,14 @@ public class MainActivity extends AppCompatActivity
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
+
         init();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         // handles drawer menu items being selected
+        if (isValidDestination(menuItem.getItemId())){
         switch (menuItem.getItemId()) {
 
             case (R.id.nav_to_home):{
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
 
-        }
+        }}
 
         menuItem.setChecked(true);
         drawerLayout.closeDrawer(GravityCompat.START);

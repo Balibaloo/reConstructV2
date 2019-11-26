@@ -1,4 +1,4 @@
-package com.example.reconstructv2.View.Adapters;
+package com.example.reconstructv2.Fragments.Home;
 
 import android.view.LayoutInflater;
 import android.view.View;

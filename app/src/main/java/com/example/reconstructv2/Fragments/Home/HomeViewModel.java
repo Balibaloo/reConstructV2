@@ -1,11 +1,10 @@
-package com.example.reconstructv2.ViewModels;
+package com.example.reconstructv2.Fragments.Home;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.Repositories.LocalRepository.ListingRepository;

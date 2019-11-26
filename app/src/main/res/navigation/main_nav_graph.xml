@@ -6,13 +6,13 @@
     app:startDestination="@id/homeFragment2">
     <fragment
         android:id="@+id/homeFragment2"
-        android:name="com.example.reconstructv2.View.Fragments.HomeFragment"
+        android:name="com.example.reconstructv2.Fragments.Home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home"/>
 
     <fragment
         android:id="@+id/singleListingFragment"
-        android:name="com.example.reconstructv2.View.Fragments.SingleListingFragment"
+        android:name="com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment"
         android:label="fragment_single_listing"
         tools:layout="@layout/fragment_single_listing" >
         <argument
@@ -24,7 +24,7 @@
         app:destination="@id/singleListingFragment" />
     <fragment
         android:id="@+id/accountViewFragment"
-        android:name="com.example.reconstructv2.View.Fragments.AccountViewFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountView.AccountViewFragment"
         android:label="fragment_account_view"
         tools:layout="@layout/fragment_account_view" />
 

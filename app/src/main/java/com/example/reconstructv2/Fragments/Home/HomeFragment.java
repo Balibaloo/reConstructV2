@@ -1,4 +1,4 @@
-package com.example.reconstructv2.View.Fragments;
+package com.example.reconstructv2.Fragments.Home;
 
 import android.content.Context;
 import android.net.Uri;
@@ -19,15 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragmentDirections;
 import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.R;
-import com.example.reconstructv2.View.Adapters.ListingAdapter;
-import com.example.reconstructv2.ViewModels.HomeViewModel;
 
-import java.util.concurrent.ThreadLocalRandom;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
