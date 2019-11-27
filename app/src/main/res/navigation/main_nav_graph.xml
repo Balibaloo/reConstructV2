@@ -27,5 +27,15 @@
         android:name="com.example.reconstructv2.Fragments.AccountView.AccountViewFragment"
         android:label="fragment_account_view"
         tools:layout="@layout/fragment_account_view" />
+    <fragment
+        android:id="@+id/createListingFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment"
+        android:label="fragment_create_listing"
+        tools:layout="@layout/fragment_create_listing" />
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.example.reconstructv2.Fragments.LogIn.LogInFragment"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" />
 
 </navigation>

@@ -7,6 +7,11 @@
         <item android:id="@+id/nav_to_home"
             android:title="@string/homeTitle"/>
 
+        <item android:id="@+id/nav_to_create_listing"
+            android:title="@string/CreateListing"/>
+
+        <item android:id="@+id/nav_to_log_in"
+            android:title="LogIn"/>
     </group>
 
 </menu>

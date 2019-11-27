@@ -8,5 +8,6 @@
     //menu titles
     <string name="accountTitle">Account</string>
     <string name="homeTitle">Home</string>
+    <string name="CreateListing">Create a Listing</string>
 
 </resources>

@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment;
+import com.example.reconstructv2.Fragments.LogIn.LogInFragment;
 import com.example.reconstructv2.R;
 import com.example.reconstructv2.Fragments.AccountView.AccountViewFragment;
 import com.example.reconstructv2.Fragments.Home.HomeFragment;
@@ -20,10 +22,13 @@ import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity
-        implements HomeFragment.OnFragmentInteractionListener,
-                    SingleListingFragment.OnFragmentInteractionListener,
-                    AccountViewFragment.OnFragmentInteractionListener,
-                    NavigationView.OnNavigationItemSelectedListener {
+        implements
+        HomeFragment.OnFragmentInteractionListener,
+        SingleListingFragment.OnFragmentInteractionListener,
+        AccountViewFragment.OnFragmentInteractionListener,
+        CreateListingFragment.OnFragmentInteractionListener,
+        LogInFragment.OnFragmentInteractionListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -50,6 +55,8 @@ public class MainActivity extends AppCompatActivity
                 // clear backstack on navigation to home
                 NavOptions navOptions = new NavOptions.Builder()
                         .setPopUpTo(R.id.main_nav_graph,true).build();
+
+
                 Navigation.findNavController(this,R.id.nav_host_fragment)
                         .navigate(R.id.homeFragment2,null, navOptions);
                 break;
@@ -58,6 +65,14 @@ public class MainActivity extends AppCompatActivity
             case (R.id.nav_to_account):{
                 Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.accountViewFragment);
                 break;
+            }
+            case R.id.nav_to_create_listing:{
+                Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.createListingFragment);
+                break;
+            }
+
+            case R.id.nav_to_log_in:{
+                Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.logInFragment);
             }
 
         }}
@@ -99,6 +114,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAccountViewFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onCreateListingFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }

@@ -1,4 +1,4 @@
-package com.example.reconstructv2.Repositories.LocalRepository;
+package com.example.reconstructv2.Repositories.LocalRepositories;
 
 
 import androidx.lifecycle.LiveData;

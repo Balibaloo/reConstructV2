@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.reconstructv2.Models.Listing;
-import com.example.reconstructv2.Repositories.LocalRepository.ListingRepository;
+import com.example.reconstructv2.Repositories.LocalRepositories.ListingRepository;
 
 import java.util.List;
 

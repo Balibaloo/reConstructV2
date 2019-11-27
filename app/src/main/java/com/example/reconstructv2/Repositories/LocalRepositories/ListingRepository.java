@@ -1,4 +1,4 @@
-package com.example.reconstructv2.Repositories.LocalRepository;
+package com.example.reconstructv2.Repositories.LocalRepositories;
 
 import android.app.Application;
 import android.os.AsyncTask;

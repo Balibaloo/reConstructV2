@@ -1,4 +1,4 @@
-package com.example.reconstructv2.Repositories.LocalRepository;
+package com.example.reconstructv2.Repositories.LocalRepositories;
 
 import androidx.room.RoomDatabase;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.reconstructv2.Models.Listing;
