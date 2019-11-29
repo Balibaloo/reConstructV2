@@ -9,5 +9,14 @@
     <string name="accountTitle">Account</string>
     <string name="homeTitle">Home</string>
     <string name="CreateListing">Create a Listing</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="log_in">Log In</string>
+    <string name="create_account">Create Account</string>
+    <string name="skip_log_in">Skip Log In</string>
+
+
+    <string name="master_salt">$2b$10$BjJdSB802DiH35SVuhITvO</string>
 
 </resources>
