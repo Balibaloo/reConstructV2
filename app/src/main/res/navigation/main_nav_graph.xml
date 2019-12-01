@@ -37,5 +37,46 @@
         android:name="com.example.reconstructv2.Fragments.LogIn.LogInFragment"
         android:label="fragment_log_in"
         tools:layout="@layout/fragment_log_in" />
+    <fragment
+        android:id="@+id/createUserFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment"
+        android:label="fragment_create_user"
+        tools:layout="@layout/fragment_create_user" >
+        <action
+            android:id="@+id/action_createUserFragment_to_finishCreateUserFragment"
+            app:destination="@id/finishCreateUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/finishCreateUserFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateUser.FinishCreateUserFragment"
+        android:label="fragment_finish_create_user"
+        tools:layout="@layout/fragment_finish_create_user" >
+        <argument android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="com.example.reconstructv2.Fragments.Results.ResultsFragment"
+        android:label="fragment_results"
+        tools:layout="@layout/fragment_results" >
+        <argument
+            android:name="isSuccess"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="Message"
+            app:argType="string"
+            android:defaultValue="Default Message" />
+        <argument
+            android:name="retryDestination"
+            app:argType="integer" />
+    </fragment>
+    <action android:id="@+id/action_global_resultsFragment" app:destination="@id/resultsFragment" />
 
 </navigation>

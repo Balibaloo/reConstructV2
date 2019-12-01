@@ -14,7 +14,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment;
+import com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment;
+import com.example.reconstructv2.Fragments.CreateUser.FinishCreateUserFragment;
 import com.example.reconstructv2.Fragments.LogIn.LogInFragment;
+import com.example.reconstructv2.Fragments.Results.ResultsFragment;
 import com.example.reconstructv2.R;
 import com.example.reconstructv2.Fragments.AccountView.AccountViewFragment;
 import com.example.reconstructv2.Fragments.Home.HomeFragment;
@@ -28,6 +31,9 @@ public class MainActivity extends AppCompatActivity
         AccountViewFragment.OnFragmentInteractionListener,
         CreateListingFragment.OnFragmentInteractionListener,
         LogInFragment.OnFragmentInteractionListener,
+        CreateUserFragment.OnFragmentInteractionListener,
+        FinishCreateUserFragment.OnFragmentInteractionListener,
+        ResultsFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -102,25 +108,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void onHomeFragmentInteraction(Uri uri) {
-        // Do stuff
-    }
-
-    @Override
-    public void onSingleListingFragmentInteraction(Uri uri) {
-        // Do different stuff
-    }
-
-    @Override
-    public void onAccountViewFragmentInteraction(Uri uri) {
-
-    }
-
-    @Override
-    public void onCreateListingFragmentInteraction(Uri uri) {
-
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

@@ -94,7 +94,7 @@ public interface APIService {
     Call<BaseAPIResponse> changeWantedTags(@Header("Authorisation") String AuthHeaderToken,
                                            @Query("new_tags") List<String> new_tags);
 
-    @GET("/createAccount")
+    @POST("/createAccount")
     Call<UserTokenAPIResponse> createAccount(@Query("username") String username,
                                              @Query("password") String password,
                                              @Query("first_name") String first_name,

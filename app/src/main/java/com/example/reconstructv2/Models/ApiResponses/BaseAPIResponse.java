@@ -6,8 +6,15 @@ public class BaseAPIResponse {
     @SerializedName("message")
     private String message;
 
+    @SerializedName("test_var")
+    private String testVariable;
+
 
     public String getMessage() {
         return message;
+    }
+
+    public String getTestVariable() {
+        return testVariable;
     }
 }

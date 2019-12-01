@@ -1,5 +1,6 @@
 package com.example.reconstructv2.Fragments.LogIn;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,18 +11,25 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.R;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 public class LogInFragment extends Fragment {
@@ -61,8 +69,8 @@ public class LogInFragment extends Fragment {
 
         logInViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
 
-        usernameTextEdit = view.findViewById(R.id.username_Edit_Text);
-        passwordTextEdit = view.findViewById(R.id.password_Edit_Text);
+        usernameTextEdit = view.findViewById(R.id.EditTextLogInUsername);
+        passwordTextEdit = view.findViewById(R.id.EditTextLogInPassword);
         forgotPassTextView = view.findViewById(R.id.forgotPasswordTextView);
         logInButton = view.findViewById(R.id.logInButton);
         logInSkipButton = view.findViewById(R.id.skip_logIn_Button);
@@ -74,29 +82,10 @@ public class LogInFragment extends Fragment {
             public void onClick(View v) {
                 String username = usernameTextEdit.getText().toString();
                 String password = passwordTextEdit.getText().toString();
+                String saltedHashedPassword = customSaltedHash(username,password);
 
-                try {
-                    MessageDigest md
-                            = MessageDigest.getInstance("MD5");
+                logIn(username,saltedHashedPassword);
 
-                    String master_salt = getString(R.string.master_salt);
-                    md.update(master_salt.getBytes());
-                    String saltedHashedPassword = md.digest((password + username).getBytes()).toString();
-
-                    logIn(username,saltedHashedPassword);
-                }
-
-                catch (NoSuchAlgorithmException e) {
-
-                    System.out.println("Exception thrown : " + e);
-                }
-                catch (NullPointerException e) {
-
-                    System.out.println("Exception thrown : " + e);
-                }
-
-                //U = romankubiv101
-                //P = mypassd
 
             }
         });
@@ -108,9 +97,57 @@ public class LogInFragment extends Fragment {
             }
         });
 
+        createAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.createUserFragment);
+            }
+        });
+
+
+        passwordTextEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Boolean handled = false;
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
+                    // call on click listener
+                    logInButton.callOnClick();
+                    handled = true;
+                }
+                return handled;
+
+            }
+        });
+
 
 
     }
+
+    private String customSaltedHash(String password,String username){
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            String master_salt = getString(R.string.master_salt);
+            md.update(master_salt.getBytes());
+            String concatString = password + username;
+            String saltedHashedPassword = new String(md.digest(concatString.getBytes()));
+
+            return saltedHashedPassword;
+        }
+
+        catch (NoSuchAlgorithmException e) {
+
+            System.out.println("Exception thrown : " + e);
+        }
+        catch (NullPointerException e) {
+
+            System.out.println("Exception thrown : " + e);
+        }
+        return null;
+    }
+
+
 
     private void logIn(String username, String saltedHashedPassword){
         logInViewModel.fetchLogInUser(username,saltedHashedPassword);
@@ -118,11 +155,23 @@ public class LogInFragment extends Fragment {
             @Override
             public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
                 // add code to "log in" user
-                if (userTokenAPIResponse.getUserToken() != null){
-                    System.out.println("RECEIVED USER TOKEN = " + userTokenAPIResponse.getUserToken());
-                }
+                hideSoftKeyboard(getActivity());
+
+                UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
+                UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
+                Navigation.findNavController(getView()).navigate(R.id.homeFragment2);
+
+                Toast.makeText(getContext(), userTokenAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override
@@ -137,8 +186,7 @@ public class LogInFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDetach() {        super.onDetach();
         mListener = null;
     }
 

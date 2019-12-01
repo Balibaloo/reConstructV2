@@ -18,5 +18,13 @@
 
 
     <string name="master_salt">$2b$10$BjJdSB802DiH35SVuhITvO</string>
+    <string name="retry_button">Try again?</string>
+    <string name="back_to_homepage_buton">Back To Homepage</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="submit_button">Next</string>
+    <string name="email">Email</string>
+    <string name="password_again">Password Again</string>
 
 </resources>
