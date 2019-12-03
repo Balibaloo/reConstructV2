@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onHomeFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }

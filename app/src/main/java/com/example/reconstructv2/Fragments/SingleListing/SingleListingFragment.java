@@ -58,6 +58,6 @@ public class SingleListingFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSingleListingFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 }
