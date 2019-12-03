@@ -14,6 +14,7 @@ import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
+import com.example.reconstructv2.Models.User;
 
 import java.util.List;
 
@@ -387,18 +388,25 @@ public class APIRepository {
         });
     }
 
-    public void createAccount(String username, String password, String first_name, String last_name, String email, Integer phone) {
-        apiService.createAccount(username, password, first_name, last_name, email, phone).enqueue(new Callback<UserTokenAPIResponse>() {
+    public void createAccount(User userObj) {
+        System.out.println("REPOSITORY RECEIVED");
+
+        apiService.createAccount(userObj.getUsername(), userObj.getPassword(), userObj.getFirst_name(), userObj.getLast_name(), userObj.getEmail(), userObj.getPhone()).enqueue(new Callback<UserTokenAPIResponse>() {
             @Override
             public void onResponse(Call<UserTokenAPIResponse> call, Response<UserTokenAPIResponse> response) {
                 if (response.isSuccessful()) {
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    System.out.println("Not succesfull");
+                    System.out.println(response.errorBody());
                 }
+
+
             }
 
             @Override
             public void onFailure(Call<UserTokenAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }

@@ -1,11 +1,24 @@
 package com.example.reconstructv2.Models;
 
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
+
 public class User {
-    private String username;
     private String password;
+
+    @SerializedName("username")
+    private String username;
+
+    @SerializedName("fName")
     private String first_name;
+
+    @SerializedName("lName")
     private String last_name;
+
+    @SerializedName("email")
     private String email;
+
+    @SerializedName("phone")
     private Integer phone;
 
 
@@ -18,6 +31,7 @@ public class User {
         this.email = email;
         this.phone = phone;
     }
+
 
     public String getUsername() {
         return username;
