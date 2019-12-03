@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -29,12 +30,11 @@ import com.example.reconstructv2.R;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 public class LogInFragment extends Fragment {
 
-
+    private ConstraintLayout constraintLayout;
     private EditText usernameTextEdit;
     private EditText passwordTextEdit;
     private TextView forgotPassTextView;
@@ -69,14 +69,23 @@ public class LogInFragment extends Fragment {
 
         logInViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
 
+        initViewObjects(view);
+        initOnClickListeners(view);
+
+
+    }
+
+    private void initViewObjects(View view){
+        constraintLayout = view.findViewById(R.id.logInContainer);
         usernameTextEdit = view.findViewById(R.id.EditTextLogInUsername);
         passwordTextEdit = view.findViewById(R.id.EditTextLogInPassword);
         forgotPassTextView = view.findViewById(R.id.forgotPasswordTextView);
         logInButton = view.findViewById(R.id.logInButton);
         logInSkipButton = view.findViewById(R.id.skip_logIn_Button);
         createAccountButton = view.findViewById(R.id.create_account_Button);
+    }
 
-
+    private void initOnClickListeners(View  view){
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +99,13 @@ public class LogInFragment extends Fragment {
             }
         });
 
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(getActivity());
+            }
+        });
+
         logInSkipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +116,7 @@ public class LogInFragment extends Fragment {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.createUserFragment);
+                Navigation.findNavController(getView()).navigate(R.id.createUserFragment);
             }
         });
 
@@ -118,9 +134,6 @@ public class LogInFragment extends Fragment {
 
             }
         });
-
-
-
     }
 
     private String customSaltedHash(String password,String username){
@@ -147,15 +160,16 @@ public class LogInFragment extends Fragment {
         return null;
     }
 
-
-
     private void logIn(String username, String saltedHashedPassword){
         logInViewModel.fetchLogInUser(username,saltedHashedPassword);
+
+        hideSoftKeyboard(getActivity());
+
         logInViewModel.getUserTokenAPIResponseMutableLiveData().observe(this, new Observer<UserTokenAPIResponse>() {
             @Override
             public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
                 // add code to "log in" user
-                hideSoftKeyboard(getActivity());
+
 
                 UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
                 UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
@@ -186,7 +200,8 @@ public class LogInFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {        super.onDetach();
+    public void onDetach() {
+        super.onDetach();
         mListener = null;
     }
 
