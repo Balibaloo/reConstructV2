@@ -49,7 +49,7 @@ public class CreateListingFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener{
-        void onCreateListingFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 
