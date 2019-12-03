@@ -1,33 +1,55 @@
 package com.example.reconstructv2.Fragments.AccountView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.Fragments.Home.HomeViewModel;
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
+import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
+import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.Listing;
+import com.example.reconstructv2.Models.User;
 import com.example.reconstructv2.R;
+import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
+import com.google.gson.JsonObject;
 
 
 public class AccountViewFragment extends Fragment {
 
     private AccountViewFragment.OnFragmentInteractionListener mListener;
-
     private AccountViewModel accountViewModel;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ConstraintLayout constraintLayout;
 
     private TextView textView;
 
-    public AccountViewFragment() {};
+    private EditText editTextUsername;
+    private EditText editTextFirstName;
+    private EditText editTextLastName;
+    private EditText editTextEmail;
+    private EditText editTextPhoneNumber;
+
+    private Button buttonRefreshText;
+
+    public AccountViewFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,22 +62,82 @@ public class AccountViewFragment extends Fragment {
         super.onActivityCreated(savedInstaceState);
         final View view = getView();
 
-        textView = view.findViewById(R.id.textView);
+        textView = view.findViewById(R.id.textViewAccViewUserToken);
+
+        swipeRefreshLayout = view.findViewById(R.id.accountViewRefreshLayout);
+        constraintLayout = view.findViewById(R.id.accountViewContainer);
+        editTextUsername = view.findViewById(R.id.editTextAccViewUsername);
+        editTextFirstName = view.findViewById(R.id.editTextAccViewFirstName);
+        editTextLastName = view.findViewById(R.id.editTextAccViewLastName);
+        editTextEmail = view.findViewById(R.id.editTextAccViewEmail);
+        editTextPhoneNumber = view.findViewById(R.id.editTextAccViewPhoneNumber);
+
+        buttonRefreshText = view.findViewById(R.id.textRefreshButton);
 
         accountViewModel = ViewModelProviders.of(this).get(AccountViewModel.class);
 
-        accountViewModel.getFrontPageListings();
-        accountViewModel.getAPIListingResponse().observe(this, new Observer<ListingListAPIResponse>() {
-            @Override
-            public void onChanged(ListingListAPIResponse listingListAPIResponse) {
-                Listing firstListing = listingListAPIResponse.getListings().get(0);
-                textView.setText(firstListing.getTitle());
-                System.out.println("LISTING ID === "+firstListing.getListingID());
-            }
 
+
+        System.out.println("UserID = "+UserInfo.getSelfUserID(getContext()));
+        System.out.println("UserToken = "+UserInfo.getToken(getContext()));
+
+        refreshData();
+
+        constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(getActivity());
+            }
         });
 
-        System.out.println("WHOOO HOOO in account frag");
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
+
+        buttonRefreshText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText("Please log In");
+            }
+        });
+
+    }
+
+    private void refreshData(){
+        if (UserInfo.getSelfUserID(getContext()) != null){
+            accountViewModel.getUserRequest(UserInfo.getSelfUserID(getContext()));
+            accountViewModel.getUserAPIResponse().observe(this, new Observer<UserAPIResponse>() {
+                @Override
+                public void onChanged(UserAPIResponse userAPIResponse) {
+                    User userObject = userAPIResponse.getUserProfile();
+                    System.out.println(userObject.getUsername());
+                    swipeRefreshLayout.setRefreshing(false);
+                    displayUser(userObject);
+
+                }
+            });
+        } else {
+            textView.setText("Please log In");
+        }
+    }
+
+    private void displayUser(User user){
+        editTextUsername.setText(user.getUsername());
+        editTextFirstName.setText(user.getFirst_name());
+        editTextLastName.setText(user.getLast_name());
+        editTextEmail.setText(user.getEmail());
+        editTextPhoneNumber.setText(user.getPhone().toString());
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override
@@ -78,6 +160,6 @@ public class AccountViewFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onAccountViewFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 }

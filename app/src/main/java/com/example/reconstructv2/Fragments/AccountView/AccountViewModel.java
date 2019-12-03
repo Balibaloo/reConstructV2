@@ -6,29 +6,28 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
+import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
 
 public class AccountViewModel extends AndroidViewModel {
 
     private APIRepository apiRepository;
-
-    private MutableLiveData<ListingListAPIResponse> listingListAPIResponse;
+    private MutableLiveData<UserAPIResponse> userAPIResponse;
 
     public AccountViewModel(@NonNull Application application) {
         super(application);
 
         apiRepository = new APIRepository(application);
+        userAPIResponse = apiRepository.getUserAPIResponseMutableLiveData();
 
-        listingListAPIResponse = apiRepository.getListingListAPIResponseMutableLiveData();
     }
 
-    public MutableLiveData<ListingListAPIResponse> getAPIListingResponse() {
-        return listingListAPIResponse;
+    public MutableLiveData<UserAPIResponse> getUserAPIResponse() {
+        return userAPIResponse;
     }
 
-
-    public void getFrontPageListings() {
-        apiRepository.getFrontPageListings();
+    public void getUserRequest(String userID){
+        apiRepository.getUserProfile(userID);
     }
+
 }
