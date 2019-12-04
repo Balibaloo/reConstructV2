@@ -13,6 +13,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reconstructv2.Fragments.Results.ResultsFragmentDirections;
+import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
@@ -44,8 +48,6 @@ public class FinishCreateUserFragment extends Fragment {
     private EditText firstNameEditText;
     private EditText lastNameEditText;
     private EditText phoneNumberEditText;
-
-    private Boolean dataCorrect;
 
     private Button testConnectionButton;
     private Button submitButton;
@@ -79,11 +81,6 @@ public class FinishCreateUserFragment extends Fragment {
         finishCreateUserViewModel = ViewModelProviders.of(this).get(FinishCreateUserViewModel.class);
 
         constraintLayoutContainer = view.findViewById(R.id.finishCreateUserContainer);
-        // add dynamic input valdiation for text edits
-
-        // dont let user submit if errors in validation
-
-        // on submit stick values into user object and call viewmodel.createuser
 
         firstNameEditText = view.findViewById(R.id.editTextFirstName);
         lastNameEditText = view.findViewById(R.id.editTextLastName);
@@ -92,59 +89,18 @@ public class FinishCreateUserFragment extends Fragment {
         submitButton = view.findViewById(R.id.buttonSubmit);
         testConnectionButton = view.findViewById(R.id.buttonTestConnection);
 
-
-        dataCorrect = true;
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCreateRequest();
-            }
-        });
+        addOnTextChangedListeners();
+        setOnClickListeners();
+        setLiveDataObservers();
 
 
 
-        constraintLayoutContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideSoftKeyboard(getActivity());
-            }
-        });
-
-        finishCreateUserViewModel.getUserTokenAPIResponse().observe(this, new Observer<UserTokenAPIResponse>() {
-            @Override
-            public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
-                // go to results
-                // implement on failue flag
-
-                MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createUserFragment);
-                action.setIsSuccess(true);
-                action.setMessage(userTokenAPIResponse.getMessage());
-
-                Navigation.findNavController(view).navigate(action);
-            }
-        });
-
-
-        testConnectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishCreateUserViewModel.testConnectionRequest();
-            }
-        });
-
-        finishCreateUserViewModel.getBaseAPIResponse().observe(this, new Observer<BaseAPIResponse>() {
-            @Override
-            public void onChanged(BaseAPIResponse baseAPIResponse) {
-                Toast.makeText(getContext(),baseAPIResponse.getTestVariable(),Toast.LENGTH_SHORT).show();
-            }
-        });
 
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 Boolean handled = false;
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     // call on click listener
                     submitButton.callOnClick();
                     handled = true;
@@ -154,9 +110,19 @@ public class FinishCreateUserFragment extends Fragment {
             }
         });
 
+
+
     }
 
-    private void sendCreateRequest(){
+    private boolean validateAll() {
+        return (InputValidator.validateName(firstNameEditText, "first name")
+                &&
+                InputValidator.validateName(lastNameEditText,"last name")
+                &&
+                InputValidator.validatePhone(phoneNumberEditText, "phone number"));
+    }
+
+    private void sendCreateRequest() {
         Boolean dataCorrect = true;
         if (dataCorrect) {
 
@@ -177,22 +143,142 @@ public class FinishCreateUserFragment extends Fragment {
                 String concatString = password + username;
                 String saltedHashedPassword = new String(md.digest(concatString.getBytes()));
 
-                User newUser = new User(username,saltedHashedPassword,first_name,last_name,email,phone);
+                User newUser = new User(username, saltedHashedPassword, first_name, last_name, email, phone);
 
                 finishCreateUserViewModel.createUserRequest(newUser);
-            }
-
-            catch (NoSuchAlgorithmException e) {
+            } catch (NoSuchAlgorithmException e) {
 
                 System.out.println("Exception thrown : " + e);
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
 
                 System.out.println("Exception thrown : " + e);
             }
 
 
         }
+    }
+
+    private void addOnTextChangedListeners(){
+        firstNameEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                InputValidator.validateName(firstNameEditText,"first name");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        lastNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                InputValidator.validateName(lastNameEditText, "last name");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        InputValidator.validatePhone(phoneNumberEditText,"phone number");
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void setOnClickListeners(){
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateAll()) {
+                    sendCreateRequest();
+                } else {
+                    Toast.makeText(getContext(), "Please check that the data entered is correct", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+        constraintLayoutContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard(getActivity());
+            }
+        });
+
+        testConnectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishCreateUserViewModel.testConnectionRequest();
+            }
+        });
+    }
+
+    private void setLiveDataObservers(){
+        finishCreateUserViewModel.getUserTokenAPIResponse().observe(this, new Observer<UserTokenAPIResponse>() {
+            @Override
+            public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
+                // go to results
+                // implement on failue flag
+
+                MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createUserFragment);
+                action.setIsSuccess(true);
+                action.setMessage(userTokenAPIResponse.getMessage());
+
+                Navigation.findNavController(getView()).navigate(action);
+            }
+        });
+
+
+        finishCreateUserViewModel.getBaseAPIResponse().observe(this, new Observer<BaseAPIResponse>() {
+            @Override
+            public void onChanged(BaseAPIResponse baseAPIResponse) {
+                Toast.makeText(getContext(), baseAPIResponse.getTestVariable(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public static void hideSoftKeyboard(Activity activity) {
