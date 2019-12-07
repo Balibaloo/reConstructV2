@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.Results.ResultsFragment">
+    tools:context=".Fragments.Results.ResultsFragment"
+    android:background="@drawable/custom_background">
 
     <TextView
         android:id="@+id/resultTextView"
