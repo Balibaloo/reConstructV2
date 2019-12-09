@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.R;
 
 
@@ -23,8 +24,6 @@ public class CreateUserFragment extends Fragment {
     private EditText passwordEditText;
     private EditText passwordAgainEditText;
     private EditText emailEditText;
-
-    private Boolean dataCorrect;
 
     private Button nextButton;
 
@@ -62,17 +61,15 @@ public class CreateUserFragment extends Fragment {
 
         nextButton = view.findViewById(R.id.buttonNext);
 
-        dataCorrect = true;
-
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (dataCorrect) {
+                if (validateAll()) {
 
-                    String email = emailEditText.getText().toString();
                     String username = usernameEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
+                    String email = emailEditText.getText().toString();
 
                     CreateUserFragmentDirections.ActionCreateUserFragmentToFinishCreateUserFragment action = CreateUserFragmentDirections.actionCreateUserFragmentToFinishCreateUserFragment(email, username, password);
                     Navigation.findNavController(getView()).navigate(action);
@@ -80,11 +77,18 @@ public class CreateUserFragment extends Fragment {
             }
         });
 
-
-
-
-
     }
+
+    private boolean validateAll(){
+        return (
+                InputValidator.validatePasswordsMatch(passwordEditText,passwordAgainEditText)
+                &&
+                InputValidator.validateUsername(usernameEditText)
+                &&
+                InputValidator.validatePassword(passwordEditText,usernameEditText.getText().toString().trim())
+                &&
+                InputValidator.validateEmail(emailEditText));
+    };
 
     @Override
     public void onAttach(Context context) {

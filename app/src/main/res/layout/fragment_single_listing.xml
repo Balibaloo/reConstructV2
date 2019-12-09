@@ -45,15 +45,16 @@
             app:layout_constraintTop_toBottomOf="@+id/singleListingImageView" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/singleListingRecyclerView"
             android:layout_width="347dp"
             android:layout_height="275dp"
-            app:layout_constraintBottom_toTopOf="@+id/button"
+            app:layout_constraintBottom_toTopOf="@+id/singleListingReserveButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/singleListingBodyTextView" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/singleListingReserveButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="134dp"
             android:layout_height="34dp"

@@ -15,6 +15,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -47,7 +48,7 @@ public interface APIService {
                                              @Query("body") Integer body,
                                              @Query("end_date") String end_date,
                                              @Query("location") String location,
-                                             @Query("item_list") Integer pageNum,
+                                             @Body List<Integer> itemList,
                                              @Query("main_photo") String main_photoID);
 
     @POST("/auth/addListingtoWatchList")
@@ -58,7 +59,7 @@ public interface APIService {
     Call<BaseAPIResponse> removeListingfromWatchList(@Header("Authorisation") String AuthHeaderToken,
                                                      @Query("listingID") String listingID);
 
-    @POST("/auth/getWatchlist")
+    @GET("/auth/getWatchlist")
     Call<ListingListAPIResponse> getWatchlist(@Header("Authorisation") String AuthHeaderToken);
 
     @GET("/auth/getRecentListings")
@@ -101,6 +102,7 @@ public interface APIService {
                                              @Query("last_name") String last_name,
                                              @Query("email") String email,
                                              @Query("phone") Integer phone);
+
 
     @POST("/auth/saveImage")
     Call<ImageIDAPIResponse> saveImageonServer(@Part("temp_imageID") String temp_imageID,

@@ -1,11 +1,8 @@
 package com.example.reconstructv2.Models;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -22,14 +19,12 @@ public class Listing implements Serializable {
     private String post_date;
     private String end_date;
     private String location;
-
-    @Ignore
-    private Bitmap image;
+    private String imageID;
 
     @ColumnInfo(name = "isActive")
     private Boolean isActive;
 
-    public Listing(String listingID, String authorID, String title, String body, String post_date, String end_date, String location, Boolean isActive) {
+    public Listing(String listingID, String authorID, String title, String body, String post_date, String end_date, String location, Boolean isActive, String imageID) {
         this.listingID = listingID;
         this.authorID = authorID;
         this.title = title;
@@ -38,8 +33,12 @@ public class Listing implements Serializable {
         this.end_date = end_date;
         this.location = location;
         this.isActive = isActive;
+        this.imageID = imageID;
     }
 
+    public String getImageID() {
+        return imageID;
+    }
 
     public String getListingID() {
         return listingID;

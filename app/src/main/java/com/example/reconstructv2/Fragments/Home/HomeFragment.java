@@ -21,17 +21,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragmentDirections;
 import com.example.reconstructv2.MainNavGraphDirections;
+import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.R;
+import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
 
 
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private Button toSingleListingButton;
     private RecyclerView listingRecyclerView;
     private SwipeRefreshLayout refreshLayout;
     private HomeFragment.OnFragmentInteractionListener mListener;
+
+    private ListingAdapter recyclerAdapter;
 
     private HomeViewModel homeViewModel;
 
@@ -47,38 +50,63 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstaceState);
         final View view = getView();
 
-        refreshLayout = view.findViewById(R.id.homeSwipeRefreshLayout);
 
+        initViewModel();
+        initViews(view);
+        setLiveDataObservers();
+        configureRecyclerViewAdapter();
+        setViewListeners();
+        refreshFrontPageListings();
+
+    }
+
+    private void refreshFrontPageListings(){
+        homeViewModel.fetchFrontPageListingsRequest();
+        refreshLayout.setRefreshing(true);
+    }
+
+    private void setViewListeners(){
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                homeViewModel.deleteAll();
+                refreshFrontPageListings();
 
-                int randomNum = 1 + (int)(Math.random() * ((9) + 1));
-
-                for (int i = 0; i < randomNum; i++) {
-                    int listingRand = 1 + (int)(Math.random() * ((99999) + 1));
-                    homeViewModel.insert(new Listing("id" + listingRand,"Randpom Autrhor id","TITLE  = " + i, "refreshed body" + listingRand, "2002-07-15T10:30:05.000Z","2002-07-15T10:30:05.000Z","some Address",true));
-                }
-
-                Toast toast =  Toast.makeText(view.getContext(),Integer.toString(randomNum),Toast.LENGTH_SHORT);
-                toast.show();
-                refreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void setLiveDataObservers() {
+        homeViewModel.getListingListAPIResponse().observe(this, new Observer<ListingListAPIResponse>() {
+            @Override
+            public void onChanged(ListingListAPIResponse listingListAPIResponse) {
+                homeViewModel.deleteAll();
+                recyclerAdapter.setListings(listingListAPIResponse.getListings());
+                refreshLayout.setRefreshing(false);
+
+            }
+        });
+    }
+
+    private void initViews(View view) {
+        refreshLayout = view.findViewById(R.id.homeSwipeRefreshLayout);
 
         listingRecyclerView = view.findViewById(R.id.main_recycler_view);
         listingRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         listingRecyclerView.setHasFixedSize(true);
+    }
 
-        final ListingAdapter adapter = new ListingAdapter();
-        listingRecyclerView.setAdapter(adapter);
-
+    private void initViewModel(){
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+    }
+
+    private void configureRecyclerViewAdapter(){
+        recyclerAdapter = new ListingAdapter();
+        listingRecyclerView.setAdapter(recyclerAdapter);
+
         homeViewModel.getAllListings().observe(this, new Observer<List<Listing>>() {
             @Override
             public void onChanged(List<Listing> listings) {
-                adapter.setListings(listings);
+                recyclerAdapter.setListings(listings);
             }
         });
 
@@ -93,7 +121,8 @@ public class HomeFragment extends Fragment {
 
             }
         }).attachToRecyclerView(listingRecyclerView);
-        adapter.setOnItemClickListener(new ListingAdapter.OnClickListener() {
+
+        recyclerAdapter.setOnItemClickListener(new ListingAdapter.OnClickListener() {
             @Override
             public void onItemClick(Listing listing) {
 
@@ -101,11 +130,8 @@ public class HomeFragment extends Fragment {
                 Navigation.findNavController(getView()).navigate(action);
             }
         });
-
-
-
-
     }
+
 
 
     @Override

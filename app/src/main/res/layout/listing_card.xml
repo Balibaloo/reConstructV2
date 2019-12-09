@@ -51,7 +51,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 
-
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
