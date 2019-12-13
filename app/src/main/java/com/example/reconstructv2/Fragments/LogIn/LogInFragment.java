@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.R;
@@ -71,6 +72,7 @@ public class LogInFragment extends Fragment {
 
         initViewObjects(view);
         initOnClickListeners(view);
+        setLiveDataObservers();
 
 
     }
@@ -91,7 +93,7 @@ public class LogInFragment extends Fragment {
             public void onClick(View v) {
                 String username = usernameTextEdit.getText().toString();
                 String password = passwordTextEdit.getText().toString();
-                String saltedHashedPassword = customSaltedHash(username,password);
+                String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),username,password);
 
                 logIn(username,saltedHashedPassword);
 
@@ -136,41 +138,22 @@ public class LogInFragment extends Fragment {
         });
     }
 
-    private String customSaltedHash(String password,String username){
-        try {
 
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            String master_salt = getString(R.string.master_salt);
-            md.update(master_salt.getBytes());
-            String concatString = password + username;
-            String saltedHashedPassword = new String(md.digest(concatString.getBytes()));
-
-            return saltedHashedPassword;
-        }
-
-        catch (NoSuchAlgorithmException e) {
-
-            System.out.println("Exception thrown : " + e);
-        }
-        catch (NullPointerException e) {
-
-            System.out.println("Exception thrown : " + e);
-        }
-        return null;
-    }
 
     private void logIn(String username, String saltedHashedPassword){
         logInViewModel.fetchLogInUser(username,saltedHashedPassword);
 
         hideSoftKeyboard(getActivity());
 
+    }
+
+    private void setLiveDataObservers(){
         logInViewModel.getUserTokenAPIResponseMutableLiveData().observe(this, new Observer<UserTokenAPIResponse>() {
             @Override
             public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
                 // add code to "log in" user
 
-
+                UserInfo.setIsLoggedIn(getContext(),true);
                 UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
                 UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
                 Navigation.findNavController(getView()).navigate(R.id.homeFragment2);

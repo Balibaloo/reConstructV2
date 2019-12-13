@@ -1,5 +1,4 @@
-package com.example.reconstructv2.Repositories.LocalRepositories;
-
+package com.example.reconstructv2.Repositories.LocalRepositories.ListingRepository;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

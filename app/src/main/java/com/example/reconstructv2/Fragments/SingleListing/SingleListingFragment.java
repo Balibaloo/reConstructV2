@@ -10,23 +10,31 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.Listing;
+import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 
 
 public class SingleListingFragment extends Fragment {
+    private Listing listingData;
+    private RecyclerView itemRecyclerView;
+    private ListingItemAdapter recyclerAdapter;
 
     private SingleListingFragment.OnFragmentInteractionListener mListener;
 
+    private SwipeRefreshLayout refreshLayout;
     private TextView titleTextView;
     private TextView bodyTextView;
-    private RecyclerView itemRecyclerView;
     private ImageView listingImage;
     private Button reserveButton;
 
@@ -45,15 +53,14 @@ public class SingleListingFragment extends Fragment {
         super.onActivityCreated(savedInstaceState);
         final View view = getView();
 
-        initViewModel();
-
-        Listing listing = SingleListingFragmentArgs.fromBundle(getArguments()).getListingArgument();
-
-        getListingRequest(listing.getListingID());
-
         initViews(view);
+        initViewModel();
+        setLiveDataObservers();
+        configureRecyclerViewAdapter();
+        setRefreshListener();
 
-
+        listingData = SingleListingFragmentArgs.fromBundle(getArguments()).getListingArgument();
+        this.getListingRequest(listingData.getListingID());
 
     }
 
@@ -62,25 +69,65 @@ public class SingleListingFragment extends Fragment {
         bodyTextView = view.findViewById(R.id.singleListingBodyTextView);
         itemRecyclerView = view.findViewById(R.id.singleListingRecyclerView);
 
+        refreshLayout = view.findViewById(R.id.singleListingSwipeRefreshLayout);
         listingImage = view.findViewById(R.id.singleListingImageView);
         reserveButton = view.findViewById(R.id.singleListingReserveButton);
-
-
     }
+
+    private void setRefreshListener(){
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshLayout.setRefreshing(true);
+                getListingRequest(listingData.getListingID());
+            }
+        });
+    }
+
+    private void configureRecyclerViewAdapter(){
+      recyclerAdapter = new ListingItemAdapter();
+      itemRecyclerView.setAdapter(recyclerAdapter);
+
+      itemRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+      itemRecyclerView.setHasFixedSize(true);
+
+      new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,0) {
+          @Override
+          public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+              return false;
+          }
+
+          @Override
+          public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+          }
+      }).attachToRecyclerView(itemRecyclerView);
+
+      recyclerAdapter.setOnItemCLickListener(new ListingItemAdapter.OnClickListener() {
+          @Override
+          public void onItemClick(ListingItem listingItem) {
+              // navigate to item in item view
+          }
+      });
+
+      // add long press
+    };
 
     private void initViewModel(){
         viewModel = ViewModelProviders.of(this).get(SingleListingViewModel.class);
     }
 
     private void getListingRequest(String listingID){
-        viewModel.fetchListing(listingID);
+        viewModel.fetchListing(getContext(),listingID);
     }
 
     private void setLiveDataObservers(){
         viewModel.getListingLiveData().observe(this, new Observer<SingleListingAPIResponse>() {
             @Override
             public void onChanged(SingleListingAPIResponse singleListingAPIResponse) {
+                System.out.println("listing items updated " + singleListingAPIResponse.getListing().getItemList().get(0).getName());
                 setListing(singleListingAPIResponse.getListing());
+                recyclerAdapter.setListingItems(singleListingAPIResponse.getListing().getItemList());
             }
         });
 

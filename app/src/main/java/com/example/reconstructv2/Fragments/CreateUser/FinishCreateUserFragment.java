@@ -28,7 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reconstructv2.Fragments.Results.ResultsFragmentDirections;
+import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Helpers.InputValidator;
+import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
@@ -123,39 +125,17 @@ public class FinishCreateUserFragment extends Fragment {
     }
 
     private void sendCreateRequest() {
-        Boolean dataCorrect = true;
-        if (dataCorrect) {
+        String username = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getUsername();
+        String password = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getPassword();
+        String first_name = firstNameEditText.getText().toString();
+        String last_name = lastNameEditText.getText().toString();
+        String email = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getEmail();
+        Integer phone = Integer.parseInt(phoneNumberEditText.getText().toString());
 
-            String username = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getUsername();
-            String password = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getPassword();
-            String first_name = firstNameEditText.getText().toString();
-            String last_name = lastNameEditText.getText().toString();
-            String email = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getEmail();
-            Integer phone = Integer.parseInt(phoneNumberEditText.getText().toString());
+        String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),password,username);
+        User newUser = new User(username, saltedHashedPassword, first_name, last_name, email, phone);
 
-
-            try {
-
-                MessageDigest md = MessageDigest.getInstance("MD5");
-
-                String master_salt = getString(R.string.master_salt);
-                md.update(master_salt.getBytes());
-                String concatString = password + username;
-                String saltedHashedPassword = new String(md.digest(concatString.getBytes()));
-
-                User newUser = new User(username, saltedHashedPassword, first_name, last_name, email, phone);
-
-                finishCreateUserViewModel.createUserRequest(newUser);
-            } catch (NoSuchAlgorithmException e) {
-
-                System.out.println("Exception thrown : " + e);
-            } catch (NullPointerException e) {
-
-                System.out.println("Exception thrown : " + e);
-            }
-
-
-        }
+        finishCreateUserViewModel.createUserRequest(newUser);
     }
 
     private void addOnTextChangedListeners(){
@@ -262,6 +242,9 @@ public class FinishCreateUserFragment extends Fragment {
             public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
                 // go to results
                 // implement on failue flag
+
+                UserInfo.setIsLoggedIn(getContext(),true);
+                UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
 
                 MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createUserFragment);
                 action.setIsSuccess(true);

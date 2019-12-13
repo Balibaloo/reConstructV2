@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.Listing;
-import com.example.reconstructv2.Repositories.LocalRepositories.ListingRepository;
+import com.example.reconstructv2.Repositories.LocalRepositories.ListingRepository.ListingRepository;
 import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
 
 import java.util.List;

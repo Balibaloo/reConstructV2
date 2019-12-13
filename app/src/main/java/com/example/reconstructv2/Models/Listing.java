@@ -1,11 +1,15 @@
 package com.example.reconstructv2.Models;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+import java.util.List;
 
 
 @Entity(tableName = "listing_table")
@@ -20,6 +24,7 @@ public class Listing implements Serializable {
     private String end_date;
     private String location;
     private String imageID;
+
 
     @ColumnInfo(name = "isActive")
     private Boolean isActive;

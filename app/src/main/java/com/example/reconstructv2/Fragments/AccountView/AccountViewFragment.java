@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.reconstructv2.Fragments.Home.HomeViewModel;
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
 import com.example.reconstructv2.Helpers.UserInfo;
-import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
-import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.Models.User;
 import com.example.reconstructv2.R;
-import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
-import com.google.gson.JsonObject;
 
 
 public class AccountViewFragment extends Fragment {

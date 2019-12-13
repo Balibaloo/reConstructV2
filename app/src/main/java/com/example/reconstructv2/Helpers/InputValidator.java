@@ -24,7 +24,8 @@ public class InputValidator {
     }
 
     public static boolean validatePasswordsMatch(EditText paswordMain,EditText passwordSecond){
-        if (paswordMain.getText().toString().trim() == passwordSecond.getText().toString().trim()){
+
+        if (paswordMain.getText().toString().trim().equals(passwordSecond.getText().toString().trim())){
             return true;
         } else {
             passwordSecond.setError("passwords dont match");

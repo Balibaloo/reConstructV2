@@ -5,6 +5,7 @@ import android.util.Base64;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.DesiredItemsAPIResponse;
@@ -163,7 +164,7 @@ public class APIRepository {
         });
     }
 
-    public void createListing(String AuthHeaderToken, Integer title, Integer body, String end_date, String location, Integer pageNum, String main_photoID) {
+    public void createListing(String AuthHeaderToken, Integer title, Integer body, String end_date, String location, List<Integer> pageNum, String main_photoID) {
         apiService.createListing(AuthHeaderToken, title, body, end_date, location, pageNum, main_photoID).enqueue(new Callback<ListingIDAPIResponse>() {
             @Override
             public void onResponse(Call<ListingIDAPIResponse> call, Response<ListingIDAPIResponse> response) {
@@ -254,7 +255,7 @@ public class APIRepository {
 
             @Override
             public void onFailure(Call<SingleListingAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
 
@@ -327,16 +328,7 @@ public class APIRepository {
     }
 
     public void login(String Username,String saltedHashedPassword) {
-
-        System.out.println("entering login");
-
-        String AuthHeaderUP = Username + ":" + saltedHashedPassword;
-
-        System.out.println("haeader = " + AuthHeaderUP);
-
-        String base64EncodedUP =  "Basic " + Base64.encodeToString(AuthHeaderUP.getBytes(),Base64.NO_WRAP);
-
-        System.out.println("encoded = " + base64EncodedUP);
+        String base64EncodedUP = AuthenticationHelper.getHeaderB64(Username,saltedHashedPassword);
 
         apiService.login(base64EncodedUP).enqueue(new Callback<UserTokenAPIResponse>() {
             @Override

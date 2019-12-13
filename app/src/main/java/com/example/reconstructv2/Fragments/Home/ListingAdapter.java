@@ -22,7 +22,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
     @NonNull
     @Override
     public ListingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //Creates and returns a ListingHolder, the layout we use in the recycler view
+        //Creates and returns a ListingHolder, the layout used in the recycler view
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listing_card, parent, false);
         return new ListingHolder(itemView);

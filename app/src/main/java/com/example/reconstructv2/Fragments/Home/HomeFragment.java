@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,8 +22,6 @@ import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.R;
-import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
-
 
 import java.util.List;
 
@@ -49,7 +45,6 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstaceState) {
         super.onActivityCreated(savedInstaceState);
         final View view = getView();
-
 
         initViewModel();
         initViews(view);
@@ -91,8 +86,6 @@ public class HomeFragment extends Fragment {
         refreshLayout = view.findViewById(R.id.homeSwipeRefreshLayout);
 
         listingRecyclerView = view.findViewById(R.id.main_recycler_view);
-        listingRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        listingRecyclerView.setHasFixedSize(true);
     }
 
     private void initViewModel(){
@@ -102,6 +95,9 @@ public class HomeFragment extends Fragment {
     private void configureRecyclerViewAdapter(){
         recyclerAdapter = new ListingAdapter();
         listingRecyclerView.setAdapter(recyclerAdapter);
+
+        listingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        listingRecyclerView.setHasFixedSize(true);
 
         homeViewModel.getAllListings().observe(this, new Observer<List<Listing>>() {
             @Override

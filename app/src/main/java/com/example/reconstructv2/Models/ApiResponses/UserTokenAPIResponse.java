@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class UserTokenAPIResponse extends BaseAPIResponse {
 
-    @SerializedName("user_token")
+    @SerializedName("userToken")
     private String token;
 
     @SerializedName("userID")
