@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureRecyclerViewAdapter(){
-        recyclerAdapter = new ListingAdapter();
+        recyclerAdapter = new ListingAdapter(getContext());
         listingRecyclerView.setAdapter(recyclerAdapter);
 
         listingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
