@@ -24,17 +24,25 @@ public class ListingItem {
     @SerializedName("tagList")
     private List<String> tagList;
 
-    public ListingItem(String itemID, String name, String description, Boolean isAvailable, String takenByUserID, List<String> tagList) {
+    @SerializedName("imageArray")
+    private List<String> imageIDArray;
+
+    public ListingItem(String itemID, String name, String description, Boolean isAvailable, String takenByUserID, List<String> tagList, List<String> imageIDArray) {
         ItemID = itemID;
         this.name = name;
         this.description = description;
         this.isAvailable = isAvailable;
         this.takenByUserID = takenByUserID;
         this.tagList = tagList;
+        this.imageIDArray = imageIDArray;
     }
 
     public String getItemID() {
         return ItemID;
+    }
+
+    public List<String> getImageIDArray() {
+        return imageIDArray;
     }
 
     public String getName() {

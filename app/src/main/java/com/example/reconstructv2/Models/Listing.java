@@ -1,15 +1,11 @@
 package com.example.reconstructv2.Models;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
-import java.util.List;
 
 
 @Entity(tableName = "listing_table")
@@ -23,13 +19,13 @@ public class Listing implements Serializable {
     private String post_date;
     private String end_date;
     private String location;
-    private String imageID;
+    private String mainImageID;
 
 
     @ColumnInfo(name = "isActive")
     private Boolean isActive;
 
-    public Listing(String listingID, String authorID, String title, String body, String post_date, String end_date, String location, Boolean isActive, String imageID) {
+    public Listing(String listingID, String authorID, String title, String body, String post_date, String end_date, String location, Boolean isActive, String mainImageID) {
         this.listingID = listingID;
         this.authorID = authorID;
         this.title = title;
@@ -38,11 +34,11 @@ public class Listing implements Serializable {
         this.end_date = end_date;
         this.location = location;
         this.isActive = isActive;
-        this.imageID = imageID;
+        this.mainImageID = mainImageID;
     }
 
-    public String getImageID() {
-        return imageID;
+    public String getMainImageID() {
+        return mainImageID;
     }
 
     public String getListingID() {

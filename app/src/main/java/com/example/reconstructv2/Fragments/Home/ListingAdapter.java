@@ -1,5 +1,6 @@
 package com.example.reconstructv2.Fragments.Home;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder> {
+    private Context mContext;
+    private ArrayList<Listing> mListingList;
+
     private List<Listing> listings = new ArrayList<>();
     private OnClickListener listener;
+
+    public ListingAdapter(Context context){
+        mContext = context;
+    }
 
     @NonNull
     @Override
@@ -29,12 +38,20 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
     }
 
 
+
+
     @Override
     public void onBindViewHolder(@NonNull ListingHolder holder, int position) {
         // puts data from listing object into ListingHolder views
         Listing currListing = listings.get(position);
+
         holder.textViewTitle.setText(currListing.getTitle());
         holder.textViewBody.setText(currListing.getBody());
+
+        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+        System.out.println("LISTING IMAGE ID = "+ currListing.getMainImageID());
+        String imageUrl = rootURL + "/getImage?imageID=" + currListing.getMainImageID();
+        Picasso.get().load(imageUrl).into(holder.listingImage);
     }
 
     @Override

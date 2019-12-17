@@ -3,11 +3,14 @@ package com.example.reconstructv2.Fragments.SingleListing;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +19,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
@@ -85,7 +90,7 @@ public class SingleListingFragment extends Fragment {
     }
 
     private void configureRecyclerViewAdapter(){
-      recyclerAdapter = new ListingItemAdapter();
+      recyclerAdapter = new ListingItemAdapter(getContext());
       itemRecyclerView.setAdapter(recyclerAdapter);
 
       itemRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -102,6 +107,11 @@ public class SingleListingFragment extends Fragment {
 
           }
       }).attachToRecyclerView(itemRecyclerView);
+
+      SnapHelper helper = new LinearSnapHelper();
+      helper.attachToRecyclerView(itemRecyclerView);
+
+
 
       recyclerAdapter.setOnItemCLickListener(new ListingItemAdapter.OnClickListener() {
           @Override
@@ -128,6 +138,7 @@ public class SingleListingFragment extends Fragment {
                 System.out.println("listing items updated " + singleListingAPIResponse.getListing().getItemList().get(0).getName());
                 setListing(singleListingAPIResponse.getListing());
                 recyclerAdapter.setListingItems(singleListingAPIResponse.getListing().getItemList());
+                refreshLayout.setRefreshing(false);
             }
         });
 
@@ -136,11 +147,6 @@ public class SingleListingFragment extends Fragment {
     private void setListing(Listing listing){
         titleTextView.setText(listing.getTitle());
         bodyTextView.setText(listing.getBody());
-
-    }
-
-
-    private void refreshImage(String imageID){
 
     }
 

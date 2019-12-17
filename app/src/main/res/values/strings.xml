@@ -4,6 +4,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="ROOTURL">http://82.3.163.116:1234</string>
+
 
     //menu titles
     <string name="accountTitle">Account</string>

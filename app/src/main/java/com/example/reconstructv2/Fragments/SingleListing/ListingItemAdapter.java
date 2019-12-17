@@ -1,5 +1,6 @@
 package com.example.reconstructv2.Fragments.SingleListing;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.reconstructv2.Fragments.Home.ListingAdapter;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,13 @@ import java.util.List;
 public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.ListingItemHolder>{
     private List<ListingItem> listingItems = new ArrayList<>();
     private OnClickListener listener;
+
+    private Context mContext;
+
+
+    public ListingItemAdapter(Context context){
+        this.mContext = context;
+    }
 
 
     @NonNull
@@ -34,10 +44,13 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     public void onBindViewHolder(@NonNull ListingItemHolder holder, int position){
 
         ListingItem currItem = listingItems.get(position);
-        //holder.itemImage
+
+        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+
+        String imageUrl = rootURL + "/getImage?imageID=" + currItem.getImageIDArray().get(0);
+        Picasso.get().load(imageUrl).into(holder.itemImage);
         holder.TextViewname.setText(currItem.getName());
         holder.TextViewdescription.setText(currItem.getDescription());
-
     }
 
     @Override
@@ -55,7 +68,7 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
 
         public ListingItemHolder(@NonNull View itemView){
             super(itemView);
-            //itemImage = itemView.findViewById(R.id.item_imageView);
+            itemImage = itemView.findViewById(R.id.item_imageView);
             TextViewname = itemView.findViewById(R.id.item_nameTextView);
             TextViewdescription = itemView.findViewById(R.id.item_bodyTextView);
 
@@ -72,9 +85,11 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
         }
     }
 
+
     public interface OnClickListener{
         void onItemClick(ListingItem listingItem);
     }
+
 
     public void setOnItemCLickListener(OnClickListener listener){this.listener = listener;}
 
