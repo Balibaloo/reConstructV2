@@ -121,7 +121,6 @@ public class HomeFragment extends Fragment {
         recyclerAdapter.setOnItemClickListener(new ListingAdapter.OnClickListener() {
             @Override
             public void onItemClick(Listing listing) {
-
                 MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(listing);
                 Navigation.findNavController(getView()).navigate(action);
             }

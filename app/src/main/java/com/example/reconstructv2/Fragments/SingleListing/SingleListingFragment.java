@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -24,16 +25,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.Listing;
+import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 
+import java.util.List;
+
 
 public class SingleListingFragment extends Fragment {
-    private Listing listingData;
+    private ListingFull listingData;
     private RecyclerView itemRecyclerView;
     private ListingItemAdapter recyclerAdapter;
+
+
 
     private SingleListingFragment.OnFragmentInteractionListener mListener;
 
@@ -52,7 +59,6 @@ public class SingleListingFragment extends Fragment {
     return inflater.inflate(R.layout.fragment_single_listing,container,false);
     }
 
-
     @Override
     public  void onActivityCreated(Bundle savedInstaceState) {
         super.onActivityCreated(savedInstaceState);
@@ -64,9 +70,8 @@ public class SingleListingFragment extends Fragment {
         configureRecyclerViewAdapter();
         setRefreshListener();
 
-        listingData = SingleListingFragmentArgs.fromBundle(getArguments()).getListingArgument();
-        this.getListingRequest(listingData.getListingID());
-
+        String listingId = SingleListingFragmentArgs.fromBundle(getArguments()).getListingArgument().getListingID();
+        this.getListingRequest(listingId);
     }
 
     private void initViews(View view){
@@ -108,15 +113,12 @@ public class SingleListingFragment extends Fragment {
           }
       }).attachToRecyclerView(itemRecyclerView);
 
-      SnapHelper helper = new LinearSnapHelper();
-      helper.attachToRecyclerView(itemRecyclerView);
-
-
-
       recyclerAdapter.setOnItemCLickListener(new ListingItemAdapter.OnClickListener() {
           @Override
           public void onItemClick(ListingItem listingItem) {
-              // navigate to item in item view
+              Integer itemPosition = listingData.getItemList().indexOf(listingItem);
+              SingleListingFragmentDirections.ActionSingleListingFragmentToSingleItemViewFragment action = SingleListingFragmentDirections.actionSingleListingFragmentToSingleItemViewFragment(listingData,itemPosition);
+              Navigation.findNavController(getView()).navigate(action);
           }
       });
 
@@ -135,7 +137,7 @@ public class SingleListingFragment extends Fragment {
         viewModel.getListingLiveData().observe(this, new Observer<SingleListingAPIResponse>() {
             @Override
             public void onChanged(SingleListingAPIResponse singleListingAPIResponse) {
-                System.out.println("listing items updated " + singleListingAPIResponse.getListing().getItemList().get(0).getName());
+                listingData = singleListingAPIResponse.getListing();
                 setListing(singleListingAPIResponse.getListing());
                 recyclerAdapter.setListingItems(singleListingAPIResponse.getListing().getItemList());
                 refreshLayout.setRefreshing(false);

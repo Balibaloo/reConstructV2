@@ -27,6 +27,8 @@ public class ListingItem {
     @SerializedName("imageArray")
     private List<String> imageIDArray;
 
+    private Boolean isSelected;
+
     public ListingItem(String itemID, String name, String description, Boolean isAvailable, String takenByUserID, List<String> tagList, List<String> imageIDArray) {
         ItemID = itemID;
         this.name = name;
@@ -35,6 +37,7 @@ public class ListingItem {
         this.takenByUserID = takenByUserID;
         this.tagList = tagList;
         this.imageIDArray = imageIDArray;
+        this.isSelected = false;
     }
 
     public String getItemID() {
@@ -63,5 +66,9 @@ public class ListingItem {
 
     public List<String> getTagList() {
         return tagList;
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
     }
 }

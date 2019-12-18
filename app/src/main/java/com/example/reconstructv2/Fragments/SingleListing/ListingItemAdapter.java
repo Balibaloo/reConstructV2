@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.reconstructv2.Fragments.Home.ListingAdapter;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 import com.squareup.picasso.Picasso;
@@ -35,7 +34,7 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     public ListingItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         //Creates and returns a ListingHolder, the layout used in the recycler view
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.listing_item_card, parent, false);
+                .inflate(R.layout.listing_item_card_small, parent, false);
         return new ListingItemHolder(itemView);
     }
 

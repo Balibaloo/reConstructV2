@@ -18,6 +18,7 @@ import com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment;
 import com.example.reconstructv2.Fragments.CreateUser.FinishCreateUserFragment;
 import com.example.reconstructv2.Fragments.LogIn.LogInFragment;
 import com.example.reconstructv2.Fragments.Results.ResultsFragment;
+import com.example.reconstructv2.Fragments.SingleItem.SingleItemViewFragment;
 import com.example.reconstructv2.R;
 import com.example.reconstructv2.Fragments.AccountView.AccountViewFragment;
 import com.example.reconstructv2.Fragments.Home.HomeFragment;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         implements
         HomeFragment.OnFragmentInteractionListener,
         SingleListingFragment.OnFragmentInteractionListener,
+        SingleItemViewFragment.OnFragmentInteractionListener,
         AccountViewFragment.OnFragmentInteractionListener,
         CreateListingFragment.OnFragmentInteractionListener,
         LogInFragment.OnFragmentInteractionListener,

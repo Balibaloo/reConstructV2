@@ -18,6 +18,9 @@
         <argument
             android:name="listingArgument"
             app:argType="com.example.reconstructv2.Models.Listing" />
+        <action
+            android:id="@+id/action_singleListingFragment_to_singleItemViewFragment"
+            app:destination="@id/singleItemViewFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_singleListingFragment"
@@ -78,5 +81,19 @@
             app:argType="integer" />
     </fragment>
     <action android:id="@+id/action_global_resultsFragment" app:destination="@id/resultsFragment" />
+    <fragment
+        android:id="@+id/singleItemViewFragment"
+        android:name="com.example.reconstructv2.Fragments.SingleItem.SingleItemViewFragment"
+        android:label="SingleItemViewFragment" >
+        <action
+            android:id="@+id/action_singleItemViewFragment_to_singleListingFragment"
+            app:destination="@id/singleListingFragment" />
+        <argument
+            android:name="Listing"
+            app:argType="com.example.reconstructv2.Models.ListingFull" />
+        <argument
+            android:name="itemPosition"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>
