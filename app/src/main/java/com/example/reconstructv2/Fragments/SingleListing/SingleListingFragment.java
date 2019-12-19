@@ -70,8 +70,13 @@ public class SingleListingFragment extends Fragment {
         configureRecyclerViewAdapter();
         setRefreshListener();
 
-        String listingId = SingleListingFragmentArgs.fromBundle(getArguments()).getListingArgument().getListingID();
-        this.getListingRequest(listingId);
+        if (SingleListingFragmentArgs.fromBundle(getArguments()).getShouldRefresh()) {
+            this.getListingRequest(SingleListingFragmentArgs.fromBundle(getArguments()).getListingID());
+        } else {
+            listingData = SingleListingFragmentArgs.fromBundle(getArguments()).getListingFullArg();
+            setListing(listingData);
+            recyclerAdapter.setListingItems(listingData.getItemList());
+        }
     }
 
     private void initViews(View view){
@@ -122,7 +127,14 @@ public class SingleListingFragment extends Fragment {
           }
       });
 
-      // add long press
+      recyclerAdapter.setLongClickListener(new ListingItemAdapter.OnLongPressListener() {
+          @Override
+          public void onLongPress(ListingItem listingItem) {
+              listingItem.toggleIsSelected();
+              recyclerAdapter.notifyDataSetChanged();
+          }
+      });
+
     };
 
     private void initViewModel(){
@@ -138,17 +150,18 @@ public class SingleListingFragment extends Fragment {
             @Override
             public void onChanged(SingleListingAPIResponse singleListingAPIResponse) {
                 listingData = singleListingAPIResponse.getListing();
-                setListing(singleListingAPIResponse.getListing());
-                recyclerAdapter.setListingItems(singleListingAPIResponse.getListing().getItemList());
+                setListing(listingData);
+                recyclerAdapter.setListingItems(listingData.getItemList());
                 refreshLayout.setRefreshing(false);
             }
         });
 
     }
 
-    private void setListing(Listing listing){
+    private void setListing(ListingFull listing){
         titleTextView.setText(listing.getTitle());
         bodyTextView.setText(listing.getBody());
+
 
     }
 

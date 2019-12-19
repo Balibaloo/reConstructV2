@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reconstructv2.Models.ListingItem;
@@ -20,6 +23,7 @@ import java.util.List;
 public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.ListingItemHolder>{
     private List<ListingItem> listingItems = new ArrayList<>();
     private OnClickListener listener;
+    private OnLongPressListener longClickListener;
 
     private Context mContext;
 
@@ -50,6 +54,14 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
         Picasso.get().load(imageUrl).into(holder.itemImage);
         holder.TextViewname.setText(currItem.getName());
         holder.TextViewdescription.setText(currItem.getDescription());
+
+
+        if (currItem.getIsSelected()) {
+            holder.itemLayout.setBackgroundResource(R.drawable.listing_item_selected);
+        } else {
+            holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_selected);
+        }
+
     }
 
     @Override
@@ -61,12 +73,14 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     }
 
     class ListingItemHolder extends RecyclerView.ViewHolder {
+        private CardView itemLayout;
         private TextView TextViewname;
         private TextView TextViewdescription;
         private ImageView itemImage;
 
         public ListingItemHolder(@NonNull View itemView){
             super(itemView);
+            itemLayout = itemView.findViewById(R.id.item_cardView);
             itemImage = itemView.findViewById(R.id.item_imageView);
             TextViewname = itemView.findViewById(R.id.item_nameTextView);
             TextViewdescription = itemView.findViewById(R.id.item_bodyTextView);
@@ -81,15 +95,36 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
                     }
                 }
             });
-        }
-    }
 
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = getAdapterPosition();
+                    if (longClickListener != null && pos != RecyclerView.NO_POSITION) {
+                        longClickListener.onLongPress(listingItems.get(pos));
+
+                    }
+
+                    return true;
+                }
+            });
+        }
+
+    }
 
     public interface OnClickListener{
         void onItemClick(ListingItem listingItem);
     }
 
+    public interface OnLongPressListener{
+        void onLongPress(ListingItem listingItem);
+    }
+
 
     public void setOnItemCLickListener(OnClickListener listener){this.listener = listener;}
+
+    public void setLongClickListener(OnLongPressListener longClickListener) {
+        this.longClickListener = longClickListener;
+    }
 
 }

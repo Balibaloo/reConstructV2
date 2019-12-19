@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class SingleItemViewFragment extends Fragment {
 
         initViews(view);
         configureRecyclerViewAdapter();
+        setOnClickListeners();
 
         listing = SingleItemViewFragmentArgs.fromBundle(getArguments()).getListing();
         Integer itemPos = SingleItemViewFragmentArgs.fromBundle(getArguments()).getItemPosition();
@@ -73,6 +75,25 @@ public class SingleItemViewFragment extends Fragment {
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(horisontalRecyclerView);
+
+        recyclerAdapter.setOnLongItemCLickListener(new SingleItemHorizontalAdapter.OnLongClickListener() {
+            @Override
+            public void onLongItemClick(ListingItem listingItem) {
+                listingItem.toggleIsSelected();
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void setOnClickListeners(){
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SingleItemViewFragmentDirections.ActionSingleItemViewFragmentToSingleListingFragment action = SingleItemViewFragmentDirections.actionSingleItemViewFragmentToSingleListingFragment(listing,null);
+                action.setShouldRefresh(false);
+                Navigation.findNavController(getView()).navigate(action);
+            }
+        });
     }
 
     @Override

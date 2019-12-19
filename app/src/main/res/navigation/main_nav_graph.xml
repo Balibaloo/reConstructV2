@@ -15,12 +15,21 @@
         android:name="com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment"
         android:label="fragment_single_listing"
         tools:layout="@layout/fragment_single_listing" >
-        <argument
-            android:name="listingArgument"
-            app:argType="com.example.reconstructv2.Models.Listing" />
         <action
             android:id="@+id/action_singleListingFragment_to_singleItemViewFragment"
             app:destination="@id/singleItemViewFragment" />
+        <argument
+            android:name="shouldRefresh"
+            app:argType="boolean"
+            android:defaultValue="true" />
+        <argument
+            android:name="listingFullArg"
+            app:argType="com.example.reconstructv2.Models.ListingFull"
+            app:nullable="true" />
+        <argument
+            android:name="listingID"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <action
         android:id="@+id/action_global_singleListingFragment"

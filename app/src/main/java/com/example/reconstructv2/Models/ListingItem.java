@@ -68,7 +68,14 @@ public class ListingItem {
         return tagList;
     }
 
-    public Boolean getSelected() {
+    public void toggleIsSelected() {
+        isSelected = !isSelected;
+    }
+
+    public Boolean getIsSelected() {
+
+        if (isSelected == null){isSelected = false;}
+
         return isSelected;
     }
 }

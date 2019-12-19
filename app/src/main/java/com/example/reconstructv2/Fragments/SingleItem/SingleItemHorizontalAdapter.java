@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reconstructv2.Fragments.SingleListing.ListingItemAdapter;
@@ -19,13 +20,11 @@ import java.util.List;
 
 public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItemHorizontalAdapter.ItemHolder> {
     private List<ListingItem> listingItems = new ArrayList<>();
-    private OnClickListener listener;
+    private OnLongClickListener listener;
 
     private Context mContext;
 
-    private TextView titleTextView;
-    private ImageView itemImageView;
-    private TextView bodyTextView;
+
 
     public SingleItemHorizontalAdapter(Context context){
         this.mContext = context;
@@ -44,10 +43,17 @@ public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItem
     @Override
     public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
         ListingItem currItem = listingItems.get(position);
-        titleTextView.setText(currItem.getName());
+        holder.titleTextView.setText(currItem.getName());
 
-        bodyTextView.setText(currItem.getDescription());
-        // set data on views
+        holder.bodyTextView.setText(currItem.getDescription());
+
+        if (currItem.getIsSelected()) {
+            holder.itemContainer.setBackgroundResource(R.drawable.listing_item_selected);
+        } else {
+            holder.itemContainer.setBackgroundResource(R.drawable.listing_item_un_selected);
+        }
+
+
     }
 
     @Override
@@ -60,31 +66,40 @@ public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItem
         notifyDataSetChanged();
     }
 
-    class ItemHolder extends RecyclerView.ViewHolder {
+    class ItemHolder extends RecyclerView.ViewHolder{
+
+        private CardView itemContainer;
+        private TextView titleTextView;
+        private ImageView itemImageView;
+        private TextView bodyTextView;
 
 
         public ItemHolder(@NonNull View itemView){
             super(itemView);
+            itemContainer = itemView.findViewById(R.id.itemCardFullCardContainer);
             titleTextView = itemView.findViewById(R.id.itemCardFullTitleTextView);
             itemImageView = itemView.findViewById(R.id.itemCardFullImageView);
             bodyTextView = itemView.findViewById(R.id.itemCardFullBodyTextView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
                     int pos = getAdapterPosition();
                     if (listener != null && pos != RecyclerView.NO_POSITION) {
-                        /// do somethjing ig
+                        listener.onLongItemClick(listingItems.get(pos));
                     }
+
+                    return true;
                 }
             });
         }
     }
 
-    public interface OnClickListener{
-        void onItemClick(ListingItem listingItem);
+    public interface OnLongClickListener{
+        void onLongItemClick(ListingItem listingItem);
     }
 
-    public void setOnItemCLickListener(SingleItemHorizontalAdapter.OnClickListener listener){this.listener = listener;}
+    public void setOnLongItemCLickListener(SingleItemHorizontalAdapter.OnLongClickListener listener){this.listener = listener;}
 
 }
