@@ -41,7 +41,8 @@ public class AccountViewFragment extends Fragment {
     private EditText editTextEmail;
     private EditText editTextPhoneNumber;
 
-    private Button buttonRefreshText;
+    private TextView textEditChangePassword;
+    private Button buttonSaveUser;
 
     public AccountViewFragment() {}
 
@@ -56,8 +57,29 @@ public class AccountViewFragment extends Fragment {
         super.onActivityCreated(savedInstaceState);
         final View view = getView();
 
-        textView = view.findViewById(R.id.textViewAccViewUserToken);
+        initViews(view);
+        initViewModel();
+        setOnClickListeners();
 
+
+        refreshData();
+
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                refreshData();
+            }
+        });
+
+
+
+    }
+
+    private void initViews(View view){
+        textView = view.findViewById(R.id.textViewAccViewUserToken);
         swipeRefreshLayout = view.findViewById(R.id.accountViewRefreshLayout);
         constraintLayout = view.findViewById(R.id.accountViewContainer);
         editTextUsername = view.findViewById(R.id.editTextAccViewUsername);
@@ -65,17 +87,29 @@ public class AccountViewFragment extends Fragment {
         editTextLastName = view.findViewById(R.id.editTextAccViewLastName);
         editTextEmail = view.findViewById(R.id.editTextAccViewEmail);
         editTextPhoneNumber = view.findViewById(R.id.editTextAccViewPhoneNumber);
+        textEditChangePassword = view.findViewById(R.id.changePasswordAccountViewTextView);
+        buttonSaveUser = view.findViewById(R.id.textSaveUserCredentials);
+    }
 
-        buttonRefreshText = view.findViewById(R.id.textRefreshButton);
-
+    private void initViewModel(){
         accountViewModel = ViewModelProviders.of(this).get(AccountViewModel.class);
+    }
 
 
+    private void setOnClickListeners(){
+        buttonSaveUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        System.out.println("UserID = "+UserInfo.getSelfUserID(getContext()));
-        System.out.println("UserToken = "+UserInfo.getToken(getContext()));
+            }
+        });
 
-        refreshData();
+        textEditChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to change password fragment
+            }
+        });
 
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,22 +117,8 @@ public class AccountViewFragment extends Fragment {
                 hideSoftKeyboard(getActivity());
             }
         });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshData();
-            }
-        });
-
-        buttonRefreshText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText("Please log In");
-            }
-        });
-
     }
+
 
     private void refreshData(){
         if (UserInfo.getSelfUserID(getContext()) != null){
@@ -107,7 +127,6 @@ public class AccountViewFragment extends Fragment {
                 @Override
                 public void onChanged(UserAPIResponse userAPIResponse) {
                     User userObject = userAPIResponse.getUserProfile();
-                    System.out.println(userObject.getUsername());
                     swipeRefreshLayout.setRefreshing(false);
                     displayUser(userObject);
 
