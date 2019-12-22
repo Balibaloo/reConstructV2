@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.reconstructv2.Fragments.SingleListing.ListingItemAdapter;
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragmentArgs;
@@ -79,8 +80,12 @@ public class SingleItemViewFragment extends Fragment {
         recyclerAdapter.setOnLongItemCLickListener(new SingleItemHorizontalAdapter.OnLongClickListener() {
             @Override
             public void onLongItemClick(ListingItem listingItem) {
-                listingItem.toggleIsSelected();
-                recyclerAdapter.notifyDataSetChanged();
+                if (listingItem.getAvailable()){
+                    listingItem.toggleIsSelected();
+                    recyclerAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "this item is un available", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

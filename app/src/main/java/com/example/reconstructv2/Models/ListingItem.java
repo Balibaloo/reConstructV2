@@ -69,13 +69,11 @@ public class ListingItem {
     }
 
     public void toggleIsSelected() {
-        isSelected = !isSelected;
+        isSelected = !this.getIsSelected();
     }
 
     public Boolean getIsSelected() {
-
         if (isSelected == null){isSelected = false;}
-
         return isSelected;
     }
 }

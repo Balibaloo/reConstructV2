@@ -146,8 +146,14 @@ public class SingleListingFragment extends Fragment {
       recyclerAdapter.setLongClickListener(new ListingItemAdapter.OnLongPressListener() {
           @Override
           public void onLongPress(ListingItem listingItem) {
-              listingItem.toggleIsSelected();
-              recyclerAdapter.notifyDataSetChanged();
+              // check if available
+              if (listingItem.getAvailable()){
+                  listingItem.toggleIsSelected();
+                  recyclerAdapter.notifyDataSetChanged();
+              } else {
+                  Toast.makeText(getContext(), "this item is un available", Toast.LENGTH_SHORT).show();
+              }
+
           }
       });
 

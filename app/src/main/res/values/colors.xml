@@ -6,5 +6,6 @@
     <color name="colourBackgroundTop">#CFCFCF</color>
     <color name="colourBackgroundBottom">#303030</color>
 
-    <color name="colourSelected">#ff00</color>
+    <color name="colourSelected">#cc33ff</color>
+    <color name="colourUnAvailable">#ff00</color>
 </resources>

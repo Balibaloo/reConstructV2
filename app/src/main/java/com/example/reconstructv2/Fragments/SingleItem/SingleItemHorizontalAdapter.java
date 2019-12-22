@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.reconstructv2.Fragments.SingleListing.ListingItemAdapter;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 
@@ -47,10 +46,12 @@ public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItem
 
         holder.bodyTextView.setText(currItem.getDescription());
 
-        if (currItem.getIsSelected()) {
+        if(!currItem.getAvailable()){
+            holder.itemContainer.setBackgroundResource(R.drawable.listing_item_un_available);
+        } else if (currItem.getIsSelected()) {
             holder.itemContainer.setBackgroundResource(R.drawable.listing_item_selected);
         } else {
-            holder.itemContainer.setBackgroundResource(R.drawable.listing_item_un_selected);
+            holder.itemContainer.setBackgroundResource(R.drawable.listing_item_base);
         }
 
 

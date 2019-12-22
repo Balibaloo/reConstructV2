@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reconstructv2.Models.ListingItem;
@@ -55,11 +53,12 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
         holder.TextViewname.setText(currItem.getName());
         holder.TextViewdescription.setText(currItem.getDescription());
 
-
-        if (currItem.getIsSelected()) {
+        if(!currItem.getAvailable()){
+            holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_available);
+        } else if (currItem.getIsSelected()) {
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_selected);
         } else {
-            holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_selected);
+            holder.itemLayout.setBackgroundResource(R.drawable.listing_item_base);
         }
 
     }
