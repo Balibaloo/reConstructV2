@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,16 @@ public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItem
         return new SingleItemHorizontalAdapter.ItemHolder(itemView);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
         ListingItem currItem = listingItems.get(position);
         holder.titleTextView.setText(currItem.getName());
+
+        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+        String imageUrl = rootURL + "/getImage?imageID=" + currItem.getImageIDArray().get(0);
+        Picasso.get().load(imageUrl).into(holder.itemImageView);
 
         holder.bodyTextView.setText(currItem.getDescription());
 
@@ -56,6 +63,7 @@ public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItem
 
 
     }
+
 
     @Override
     public int getItemCount() {

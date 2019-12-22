@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -159,6 +161,7 @@ public class SingleListingFragment extends Fragment {
 
     };
 
+
     private void initViewModel(){
         viewModel = ViewModelProviders.of(this).get(SingleListingViewModel.class);
     }
@@ -183,6 +186,10 @@ public class SingleListingFragment extends Fragment {
     private void setListing(ListingFull listing){
         titleTextView.setText(listing.getTitle());
         bodyTextView.setText(listing.getBody());
+
+        String rootURL = getContext().getResources().getString(R.string.ROOTURL);
+        String imageUrl = rootURL + "/getImage?imageID=" + listing.getMainImageID();
+        Picasso.get().load(imageUrl).into(listingImage);
 
 
     }
