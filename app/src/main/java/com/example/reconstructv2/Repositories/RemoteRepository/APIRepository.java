@@ -15,6 +15,7 @@ import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
+import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.User;
 
 import java.util.List;
@@ -244,6 +245,7 @@ public class APIRepository {
         });
     }
 
+
     public void getListingAuthenticated(String AuthHeaderToken, String listingID) {
         apiService.getListingAuthenticated(AuthHeaderToken, listingID).enqueue(new Callback<SingleListingAPIResponse>() {
             @Override
@@ -272,6 +274,20 @@ public class APIRepository {
 
             @Override
             public void onFailure(Call<SingleListingAPIResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void reserveItems(String AuthHeaderToken, List<String> listingItemIds){
+        apiService.reserveItemsRequest(AuthHeaderToken,listingItemIds).enqueue(new Callback<BaseAPIResponse>() {
+            @Override
+            public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
+                baseAPIResponseMutableLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
 
             }
         });

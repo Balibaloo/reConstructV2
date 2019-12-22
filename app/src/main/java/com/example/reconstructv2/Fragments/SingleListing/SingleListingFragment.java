@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -66,6 +67,7 @@ public class SingleListingFragment extends Fragment {
 
         initViews(view);
         initViewModel();
+        setOnClickListeners();
         setLiveDataObservers();
         configureRecyclerViewAdapter();
         setRefreshListener();
@@ -95,6 +97,20 @@ public class SingleListingFragment extends Fragment {
             public void onRefresh() {
                 refreshLayout.setRefreshing(true);
                 getListingRequest(listingData.getListingID());
+            }
+        });
+    }
+
+    private void setOnClickListeners(){
+        reserveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listingData instanceof ListingFull) {
+                    viewModel.reserveItemsRequest(getContext(),listingData);
+                } else {
+                    Toast.makeText(getContext() , "please wait for the listing to be fetched from the server", Toast.LENGTH_SHORT).show();
+                }
+                
             }
         });
     }

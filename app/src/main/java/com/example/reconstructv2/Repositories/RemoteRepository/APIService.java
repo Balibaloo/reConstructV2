@@ -10,6 +10,7 @@ import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
+import com.example.reconstructv2.Models.ListingFull;
 
 import java.util.List;
 
@@ -69,6 +70,10 @@ public interface APIService {
     @GET("/auth/getListing")
     Call<SingleListingAPIResponse> getListingAuthenticated(@Header("Authorisation") String AuthHeaderToken,
                                                            @Query("listingID") String listingID);
+
+    @POST("/auth/reserveItems")
+    Call<BaseAPIResponse> reserveItemsRequest(@Header("Authorisation") String AuthHeaderToken,
+                                              @Query("listingItemIDList") List<String> listingItemIDs);
 
     @GET("/getListingNoAuth")
     Call<SingleListingAPIResponse> getListingNoAuth(@Query("listingID") String listingID);
