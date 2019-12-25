@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -15,7 +14,6 @@ import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.reconstructv2.Fragments.Results.ResultsFragmentDirections;
 import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.Helpers.UserInfo;
@@ -37,15 +34,13 @@ import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.Models.User;
 import com.example.reconstructv2.R;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 
 public class FinishCreateUserFragment extends Fragment {
 
     private FinishCreateUserViewModel finishCreateUserViewModel;
 
     private ConstraintLayout constraintLayoutContainer;
+
 
     private EditText firstNameEditText;
     private EditText lastNameEditText;
@@ -80,23 +75,11 @@ public class FinishCreateUserFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
 
-        finishCreateUserViewModel = ViewModelProviders.of(this).get(FinishCreateUserViewModel.class);
-
-        constraintLayoutContainer = view.findViewById(R.id.finishCreateUserContainer);
-
-        firstNameEditText = view.findViewById(R.id.editTextFirstName);
-        lastNameEditText = view.findViewById(R.id.editTextLastName);
-        phoneNumberEditText = view.findViewById(R.id.editTextPhoneNumber);
-
-        submitButton = view.findViewById(R.id.buttonSubmit);
-        testConnectionButton = view.findViewById(R.id.buttonTestConnection);
-
-        addOnTextChangedListeners();
+        initViews(view);
+        initViewModel();
+        setOnTextChangedListeners();
         setOnClickListeners();
         setLiveDataObservers();
-
-
-
 
         phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -107,8 +90,8 @@ public class FinishCreateUserFragment extends Fragment {
                     submitButton.callOnClick();
                     handled = true;
                 }
-                return handled;
 
+                return handled;
             }
         });
 
@@ -124,7 +107,23 @@ public class FinishCreateUserFragment extends Fragment {
                 InputValidator.validatePhone(phoneNumberEditText, "phone number"));
     }
 
+    private void initViews(View view){
+        constraintLayoutContainer = view.findViewById(R.id.finishCreateUserContainer);
+
+        firstNameEditText = view.findViewById(R.id.editTextFirstName);
+        lastNameEditText = view.findViewById(R.id.editTextLastName);
+        phoneNumberEditText = view.findViewById(R.id.editTextPhoneNumber);
+
+        submitButton = view.findViewById(R.id.buttonSubmit);
+        testConnectionButton = view.findViewById(R.id.buttonTestConnection);
+    }
+
+    private void initViewModel(){
+        finishCreateUserViewModel = ViewModelProviders.of(this).get(FinishCreateUserViewModel.class);
+    }
+
     private void sendCreateRequest() {
+
         String username = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getUsername();
         String password = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getPassword();
         String first_name = firstNameEditText.getText().toString();
@@ -138,7 +137,7 @@ public class FinishCreateUserFragment extends Fragment {
         finishCreateUserViewModel.createUserRequest(newUser);
     }
 
-    private void addOnTextChangedListeners(){
+    private void setOnTextChangedListeners(){
         firstNameEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -148,12 +147,12 @@ public class FinishCreateUserFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                InputValidator.validateName(firstNameEditText,"first name");
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                InputValidator.validateName(firstNameEditText,"first name");
             }
         });
 
@@ -165,12 +164,12 @@ public class FinishCreateUserFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                InputValidator.validateName(lastNameEditText, "last name");
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                InputValidator.validateName(lastNameEditText, "last name");
             }
         });
 
@@ -182,27 +181,12 @@ public class FinishCreateUserFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                phoneNumberEditText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        InputValidator.validatePhone(phoneNumberEditText,"phone number");
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
-                });
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                InputValidator.validatePhone(phoneNumberEditText,"phone number");
             }
         });
     }

@@ -48,6 +48,8 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
 
         String rootURL = mContext.getResources().getString(R.string.ROOTURL);
 
+        System.out.println(currItem.getImageIDArray());
+
         String imageUrl = rootURL + "/getImage?imageID=" + currItem.getImageIDArray().get(0);
         Picasso.get().load(imageUrl).into(holder.itemImage);
         holder.TextViewname.setText(currItem.getName());

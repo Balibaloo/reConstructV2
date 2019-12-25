@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.MainNavGraphDirections;
+import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.Models.ListingFull;
@@ -75,8 +76,10 @@ public class SingleListingFragment extends Fragment {
         setRefreshListener();
 
         if (SingleListingFragmentArgs.fromBundle(getArguments()).getShouldRefresh()) {
+            System.out.println("should refresh");
             this.getListingRequest(SingleListingFragmentArgs.fromBundle(getArguments()).getListingID());
         } else {
+            System.out.println("should not refresh");
             listingData = SingleListingFragmentArgs.fromBundle(getArguments()).getListingFullArg();
             setListing(listingData);
             recyclerAdapter.setListingItems(listingData.getItemList());
@@ -171,9 +174,18 @@ public class SingleListingFragment extends Fragment {
     }
 
     private void setLiveDataObservers(){
+        viewModel.getBaseAPIResponseLiveData().observe(this, new Observer<BaseAPIResponse>() {
+            @Override
+            public void onChanged(BaseAPIResponse baseAPIResponse) {
+                Toast.makeText(getContext(), baseAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         viewModel.getListingLiveData().observe(this, new Observer<SingleListingAPIResponse>() {
             @Override
             public void onChanged(SingleListingAPIResponse singleListingAPIResponse) {
+                System.out.println("received data from server");
                 listingData = singleListingAPIResponse.getListing();
                 setListing(listingData);
                 recyclerAdapter.setListingItems(listingData.getItemList());

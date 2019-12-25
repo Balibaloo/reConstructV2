@@ -1,5 +1,7 @@
 package com.example.reconstructv2.Models;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

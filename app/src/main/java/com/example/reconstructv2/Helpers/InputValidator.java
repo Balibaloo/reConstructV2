@@ -2,6 +2,8 @@ package com.example.reconstructv2.Helpers;
 
 import android.widget.EditText;
 
+import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
+
 import java.util.List;
 
 public class InputValidator {
@@ -114,7 +116,5 @@ public class InputValidator {
         }
 
     }
-
-
 
 }

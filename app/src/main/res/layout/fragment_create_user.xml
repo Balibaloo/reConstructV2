@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.CreateUser.CreateUserFragment"
-    android:background="@drawable/custom_background">
+    android:background="@drawable/custom_background"
+    tools:context=".Fragments.CreateUser.CreateUserFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -16,13 +17,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/editTextCreateUsername"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/username"
-            android:inputType="text" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextCreateUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/username"
+                android:inputType="text" />
+
+            <ImageView
+                android:id="@+id/iconUsernameStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@android:drawable/stat_notify_sync"
+                android:contentDescription="@string/username_field" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextCreateEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
+            <ImageView
+                android:id="@+id/iconEmailStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@android:drawable/stat_notify_sync" />
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
@@ -30,7 +69,7 @@
 
         <EditText
             android:id="@+id/editTextCreatePassword"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/password"
@@ -39,22 +78,15 @@
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp" />
-
         <EditText
             android:id="@+id/editTextCreatePasswordRepeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password_again"
             android:ems="10"
+            android:hint="@string/password_again"
             android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/editTextCreateEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+
 
     </LinearLayout>
 

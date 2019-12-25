@@ -1,9 +1,12 @@
 package com.example.reconstructv2.Models;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+    @Nullable
     private String password;
 
     @SerializedName("username")
@@ -23,7 +26,7 @@ public class User {
 
 
 
-    public User(String username,String password,String  first_name,String last_name,String email,Integer phone){
+    public User(String username, @Nullable String password, String  first_name, String last_name, String email, Integer phone){
         this.username = username;
         this.password = password;
         this.first_name = first_name;
@@ -41,11 +44,12 @@ public class User {
         this.username = username;
     }
 
+    @Nullable
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@Nullable String password) {
         this.password = password;
     }
 

@@ -1,7 +1,8 @@
 package com.example.reconstructv2.Repositories.RemoteRepository;
 
 import android.app.Application;
-import android.util.Base64;
+import android.content.Context;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -15,8 +16,8 @@ import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
-import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.User;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -28,7 +29,9 @@ import retrofit2.Response;
 public class APIRepository {
     private APIService apiService;
 
-    private MutableLiveData<CheckAvailableAPIResponse> CheckAvailableAPIResponseMutableLiveData;
+    private MutableLiveData<CheckAvailableAPIResponse> CheckUsernameAvailableAPIResponseMutableLiveData;
+    private MutableLiveData<CheckAvailableAPIResponse> CheckEmailAvailableAPIResponseMutableLiveData;
+
     private MutableLiveData<BaseAPIResponse> baseAPIResponseMutableLiveData;
     private MutableLiveData<ListingIDAPIResponse> listingIDAPIResponseMutableLiveData;
     private MutableLiveData<ListingListAPIResponse> listingListAPIResponseMutableLiveData;
@@ -38,10 +41,13 @@ public class APIRepository {
     private MutableLiveData<DesiredItemsAPIResponse> desiredItemsAPIResponseMutableLiveData;
     private MutableLiveData<ImageIDAPIResponse> imageIDAPIResponseMutableLiveData;
 
+    private Context mContext;
+
     public APIRepository(Application application) {
         this.apiService = RetroFactory.getRetrofitInstance();
 
-        this.CheckAvailableAPIResponseMutableLiveData = new MutableLiveData<>();
+        this.CheckUsernameAvailableAPIResponseMutableLiveData = new MutableLiveData<>();
+        this.CheckEmailAvailableAPIResponseMutableLiveData = new MutableLiveData<>();
         this.baseAPIResponseMutableLiveData = new MutableLiveData<>();
         this.listingIDAPIResponseMutableLiveData = new MutableLiveData<>();
         this.listingListAPIResponseMutableLiveData = new MutableLiveData<>();
@@ -51,6 +57,7 @@ public class APIRepository {
         this.desiredItemsAPIResponseMutableLiveData = new MutableLiveData<>();
         this.imageIDAPIResponseMutableLiveData = new MutableLiveData<>();
 
+        this.mContext = application.getApplicationContext();
 
     }
 
@@ -59,8 +66,12 @@ public class APIRepository {
     }
 
 
-    public MutableLiveData<CheckAvailableAPIResponse> getCheckAvailableAPIResponseMutableLiveData() {
-        return CheckAvailableAPIResponseMutableLiveData;
+    public MutableLiveData<CheckAvailableAPIResponse> getCheckUsernameAvailableAPIResponseMutableLiveData() {
+        return CheckUsernameAvailableAPIResponseMutableLiveData;
+    }
+
+    public MutableLiveData<CheckAvailableAPIResponse> getCheckEmailAvailableAPIResponseMutableLiveData() {
+        return CheckEmailAvailableAPIResponseMutableLiveData;
     }
 
     public MutableLiveData<BaseAPIResponse> getBaseAPIResponseMutableLiveData() {
@@ -136,7 +147,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<CheckAvailableAPIResponse> call, Response<CheckAvailableAPIResponse> response) {
                 if (response.isSuccessful()) {
-                    CheckAvailableAPIResponseMutableLiveData.setValue(response.body());
+                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(response.body());
 
                 }
 
@@ -154,7 +165,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<CheckAvailableAPIResponse> call, Response<CheckAvailableAPIResponse> response) {
                 if (response.isSuccessful()) {
-                    CheckAvailableAPIResponseMutableLiveData.setValue(response.body());
+                    CheckEmailAvailableAPIResponseMutableLiveData.setValue(response.body());
                 }
             }
 
@@ -279,11 +290,20 @@ public class APIRepository {
         });
     }
 
-    public void reserveItems(String AuthHeaderToken, List<String> listingItemIds){
-        apiService.reserveItemsRequest(AuthHeaderToken,listingItemIds).enqueue(new Callback<BaseAPIResponse>() {
+    public void reserveItems(String AuthHeaderToken, List<JsonObject> listingItems){
+
+        apiService.reserveItemsRequest(AuthHeaderToken,listingItems).enqueue(new Callback<BaseAPIResponse>() {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
-                baseAPIResponseMutableLiveData.setValue(response.body());
+                System.out.println(response.toString());
+                if (response.isSuccessful()) {
+                    baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    if (!(response.errorBody() == null)){
+                        Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show();
+                    }
+
+                }
             }
 
             @Override
@@ -370,12 +390,14 @@ public class APIRepository {
             public void onResponse(Call<UserAPIResponse> call, Response<UserAPIResponse> response) {
                 if (response.isSuccessful()) {
                     userAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -397,7 +419,6 @@ public class APIRepository {
     }
 
     public void createAccount(User userObj) {
-        System.out.println("REPOSITORY RECEIVED");
 
         apiService.createAccount(userObj.getUsername(), userObj.getPassword(), userObj.getFirst_name(), userObj.getLast_name(), userObj.getEmail(), userObj.getPhone()).enqueue(new Callback<UserTokenAPIResponse>() {
             @Override
@@ -419,8 +440,22 @@ public class APIRepository {
         });
     }
 
-    public void saveImageonServer(String temp_imageID, MultipartBody.Part file) {
-        apiService.saveImageonServer(temp_imageID, file).enqueue(new Callback<ImageIDAPIResponse>() {
+    public void saveUser(String authHeaderToken,User user){
+        apiService.saveUser(authHeaderToken,user).enqueue(new Callback<BaseAPIResponse>() {
+            @Override
+            public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
+                baseAPIResponseMutableLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
+                System.out.println(t.toString());
+            }
+        });
+    }
+
+    public void saveImageonServer( MultipartBody.Part file) {
+        apiService.saveImageOnServer(file).enqueue(new Callback<ImageIDAPIResponse>() {
             @Override
             public void onResponse(Call<ImageIDAPIResponse> call, Response<ImageIDAPIResponse> response) {
                 if (response.isSuccessful()) {
