@@ -102,12 +102,7 @@ public interface APIService {
                                            @Query("new_tags") List<String> new_tags);
 
     @POST("/createAccount")
-    Call<UserTokenAPIResponse> createAccount(@Query("username") String username,
-                                             @Query("password") String password,
-                                             @Query("first_name") String first_name,
-                                             @Query("last_name") String last_name,
-                                             @Query("email") String email,
-                                             @Query("phone") Integer phone);
+    Call<UserTokenAPIResponse> createAccount(@Body User user);
 
     @POST("/auth/update_user_data")
     Call<BaseAPIResponse> saveUser(@Header("authorisation") String AuthHeaderToken,

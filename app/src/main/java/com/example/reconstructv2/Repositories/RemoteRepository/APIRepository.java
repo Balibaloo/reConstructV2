@@ -462,7 +462,7 @@ public class APIRepository {
 
     public void createAccount(final User userObj) {
 
-        apiService.createAccount(userObj.getUsername(), userObj.getPassword(), userObj.getFirst_name(), userObj.getLast_name(), userObj.getEmail(), userObj.getPhone()).enqueue(new Callback<UserTokenAPIResponse>() {
+        apiService.createAccount(userObj).enqueue(new Callback<UserTokenAPIResponse>() {
             @Override
             public void onResponse(Call<UserTokenAPIResponse> call, Response<UserTokenAPIResponse> response) {
                 if (response.isSuccessful()) {
