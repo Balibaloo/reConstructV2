@@ -156,12 +156,16 @@ public class LogInFragment extends Fragment {
             @Override
             public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
                 swipeRefreshLayout.setRefreshing(false);
-                UserInfo.setIsLoggedIn(getContext(),true);
-                UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
-                UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
-                Navigation.findNavController(getView()).navigate(R.id.homeFragment2);
 
-                Toast.makeText(getContext(), userTokenAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                if (userTokenAPIResponse.getSuccesfull()) {
+                    UserInfo.setIsLoggedIn(getContext(),true);
+                    UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
+                    UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
+                    Navigation.findNavController(getView()).navigate(R.id.homeFragment2);
+
+                    Toast.makeText(getContext(), userTokenAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

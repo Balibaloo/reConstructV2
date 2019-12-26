@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.reconstructv2.Helpers.AuthenticationHelper;
+import com.example.reconstructv2.Helpers.RequestErrorHandler;
 import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.DesiredItemsAPIResponse;
@@ -114,13 +115,13 @@ public class APIRepository {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
-                    System.out.println("test request failed : " + response.message());
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println("test request failed on Failure : " + t.toString());
+                System.out.println(t);
             }
         });
     }
@@ -131,12 +132,14 @@ public class APIRepository {
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue((response.body()));
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
 
@@ -148,14 +151,15 @@ public class APIRepository {
             public void onResponse(Call<CheckAvailableAPIResponse> call, Response<CheckAvailableAPIResponse> response) {
                 if (response.isSuccessful()) {
                     CheckUsernameAvailableAPIResponseMutableLiveData.setValue(response.body());
-
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
 
             }
 
             @Override
             public void onFailure(Call<CheckAvailableAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -166,12 +170,14 @@ public class APIRepository {
             public void onResponse(Call<CheckAvailableAPIResponse> call, Response<CheckAvailableAPIResponse> response) {
                 if (response.isSuccessful()) {
                     CheckEmailAvailableAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<CheckAvailableAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -182,12 +188,14 @@ public class APIRepository {
             public void onResponse(Call<ListingIDAPIResponse> call, Response<ListingIDAPIResponse> response) {
                 if (response.isSuccessful()) {
                     listingIDAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingIDAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -198,12 +206,14 @@ public class APIRepository {
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -214,12 +224,14 @@ public class APIRepository {
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -230,12 +242,14 @@ public class APIRepository {
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
                 if (response.isSuccessful()) {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -246,12 +260,14 @@ public class APIRepository {
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
                 if (response.isSuccessful()) {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -263,6 +279,8 @@ public class APIRepository {
             public void onResponse(Call<SingleListingAPIResponse> call, Response<SingleListingAPIResponse> response) {
                 if (response.isSuccessful()) {
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
@@ -280,12 +298,14 @@ public class APIRepository {
             public void onResponse(Call<SingleListingAPIResponse> call, Response<SingleListingAPIResponse> response) {
                 if (response.isSuccessful()) {
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<SingleListingAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -299,16 +319,13 @@ public class APIRepository {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
-                    if (!(response.errorBody() == null)){
-                        Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show();
-                    }
-
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -320,13 +337,13 @@ public class APIRepository {
                 if (response.isSuccessful()) {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
-                    System.out.println("LISTING REQUEST FAILED ?????????????");
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-                System.out.println("LISTING REQUEST FAILED 2 ?????????????");
+                System.out.println(t);
             }
 
 
@@ -337,12 +354,17 @@ public class APIRepository {
         apiService.getFilteredListings(searchString, pageNum).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
+                if (response.isSuccessful()){
+                    listingListAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
+                }
 
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -353,12 +375,14 @@ public class APIRepository {
             public void onResponse(Call<DesiredItemsAPIResponse> call, Response<DesiredItemsAPIResponse> response) {
                 if (response.isSuccessful()) {
                     desiredItemsAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<DesiredItemsAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -370,16 +394,16 @@ public class APIRepository {
             @Override
             public void onResponse(Call<UserTokenAPIResponse> call, Response<UserTokenAPIResponse> response) {
                 if (response.isSuccessful()) {
-                    System.out.println("data set");
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
-                    System.out.println("NOT SUCCESFULL");
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
+                    userTokenAPIResponseMutableLiveData.setValue(new UserTokenAPIResponse(false));
                 }
             }
 
             @Override
             public void onFailure(Call<UserTokenAPIResponse> call, Throwable t) {
-                System.out.println(t.getMessage());
+                System.out.println(t);
             }
         });
     }
@@ -391,7 +415,7 @@ public class APIRepository {
                 if (response.isSuccessful()) {
                     userAPIResponseMutableLiveData.setValue(response.body());
                 } else {
-                    Toast.makeText(mContext, response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
@@ -408,12 +432,14 @@ public class APIRepository {
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -426,11 +452,8 @@ public class APIRepository {
                 if (response.isSuccessful()) {
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
-                    System.out.println("Not succesfull");
-                    System.out.println(response.errorBody());
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
-
-
             }
 
             @Override
@@ -444,12 +467,16 @@ public class APIRepository {
         apiService.saveUser(authHeaderToken,user).enqueue(new Callback<BaseAPIResponse>() {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
-                baseAPIResponseMutableLiveData.setValue(response.body());
+                if (response.isSuccessful()){
+                    baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
+                }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t.toString());
+                System.out.println(t);
             }
         });
     }
@@ -460,12 +487,14 @@ public class APIRepository {
             public void onResponse(Call<ImageIDAPIResponse> call, Response<ImageIDAPIResponse> response) {
                 if (response.isSuccessful()) {
                     imageIDAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<ImageIDAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
@@ -476,12 +505,14 @@ public class APIRepository {
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
                     baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-
+                System.out.println(t);
             }
         });
     }
