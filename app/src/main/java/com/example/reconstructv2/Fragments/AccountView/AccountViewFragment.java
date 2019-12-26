@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
 import com.example.reconstructv2.Helpers.InputValidator;
+import com.example.reconstructv2.Helpers.KeyboardHelper;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
@@ -170,7 +171,15 @@ public class AccountViewFragment extends Fragment {
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard(getActivity());
+                //KeyboardHelper.hideSoftKeyboard(getActivity());
+                System.out.println("clicked on constraint");
+            }
+        });
+
+        swipeRefreshLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("clicked on refresh");
             }
         });
     }
@@ -200,7 +209,6 @@ public class AccountViewFragment extends Fragment {
             public void onChanged(UserAPIResponse userAPIResponse) {
                 setUserAccount(userAPIResponse.getUserProfile());
                 swipeRefreshLayout.setRefreshing(false);
-
             }
         });
 
@@ -358,14 +366,6 @@ public class AccountViewFragment extends Fragment {
 
 
 
-    }
-
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     private boolean validateAll(){

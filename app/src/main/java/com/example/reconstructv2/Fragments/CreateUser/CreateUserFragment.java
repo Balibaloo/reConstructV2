@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,11 +21,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.reconstructv2.Helpers.InputValidator;
+import com.example.reconstructv2.Helpers.KeyboardHelper;
 import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.R;
 
 
 public class CreateUserFragment extends Fragment {
+    private ConstraintLayout container;
 
     private CreateUserViewModel viewModel;
 
@@ -95,7 +98,7 @@ public class CreateUserFragment extends Fragment {
 
     private void initViews(View view){
 
-
+        container = view.findViewById(R.id.containerCreate);
 
         usernameEditText = view.findViewById(R.id.editTextCreateUsername);
         usernameStatusIco = view.findViewById(R.id.iconUsernameStatus);
@@ -114,6 +117,13 @@ public class CreateUserFragment extends Fragment {
     }
 
     private void setOnClickListeners(){
+        container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                KeyboardHelper.hideSoftKeyboard(getActivity());
+            }
+        });
+
         // on next button pressed navigate to finish create with arguments
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override

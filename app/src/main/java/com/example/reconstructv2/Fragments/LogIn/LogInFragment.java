@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reconstructv2.Helpers.AuthenticationHelper;
+import com.example.reconstructv2.Helpers.KeyboardHelper;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.R;
@@ -35,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class LogInFragment extends Fragment {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ConstraintLayout constraintLayout;
     private EditText usernameTextEdit;
     private EditText passwordTextEdit;
@@ -78,6 +81,7 @@ public class LogInFragment extends Fragment {
     }
 
     private void initViewObjects(View view){
+        swipeRefreshLayout = view.findViewById(R.id.logInRefreshLayout);
         constraintLayout = view.findViewById(R.id.logInContainer);
         usernameTextEdit = view.findViewById(R.id.EditTextLogInUsername);
         passwordTextEdit = view.findViewById(R.id.EditTextLogInPassword);
@@ -104,7 +108,7 @@ public class LogInFragment extends Fragment {
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard(getActivity());
+                KeyboardHelper.hideSoftKeyboard(getActivity());
             }
         });
 
@@ -141,9 +145,9 @@ public class LogInFragment extends Fragment {
 
 
     private void logIn(String username, String saltedHashedPassword){
+        swipeRefreshLayout.setRefreshing(true);
         logInViewModel.fetchLogInUser(username,saltedHashedPassword);
-
-        hideSoftKeyboard(getActivity());
+        KeyboardHelper.hideSoftKeyboard(getActivity());
 
     }
 
@@ -151,8 +155,7 @@ public class LogInFragment extends Fragment {
         logInViewModel.getUserTokenAPIResponseMutableLiveData().observe(this, new Observer<UserTokenAPIResponse>() {
             @Override
             public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
-                // add code to "log in" user
-
+                swipeRefreshLayout.setRefreshing(false);
                 UserInfo.setIsLoggedIn(getContext(),true);
                 UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
                 UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
@@ -161,14 +164,6 @@ public class LogInFragment extends Fragment {
                 Toast.makeText(getContext(), userTokenAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override
