@@ -46,8 +46,8 @@ public interface APIService {
 
     @POST("/auth/createListing")
     Call<ListingIDAPIResponse> createListing(@Header("authorisation") String AuthHeaderToken,
-                                             @Query("title") Integer title,
-                                             @Query("body") Integer body,
+                                             @Query("title") String title,
+                                             @Query("body") String body,
                                              @Query("end_date") String end_date,
                                              @Query("location") String location,
                                              @Body List<Integer> itemList,

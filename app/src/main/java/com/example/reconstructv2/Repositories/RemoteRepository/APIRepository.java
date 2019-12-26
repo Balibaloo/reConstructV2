@@ -185,7 +185,7 @@ public class APIRepository {
         });
     }
 
-    public void createListing(String AuthHeaderToken, Integer title, Integer body, String end_date, String location, List<Integer> pageNum, String main_photoID) {
+    public void createListing(String AuthHeaderToken, String title, String body, String end_date, String location, List<Integer> pageNum, String main_photoID) {
         apiService.createListing(AuthHeaderToken, title, body, end_date, location, pageNum, main_photoID).enqueue(new Callback<ListingIDAPIResponse>() {
             @Override
             public void onResponse(Call<ListingIDAPIResponse> call, Response<ListingIDAPIResponse> response) {
