@@ -111,11 +111,11 @@ public class SingleListingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (listingData instanceof ListingFull) {
+                    refreshLayout.setRefreshing(true);
                     viewModel.reserveItemsRequest(getContext(),listingData);
                 } else {
                     Toast.makeText(getContext() , "please wait for the listing to be fetched from the server", Toast.LENGTH_SHORT).show();
                 }
-                
             }
         });
     }
@@ -176,20 +176,27 @@ public class SingleListingFragment extends Fragment {
     private void setLiveDataObservers(){
         viewModel.getBaseAPIResponseLiveData().observe(this, new Observer<BaseAPIResponse>() {
             @Override
-            public void onChanged(BaseAPIResponse baseAPIResponse) {
-                Toast.makeText(getContext(), baseAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onChanged(BaseAPIResponse response) {
+                refreshLayout.setRefreshing(false);
+
+                if (response.getSuccesfull()){
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
 
         viewModel.getListingLiveData().observe(this, new Observer<SingleListingAPIResponse>() {
             @Override
-            public void onChanged(SingleListingAPIResponse singleListingAPIResponse) {
-                System.out.println("received data from server");
-                listingData = singleListingAPIResponse.getListing();
-                setListing(listingData);
-                recyclerAdapter.setListingItems(listingData.getItemList());
+            public void onChanged(SingleListingAPIResponse response) {
                 refreshLayout.setRefreshing(false);
+
+                if (response.getSuccesfull()){
+                    listingData = response.getListing();
+                    setListing(listingData);
+                    recyclerAdapter.setListingItems(listingData.getItemList());
+                }
             }
         });
 

@@ -1,6 +1,5 @@
 package com.example.reconstructv2.Fragments.LogIn;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,10 +27,6 @@ import com.example.reconstructv2.Helpers.KeyboardHelper;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.R;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 
 
 public class LogInFragment extends Fragment {
@@ -73,14 +67,14 @@ public class LogInFragment extends Fragment {
 
         logInViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
 
-        initViewObjects(view);
-        initOnClickListeners(view);
+        initViews(view);
+        setOnClickListeners();
         setLiveDataObservers();
 
 
     }
 
-    private void initViewObjects(View view){
+    private void initViews(View view){
         swipeRefreshLayout = view.findViewById(R.id.logInRefreshLayout);
         constraintLayout = view.findViewById(R.id.logInContainer);
         usernameTextEdit = view.findViewById(R.id.EditTextLogInUsername);
@@ -91,7 +85,7 @@ public class LogInFragment extends Fragment {
         createAccountButton = view.findViewById(R.id.create_account_Button);
     }
 
-    private void initOnClickListeners(View  view){
+    private void setOnClickListeners(){
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,9 +93,7 @@ public class LogInFragment extends Fragment {
                 String password = passwordTextEdit.getText().toString();
                 String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),username,password);
 
-                logIn(username,saltedHashedPassword);
-
-
+                sendLogInRequest(username,saltedHashedPassword);
             }
         });
 
@@ -142,28 +134,25 @@ public class LogInFragment extends Fragment {
         });
     }
 
-
-
-    private void logIn(String username, String saltedHashedPassword){
+    private void sendLogInRequest(String username, String saltedHashedPassword){
         swipeRefreshLayout.setRefreshing(true);
         logInViewModel.fetchLogInUser(username,saltedHashedPassword);
         KeyboardHelper.hideSoftKeyboard(getActivity());
-
     }
 
     private void setLiveDataObservers(){
         logInViewModel.getUserTokenAPIResponseMutableLiveData().observe(this, new Observer<UserTokenAPIResponse>() {
             @Override
-            public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
+            public void onChanged(UserTokenAPIResponse response) {
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (userTokenAPIResponse.getSuccesfull()) {
+                if (response.getSuccesfull()) {
                     UserInfo.setIsLoggedIn(getContext(),true);
-                    UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
-                    UserInfo.setSelfUserID(getContext(),userTokenAPIResponse.getUserID());
+                    UserInfo.setToken(getContext(),response.getUserToken());
+                    UserInfo.setSelfUserID(getContext(),response.getUserID());
                     Navigation.findNavController(getView()).navigate(R.id.homeFragment2);
 
-                    Toast.makeText(getContext(), userTokenAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }

@@ -27,7 +27,7 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="phone_number">Phone Number</string>
-    <string name="submit_button">Next</string>
+    <string name="submit_button">Submit</string>
     <string name="email">Email</string>
     <string name="password_again">Password Again</string>
     <string name="samplePhoneNumber">1234</string>

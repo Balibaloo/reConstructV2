@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +40,7 @@ public class FinishCreateUserFragment extends Fragment {
 
     private FinishCreateUserViewModel finishCreateUserViewModel;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ConstraintLayout constraintLayoutContainer;
 
 
@@ -46,7 +48,6 @@ public class FinishCreateUserFragment extends Fragment {
     private EditText lastNameEditText;
     private EditText phoneNumberEditText;
 
-    private Button testConnectionButton;
     private Button submitButton;
 
     private OnFragmentInteractionListener mListener;
@@ -108,6 +109,7 @@ public class FinishCreateUserFragment extends Fragment {
     }
 
     private void initViews(View view){
+        swipeRefreshLayout = view.findViewById(R.id.finishCreateUserSwipeRefreshLayout);
         constraintLayoutContainer = view.findViewById(R.id.finishCreateUserContainer);
 
         firstNameEditText = view.findViewById(R.id.editTextFirstName);
@@ -115,7 +117,6 @@ public class FinishCreateUserFragment extends Fragment {
         phoneNumberEditText = view.findViewById(R.id.editTextPhoneNumber);
 
         submitButton = view.findViewById(R.id.buttonSubmit);
-        testConnectionButton = view.findViewById(R.id.buttonTestConnection);
     }
 
     private void initViewModel(){
@@ -134,6 +135,7 @@ public class FinishCreateUserFragment extends Fragment {
         String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),password,username);
         User newUser = new User(username, saltedHashedPassword, first_name, last_name, email, phone);
 
+        swipeRefreshLayout.setRefreshing(true);
         finishCreateUserViewModel.createUserRequest(newUser);
     }
 
@@ -212,37 +214,24 @@ public class FinishCreateUserFragment extends Fragment {
             }
         });
 
-        testConnectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishCreateUserViewModel.testConnectionRequest();
-            }
-        });
     }
 
     private void setLiveDataObservers(){
         finishCreateUserViewModel.getUserTokenAPIResponse().observe(this, new Observer<UserTokenAPIResponse>() {
             @Override
-            public void onChanged(UserTokenAPIResponse userTokenAPIResponse) {
-                // go to results
-                // implement on failue flag
+            public void onChanged(UserTokenAPIResponse response) {
+                swipeRefreshLayout.setRefreshing(false);
 
-                UserInfo.setIsLoggedIn(getContext(),true);
-                UserInfo.setToken(getContext(),userTokenAPIResponse.getUserToken());
+                if (response.getSuccesfull()) {
+                    UserInfo.setIsLoggedIn(getContext(),true);
+                    UserInfo.setToken(getContext(),response.getUserToken());
 
-                MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createUserFragment);
-                action.setIsSuccess(true);
-                action.setMessage(userTokenAPIResponse.getMessage());
+                    MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createUserFragment);
+                    action.setIsSuccess(true);
+                    action.setMessage(response.getMessage());
 
-                Navigation.findNavController(getView()).navigate(action);
-            }
-        });
-
-
-        finishCreateUserViewModel.getBaseAPIResponse().observe(this, new Observer<BaseAPIResponse>() {
-            @Override
-            public void onChanged(BaseAPIResponse baseAPIResponse) {
-                Toast.makeText(getContext(), baseAPIResponse.getTestVariable(), Toast.LENGTH_SHORT).show();
+                    Navigation.findNavController(getView()).navigate(action);
+                }
             }
         });
 

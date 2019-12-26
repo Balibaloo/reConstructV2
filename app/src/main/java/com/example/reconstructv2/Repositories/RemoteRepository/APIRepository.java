@@ -66,7 +66,6 @@ public class APIRepository {
         return apiService;
     }
 
-
     public MutableLiveData<CheckAvailableAPIResponse> getCheckUsernameAvailableAPIResponseMutableLiveData() {
         return CheckUsernameAvailableAPIResponseMutableLiveData;
     }
@@ -116,6 +115,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -134,6 +134,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue((response.body()));
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -153,6 +154,7 @@ public class APIRepository {
                     CheckUsernameAvailableAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(new CheckAvailableAPIResponse(false));
                 }
 
             }
@@ -172,6 +174,7 @@ public class APIRepository {
                     CheckEmailAvailableAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(new CheckAvailableAPIResponse(false));
                 }
             }
 
@@ -190,6 +193,7 @@ public class APIRepository {
                     listingIDAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    listingIDAPIResponseMutableLiveData.setValue(new ListingIDAPIResponse(false));
                 }
             }
 
@@ -208,6 +212,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -226,6 +231,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -244,6 +250,7 @@ public class APIRepository {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
                 }
             }
 
@@ -262,6 +269,7 @@ public class APIRepository {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
                 }
             }
 
@@ -281,6 +289,7 @@ public class APIRepository {
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    singleListingAPIResponseMutableLiveData.setValue(new SingleListingAPIResponse(false));
                 }
             }
 
@@ -300,6 +309,7 @@ public class APIRepository {
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    singleListingAPIResponseMutableLiveData.setValue(new SingleListingAPIResponse(false));
                 }
             }
 
@@ -320,6 +330,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -338,6 +349,7 @@ public class APIRepository {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
                 }
             }
 
@@ -358,6 +370,7 @@ public class APIRepository {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
                 }
 
             }
@@ -377,6 +390,7 @@ public class APIRepository {
                     desiredItemsAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    desiredItemsAPIResponseMutableLiveData.setValue(new DesiredItemsAPIResponse(false));
                 }
             }
 
@@ -408,7 +422,7 @@ public class APIRepository {
         });
     }
 
-    public void getUserProfile(String userID) {
+    public void getUserProfile(final String userID) {
         apiService.getUserProfile(userID).enqueue(new Callback<UserAPIResponse>() {
             @Override
             public void onResponse(Call<UserAPIResponse> call, Response<UserAPIResponse> response) {
@@ -416,6 +430,7 @@ public class APIRepository {
                     userAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    userAPIResponseMutableLiveData.setValue(new UserAPIResponse(false));
                 }
             }
 
@@ -434,6 +449,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -444,7 +460,7 @@ public class APIRepository {
         });
     }
 
-    public void createAccount(User userObj) {
+    public void createAccount(final User userObj) {
 
         apiService.createAccount(userObj.getUsername(), userObj.getPassword(), userObj.getFirst_name(), userObj.getLast_name(), userObj.getEmail(), userObj.getPhone()).enqueue(new Callback<UserTokenAPIResponse>() {
             @Override
@@ -453,6 +469,7 @@ public class APIRepository {
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    userTokenAPIResponseMutableLiveData.setValue(new UserTokenAPIResponse(false));
                 }
             }
 
@@ -471,6 +488,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 
@@ -489,6 +507,7 @@ public class APIRepository {
                     imageIDAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    imageIDAPIResponseMutableLiveData.setValue(new ImageIDAPIResponse(false));
                 }
             }
 
@@ -507,6 +526,7 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
                 }
             }
 

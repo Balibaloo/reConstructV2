@@ -73,11 +73,13 @@ public class HomeFragment extends Fragment {
     private void setLiveDataObservers() {
         homeViewModel.getListingListAPIResponse().observe(this, new Observer<ListingListAPIResponse>() {
             @Override
-            public void onChanged(ListingListAPIResponse listingListAPIResponse) {
-                homeViewModel.deleteAll();
-                recyclerAdapter.setListings(listingListAPIResponse.getListings());
+            public void onChanged(ListingListAPIResponse response) {
                 refreshLayout.setRefreshing(false);
 
+                if (response.getSuccesfull()){
+                    homeViewModel.deleteAll();
+                    recyclerAdapter.setListings(response.getListings());
+                }
             }
         });
     }

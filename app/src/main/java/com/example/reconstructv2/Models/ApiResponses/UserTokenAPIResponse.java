@@ -1,5 +1,7 @@
 package com.example.reconstructv2.Models.ApiResponses;
 
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 public class UserTokenAPIResponse extends BaseAPIResponse {
@@ -9,6 +11,10 @@ public class UserTokenAPIResponse extends BaseAPIResponse {
 
     @SerializedName("userID")
     private String userID;
+
+    public UserTokenAPIResponse(@Nullable Boolean isSuccesfull) {
+        super(isSuccesfull);
+    }
 
     public String getUserToken() {
         return token;

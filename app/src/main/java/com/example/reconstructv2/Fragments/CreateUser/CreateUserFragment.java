@@ -164,14 +164,17 @@ public class CreateUserFragment extends Fragment {
 
         viewModel.getUsernameIsAvailableLiveData().observe(this, new Observer<CheckAvailableAPIResponse>() {
             @Override
-            public void onChanged(CheckAvailableAPIResponse checkAvailableAPIResponse) {
-                if (checkAvailableAPIResponse.getIs_unused()) {
-                    usernameStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
-                    usernameIsUniqueue = true;
-                } else {
-                    usernameEditText.setError("This Username is Already in Use");
-                    usernameStatusIco.setImageResource(R.drawable.ic_cross_red_24dp);
-                    usernameIsUniqueue = false;
+            public void onChanged(CheckAvailableAPIResponse response) {
+
+                if (response.getSuccesfull()) {
+                    if (response.getIs_unused()) {
+                        usernameStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
+                        usernameIsUniqueue = true;
+                    } else {
+                        usernameEditText.setError("This Username is Already in Use");
+                        usernameStatusIco.setImageResource(R.drawable.ic_cross_red_24dp);
+                        usernameIsUniqueue = false;
+                    }
                 }
             }
         });
@@ -179,15 +182,19 @@ public class CreateUserFragment extends Fragment {
 
         viewModel.getEmailIsAvailableLiveData().observe(this, new Observer<CheckAvailableAPIResponse>() {
             @Override
-            public void onChanged(CheckAvailableAPIResponse checkAvailableAPIResponse) {
-                if (checkAvailableAPIResponse.getIs_unused()) {
-                    emailStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
-                    emailIsUniqueue = true;
-                } else {
-                    emailEditText.setError("This Email is Already in Use");
-                    emailStatusIco.setImageResource(R.drawable.ic_cross_red_24dp);
-                    emailIsUniqueue = false;
+            public void onChanged(CheckAvailableAPIResponse response) {
+
+                if (response.getSuccesfull()) {
+                    if (response.getIs_unused()) {
+                        emailStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
+                        emailIsUniqueue = true;
+                    } else {
+                        emailEditText.setError("This Email is Already in Use");
+                        emailStatusIco.setImageResource(R.drawable.ic_cross_red_24dp);
+                        emailIsUniqueue = false;
+                    }
                 }
+
             }
         });
     }
