@@ -67,7 +67,9 @@ public class APIRepository {
     private Context mContext;
 
     public APIRepository(Application application) {
-        this.apiService = RetroFactory.getRetrofitInstance();
+        this.mContext = application.getApplicationContext();
+
+        this.apiService = RetroFactory.getRetrofitInstance(mContext);
 
         this.CheckUsernameAvailableAPIResponseMutableLiveData = new MutableLiveData<>();
         this.CheckEmailAvailableAPIResponseMutableLiveData = new MutableLiveData<>();
@@ -80,7 +82,7 @@ public class APIRepository {
         this.desiredItemsAPIResponseMutableLiveData = new MutableLiveData<>();
         this.imageIDAPIResponseMutableLiveData = new MutableLiveData<>();
 
-        this.mContext = application.getApplicationContext();
+
 
     }
 

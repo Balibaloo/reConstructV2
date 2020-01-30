@@ -157,7 +157,7 @@ public class CreateListingFragment extends Fragment {
         mainImageView.setOnClickListener(v -> {
             if (UserInfo.getIsLoggedIn(getContext())){
 
-                if (mainImageId == null) {
+                if (mainImageId == null) { // MOVE  CHECK FROM HERE
 
                     Boolean hasWritePermissions = ContextCompat.checkSelfPermission(getContext(),WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
                     if (hasWritePermissions){
@@ -332,6 +332,10 @@ public class CreateListingFragment extends Fragment {
         // fetch result from image selection
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK){
             // set main image imageID to uri
+
+
+            // MOVE CHECK TO HERE
+
 
             loadingRefeshLayout.setVisibility(View.VISIBLE);
             loadingRefeshLayout.setRefreshing(true);

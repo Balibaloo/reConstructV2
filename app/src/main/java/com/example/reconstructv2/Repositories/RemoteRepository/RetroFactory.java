@@ -1,5 +1,9 @@
 package com.example.reconstructv2.Repositories.RemoteRepository;
 
+import android.content.Context;
+import android.content.res.Resources;
+
+import com.example.reconstructv2.R;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import retrofit2.Retrofit;
@@ -7,16 +11,18 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroFactory {
-    private static final String ROOTURL = "http://82.3.163.116:1234";
-
-    public static APIService getRetrofitInstance() {
+    public static APIService getRetrofitInstance(Context mContext) {
         return new Retrofit.Builder()
-                .baseUrl(ROOTURL)
+                .baseUrl(getRooturl(mContext))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build().create(APIService.class);
 
 
     }
+
+    private static String getRooturl(Context contex){
+        return contex.getResources().getString(R.string.ROOTURL);
+    };
 
 }
