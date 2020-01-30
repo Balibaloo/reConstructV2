@@ -1,6 +1,5 @@
 package com.example.reconstructv2.Fragments.AccountView;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,14 +8,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -172,7 +169,7 @@ public class AccountViewFragment extends Fragment {
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //KeyboardHelper.hideSoftKeyboard(getActivity());
+                KeyboardHelper.hideSoftKeyboard(getActivity());
                 System.out.println("clicked on constraint");
             }
         });
@@ -199,7 +196,7 @@ public class AccountViewFragment extends Fragment {
         accountViewModel.getBaseAPIResponse().observe(this, new Observer<BaseAPIResponse>() {
             @Override
             public void onChanged(BaseAPIResponse response) {
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -211,7 +208,7 @@ public class AccountViewFragment extends Fragment {
         accountViewModel.getUserAPIResponse().observe(this, new Observer<UserAPIResponse>() {
             @Override
             public void onChanged(UserAPIResponse response) {
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     setUserAccount(response.getUserProfile());
                 }
                 swipeRefreshLayout.setRefreshing(false);
@@ -221,7 +218,7 @@ public class AccountViewFragment extends Fragment {
         accountViewModel.getUsernameIsUniqueResponse().observe(this, new Observer<CheckAvailableAPIResponse>() {
             @Override
             public void onChanged(CheckAvailableAPIResponse response) {
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     if (response.getIs_unused()) {
                         usernameStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
                         usernameIsUniqueue = true;
@@ -238,7 +235,7 @@ public class AccountViewFragment extends Fragment {
         accountViewModel.getEmailIsUniqueueResponse().observe(this, new Observer<CheckAvailableAPIResponse>() {
             @Override
             public void onChanged(CheckAvailableAPIResponse response) {
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
 
                     if (response.getIs_unused()) {
                         emailStatusIco.setImageResource(R.drawable.ic_check_white_24dp);

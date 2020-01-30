@@ -1,6 +1,8 @@
 package com.example.reconstructv2.Repositories.RemoteRepository;
 
 
+import androidx.annotation.Nullable;
+
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.DesiredItemsAPIResponse;
@@ -10,20 +12,25 @@ import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
+import com.example.reconstructv2.Models.ListingFull;
+import com.example.reconstructv2.Models.ListingToCreate;
 import com.example.reconstructv2.Models.User;
 import com.google.gson.JsonObject;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import io.reactivex.Observable;
 
 
 public interface APIService {
@@ -32,7 +39,7 @@ public interface APIService {
     Call<BaseAPIResponse> testConnection();
 
     @GET("/auth")
-    Call<BaseAPIResponse> testConnectionAuthenticated(@Header("authorisation") String AuthHeaderToken);
+    Call<BaseAPIResponse> testConnectionAuthenticated(@Header("authorization") String AuthHeaderToken);
 
     /////////////////////////////////////////////////////////
 
@@ -45,35 +52,30 @@ public interface APIService {
     /////////////////////////////////////////////////////////
 
     @POST("/auth/createListing")
-    Call<ListingIDAPIResponse> createListing(@Header("authorisation") String AuthHeaderToken,
-                                             @Query("title") String title,
-                                             @Query("body") String body,
-                                             @Query("end_date") String end_date,
-                                             @Query("location") String location,
-                                             @Body List<Integer> itemList,
-                                             @Query("main_photo") String main_photoID);
+    Call<ListingIDAPIResponse> createListing(@Header("authorization") String AuthHeaderToken,
+                                             @Body ListingFull listing);
 
     @POST("/auth/addListingtoWatchList")
-    Call<BaseAPIResponse> addListingtoWatchList(@Header("authorisation") String AuthHeaderToken,
+    Call<BaseAPIResponse> addListingtoWatchList(@Header("authorization") String AuthHeaderToken,
                                                 @Query("listingID") String listingID);
 
     @POST("/auth/removeListingfromWatchList")
-    Call<BaseAPIResponse> removeListingfromWatchList(@Header("authorisation") String AuthHeaderToken,
+    Call<BaseAPIResponse> removeListingfromWatchList(@Header("authorization") String AuthHeaderToken,
                                                      @Query("listingID") String listingID);
 
     @GET("/auth/getWatchlist")
-    Call<ListingListAPIResponse> getWatchlist(@Header("authorisation") String AuthHeaderToken);
+    Call<ListingListAPIResponse> getWatchlist(@Header("authorization") String AuthHeaderToken);
 
     @GET("/auth/getRecentListings")
-    Call<ListingListAPIResponse> getRecentListings(@Header("authorisation") String AuthHeaderToken,
+    Call<ListingListAPIResponse> getRecentListings(@Header("authorization") String AuthHeaderToken,
                                                    @Query("pageNum") Integer pageNum);
 
     @GET("/auth/getListing")
-    Call<SingleListingAPIResponse> getListingAuthenticated(@Header("authorisation") String AuthHeaderToken,
+    Call<SingleListingAPIResponse> getListingAuthenticated(@Header("authorization") String AuthHeaderToken,
                                                            @Query("listingID") String listingID);
 
     @POST("/auth/reserveItems")
-    Call<BaseAPIResponse> reserveItemsRequest(@Header("authorisation") String AuthHeaderToken,
+    Call<BaseAPIResponse> reserveItemsRequest(@Header("authorization") String AuthHeaderToken,
                                               @Query("listingItemIDList") List<JsonObject> listingItemIDs);
 
     @GET("/getListingNoAuth")
@@ -92,26 +94,31 @@ public interface APIService {
     /////////////////////////////////////////////////////////
 
     @GET("/auth/login")
-    Call<UserTokenAPIResponse> login(@Header("authorisation") String AuthHeaderUP);
+    Call<UserTokenAPIResponse> login(@Header("authorization") String AuthHeaderUP);
 
     @GET("/getUserProfile")
     Call<UserAPIResponse> getUserProfile(@Query("userID") String userID);
 
     @GET("/auth/changeWantedTags")
-    Call<BaseAPIResponse> changeWantedTags(@Header("authorisation") String AuthHeaderToken,
+    Call<BaseAPIResponse> changeWantedTags(@Header("authorization") String AuthHeaderToken,
                                            @Query("new_tags") List<String> new_tags);
 
     @POST("/createAccount")
     Call<UserTokenAPIResponse> createAccount(@Body User user);
 
     @POST("/auth/update_user_data")
-    Call<BaseAPIResponse> saveUser(@Header("authorisation") String AuthHeaderToken,
+    Call<BaseAPIResponse> saveUser(@Header("authorization") String AuthHeaderToken,
                                    @Body User user);
-
+    @Multipart
     @POST("/auth/saveImage")
-    Call<ImageIDAPIResponse> saveImageOnServer(@Part MultipartBody.Part file);
+    Call<ImageIDAPIResponse> saveImageOnServer(@Header("authorization") String AuthHeaderToken,
+                                 @Part MultipartBody.Part image);
+
+    @DELETE("/auth/deleteImage")
+    Call<BaseAPIResponse> deleteImageFromServer(@Header("authorization") String AuthHeaderToken,
+                                                @Query("imageID")String imageID );
 
     @DELETE("/auth/deleteListing")
-    Call<BaseAPIResponse> deleteListing(@Header("authorisation") String AuthHeaderToken,
+    Call<BaseAPIResponse> deleteListing(@Header("authorization") String AuthHeaderToken,
                                         @Query("listingID") String listingID);
 }

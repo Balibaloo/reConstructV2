@@ -1,6 +1,9 @@
 package com.example.reconstructv2.Repositories.RemoteRepository;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetroFactory {
@@ -10,8 +13,10 @@ public class RetroFactory {
         return new Retrofit.Builder()
                 .baseUrl(ROOTURL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build().create(APIService.class);
-    }
 
+
+    }
 
 }

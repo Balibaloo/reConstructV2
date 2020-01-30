@@ -30,7 +30,6 @@ import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.MainNavGraphDirections;
-import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.Models.User;
 import com.example.reconstructv2.R;
@@ -222,7 +221,7 @@ public class FinishCreateUserFragment extends Fragment {
             public void onChanged(UserTokenAPIResponse response) {
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     UserInfo.setIsLoggedIn(getContext(),true);
                     UserInfo.setToken(getContext(),response.getUserToken());
 

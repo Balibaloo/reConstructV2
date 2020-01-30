@@ -1,21 +1,26 @@
 package com.example.reconstructv2.Activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment;
+import com.example.reconstructv2.Fragments.CreateListing.ItemListEditFragment;
 import com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment;
 import com.example.reconstructv2.Fragments.CreateUser.FinishCreateUserFragment;
 import com.example.reconstructv2.Fragments.LogIn.LogInFragment;
@@ -39,17 +44,22 @@ public class MainActivity extends AppCompatActivity
         SingleItemViewFragment.OnFragmentInteractionListener,
         AccountViewFragment.OnFragmentInteractionListener,
         CreateListingFragment.OnFragmentInteractionListener,
+        ItemListEditFragment.OnFragmentInteractionListener,
         LogInFragment.OnFragmentInteractionListener,
         CreateUserFragment.OnFragmentInteractionListener,
         FinishCreateUserFragment.OnFragmentInteractionListener,
         ResultsFragment.OnFragmentInteractionListener,
-        NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
     private List<Integer> fragmentsToConfirmLeave = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment);
     private Boolean userConfirmedLeave;
+
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +128,7 @@ public class MainActivity extends AppCompatActivity
     private void init(){
         // initialises navController and drawerLayour with navController
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
         NavigationUI.setupActionBarWithNavController(this,navController,drawerLayout);
         NavigationUI.setupWithNavController(navigationView,navController);
         navigationView.setNavigationItemSelectedListener(this);
@@ -203,6 +214,11 @@ public class MainActivity extends AppCompatActivity
         return fragmentsToConfirmLeave.contains(currFragmentId);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

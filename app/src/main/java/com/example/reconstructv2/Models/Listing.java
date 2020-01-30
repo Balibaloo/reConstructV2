@@ -72,4 +72,40 @@ public class Listing implements Serializable {
     public Boolean getActive() {
         return isActive;
     }
+
+    public void setListingID(@NonNull String listingID) {
+        this.listingID = listingID;
+    }
+
+    public void setAuthorID(String authorID) {
+        this.authorID = authorID;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setPost_date(String post_date) {
+        this.post_date = post_date;
+    }
+
+    public void setEnd_date(String end_date) {
+        this.end_date = end_date;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setMainImageID(String mainImageID) {
+        this.mainImageID = mainImageID;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
 }

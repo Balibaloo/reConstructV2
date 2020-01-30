@@ -3,15 +3,11 @@ package com.example.reconstructv2.Fragments.SingleListing;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,24 +18,22 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
-import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import org.json.JSONObject;
 
 
 public class SingleListingFragment extends Fragment {
+
+    private String listingID;
     private ListingFull listingData;
     private RecyclerView itemRecyclerView;
     private ListingItemAdapter recyclerAdapter;
@@ -77,10 +71,12 @@ public class SingleListingFragment extends Fragment {
 
         if (SingleListingFragmentArgs.fromBundle(getArguments()).getShouldRefresh()) {
             System.out.println("should refresh");
-            this.getListingRequest(SingleListingFragmentArgs.fromBundle(getArguments()).getListingID());
+            listingID = SingleListingFragmentArgs.fromBundle(getArguments()).getListingID();
+            this.getListingRequest(listingID);
         } else {
             System.out.println("should not refresh");
             listingData = SingleListingFragmentArgs.fromBundle(getArguments()).getListingFullArg();
+            listingID = listingData.getListingID();
             setListing(listingData);
             recyclerAdapter.setListingItems(listingData.getItemList());
         }
@@ -101,7 +97,7 @@ public class SingleListingFragment extends Fragment {
             @Override
             public void onRefresh() {
                 refreshLayout.setRefreshing(true);
-                getListingRequest(listingData.getListingID());
+                getListingRequest(listingID);
             }
         });
     }
@@ -164,7 +160,6 @@ public class SingleListingFragment extends Fragment {
 
     };
 
-
     private void initViewModel(){
         viewModel = ViewModelProviders.of(this).get(SingleListingViewModel.class);
     }
@@ -179,7 +174,7 @@ public class SingleListingFragment extends Fragment {
             public void onChanged(BaseAPIResponse response) {
                 refreshLayout.setRefreshing(false);
 
-                if (response.getSuccesfull()){
+                if (response.getIsSuccesfull()){
                     Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -192,7 +187,7 @@ public class SingleListingFragment extends Fragment {
             public void onChanged(SingleListingAPIResponse response) {
                 refreshLayout.setRefreshing(false);
 
-                if (response.getSuccesfull()){
+                if (response.getIsSuccesfull()){
                     listingData = response.getListing();
                     setListing(listingData);
                     recyclerAdapter.setListingItems(listingData.getItemList());

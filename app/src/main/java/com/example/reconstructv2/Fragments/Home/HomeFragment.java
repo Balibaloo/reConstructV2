@@ -74,9 +74,10 @@ public class HomeFragment extends Fragment {
         homeViewModel.getListingListAPIResponse().observe(this, new Observer<ListingListAPIResponse>() {
             @Override
             public void onChanged(ListingListAPIResponse response) {
+                System.out.println(response.getIsSuccesfull());
                 refreshLayout.setRefreshing(false);
 
-                if (response.getSuccesfull()){
+                if (response.getIsSuccesfull()){
                     homeViewModel.deleteAll();
                     recyclerAdapter.setListings(response.getListings());
                 }

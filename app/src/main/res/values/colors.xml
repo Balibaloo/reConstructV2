@@ -8,4 +8,7 @@
 
     <color name="colourSelected">#cc33ff</color>
     <color name="colourUnAvailable">#ff00</color>
+
+
+    <color name="colourImageBackground">#292929</color>
 </resources>

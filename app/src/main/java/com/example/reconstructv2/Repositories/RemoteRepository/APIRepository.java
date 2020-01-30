@@ -1,15 +1,21 @@
 package com.example.reconstructv2.Repositories.RemoteRepository;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.widget.Toast;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
+import androidx.loader.content.CursorLoader;
 
 import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Helpers.RequestErrorHandler;
-import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
+import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.DesiredItemsAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.ImageIDAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.ListingIDAPIResponse;
@@ -17,15 +23,31 @@ import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
+import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.User;
 import com.google.gson.JsonObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.functions.Action1;
+import rx.functions.FuncN;
+
 
 public class APIRepository {
     private APIService apiService;
@@ -112,6 +134,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -131,6 +154,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue((response.body()));
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -151,6 +175,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<CheckAvailableAPIResponse> call, Response<CheckAvailableAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     CheckUsernameAvailableAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -171,6 +196,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<CheckAvailableAPIResponse> call, Response<CheckAvailableAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     CheckEmailAvailableAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -185,11 +211,12 @@ public class APIRepository {
         });
     }
 
-    public void createListing(String AuthHeaderToken, String title, String body, String end_date, String location, List<Integer> pageNum, String main_photoID) {
-        apiService.createListing(AuthHeaderToken, title, body, end_date, location, pageNum, main_photoID).enqueue(new Callback<ListingIDAPIResponse>() {
+    public void createListing(String AuthHeaderToken, ListingFull listing) {
+        apiService.createListing(AuthHeaderToken,listing).enqueue(new Callback<ListingIDAPIResponse>() {
             @Override
             public void onResponse(Call<ListingIDAPIResponse> call, Response<ListingIDAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     listingIDAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -209,6 +236,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -228,6 +256,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -247,6 +276,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -266,6 +296,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -286,6 +317,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<SingleListingAPIResponse> call, Response<SingleListingAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -306,6 +338,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<SingleListingAPIResponse> call, Response<SingleListingAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -327,6 +360,7 @@ public class APIRepository {
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 System.out.println(response.toString());
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -346,6 +380,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -387,6 +422,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<DesiredItemsAPIResponse> call, Response<DesiredItemsAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     desiredItemsAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -408,6 +444,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<UserTokenAPIResponse> call, Response<UserTokenAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -427,6 +464,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<UserAPIResponse> call, Response<UserAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     userAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -446,6 +484,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -466,6 +505,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<UserTokenAPIResponse> call, Response<UserTokenAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -485,6 +525,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()){
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -499,23 +540,61 @@ public class APIRepository {
         });
     }
 
-    public void saveImageonServer( MultipartBody.Part file) {
-        apiService.saveImageOnServer(file).enqueue(new Callback<ImageIDAPIResponse>() {
+    public void saveImageonServer(String authHeader, Uri imageUri) {
+
+        String[] proj = { MediaStore.Images.Media.DATA };
+
+        CursorLoader cursorLoader = new CursorLoader(
+                mContext,
+                imageUri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int column_index =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        File imageFile = new File(cursor.getString(column_index));
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+        MultipartBody.Part body =MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
+
+        apiService.saveImageOnServer(authHeader, body).enqueue(new Callback<ImageIDAPIResponse>() {
             @Override
             public void onResponse(Call<ImageIDAPIResponse> call, Response<ImageIDAPIResponse> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful()){
+                    response.body().setIsSuccesfull(true);
                     imageIDAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
                     imageIDAPIResponseMutableLiveData.setValue(new ImageIDAPIResponse(false));
                 }
+
             }
 
             @Override
             public void onFailure(Call<ImageIDAPIResponse> call, Throwable t) {
-                System.out.println(t);
+
             }
         });
+    }
+
+    public void deleteImage(String authHeader, String imageID) {
+
+        apiService.deleteImageFromServer(authHeader,imageID).enqueue(new Callback<BaseAPIResponse>() {
+            @Override
+            public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
+                if (response.body().getIsSuccesfull()){
+                    baseAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
+                    baseAPIResponseMutableLiveData.setValue(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
+            }
+        });
+
     }
 
     public void deleteListing(String AuthHeaderToken, String listingID) {
@@ -523,6 +602,7 @@ public class APIRepository {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
@@ -536,6 +616,4 @@ public class APIRepository {
             }
         });
     }
-
-
 }

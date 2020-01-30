@@ -146,7 +146,7 @@ public class LogInFragment extends Fragment {
             public void onChanged(UserTokenAPIResponse response) {
                 swipeRefreshLayout.setRefreshing(false);
 
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     UserInfo.setIsLoggedIn(getContext(),true);
                     UserInfo.setToken(getContext(),response.getUserToken());
                     UserInfo.setSelfUserID(getContext(),response.getUserID());

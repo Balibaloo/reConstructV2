@@ -1,7 +1,7 @@
-package com.example.reconstructv2.Fragments.SingleListing;
+package com.example.reconstructv2.Fragments.CreateListing;
 
 import android.content.Context;
-import android.media.Image;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.ListingItemHolder>{
+
+public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdapter.ListingItemHolder>{
     private List<ListingItem> listingItems = new ArrayList<>();
     private OnClickListener listener;
     private OnLongPressListener longClickListener;
@@ -27,7 +28,7 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     private Context mContext;
 
 
-    public ListingItemAdapter(Context context){
+    public CreateListingAdapter(Context context){
         this.mContext = context;
     }
 
@@ -47,7 +48,13 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
 
         ListingItem currItem = listingItems.get(position);
 
-        loadImageInto(holder.itemImage,currItem.getImageIDArray()[0]);
+        try {
+            Uri imageUri = Uri.parse(currItem.getImageIDArray()[0]);
+            holder.itemImage.setImageURI(imageUri);
+        } catch(Exception e) {
+            loadImageInto(holder.itemImage,currItem.getImageIDArray()[0]);
+        }
+
         holder.TextViewname.setText(currItem.getName());
         holder.TextViewdescription.setText(currItem.getDescription());
 
@@ -61,7 +68,7 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
 
     }
 
-    private void loadImageInto(ImageView iamgeView,String imageID){
+    private void loadImageInto(ImageView iamgeView, String imageID){
         String rootURL = mContext.getResources().getString(R.string.ROOTURL);
 
         String imageUrl = rootURL + "/getImage?imageID=" + imageID;
@@ -137,3 +144,4 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     }
 
 }
+

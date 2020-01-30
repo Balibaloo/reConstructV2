@@ -13,10 +13,6 @@ public class BaseAPIResponse {
 
     private Boolean isSuccesfull;
 
-    public BaseAPIResponse() {
-        this.isSuccesfull = true;
-    }
-
     public String getMessage() {
         return message;
     }
@@ -26,6 +22,8 @@ public class BaseAPIResponse {
     }
 
     public BaseAPIResponse(@Nullable Boolean isSuccesfull) {
+        System.out.println("received is success = " + isSuccesfull);
+
         if (isSuccesfull ==  null){
             this.isSuccesfull = true;
         } else {
@@ -34,11 +32,11 @@ public class BaseAPIResponse {
 
     }
 
-    public void setSuccesfull(Boolean succesfull) {
+    public void setIsSuccesfull(Boolean succesfull) {
         isSuccesfull = succesfull;
     }
 
-    public Boolean getSuccesfull() {
+    public Boolean getIsSuccesfull() {
         return isSuccesfull;
     }
 }

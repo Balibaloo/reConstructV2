@@ -4,7 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="ROOTURL">http://82.3.163.116:1234</string>
+    <string name="ROOTURL">http://82.3.163.116:8080</string>
 
 
     //menu titles
@@ -32,5 +32,6 @@
     <string name="password_again">Password Again</string>
     <string name="samplePhoneNumber">1234</string>
     <string name="username_field">Username Field</string>
+    <string name="listing_creation_exit_dialouge">sup bitch , tryna leave without saving huh?</string>
 
 </resources>

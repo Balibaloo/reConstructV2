@@ -166,7 +166,7 @@ public class CreateUserFragment extends Fragment {
             @Override
             public void onChanged(CheckAvailableAPIResponse response) {
 
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     if (response.getIs_unused()) {
                         usernameStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
                         usernameIsUniqueue = true;
@@ -184,7 +184,7 @@ public class CreateUserFragment extends Fragment {
             @Override
             public void onChanged(CheckAvailableAPIResponse response) {
 
-                if (response.getSuccesfull()) {
+                if (response.getIsSuccesfull()) {
                     if (response.getIs_unused()) {
                         emailStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
                         emailIsUniqueue = true;

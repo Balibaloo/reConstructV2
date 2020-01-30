@@ -43,7 +43,24 @@
         android:id="@+id/createListingFragment"
         android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment"
         android:label="fragment_create_listing"
-        tools:layout="@layout/fragment_create_listing" />
+        tools:layout="@layout/fragment_create_listing" >
+        <action
+            android:id="@+id/action_createListingFragment_to_itemListEditFragment"
+            app:destination="@id/itemListEditFragment" >
+            <argument android:defaultValue="0"
+                android:name="focusedItemIndex" />
+        </action>
+        <argument
+            android:name="ListingArgument"
+            app:argType="com.example.reconstructv2.Models.ListingFull"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="uploadedImageIDs"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
     <fragment
         android:id="@+id/logInFragment"
         android:name="com.example.reconstructv2.Fragments.LogIn.LogInFragment"
@@ -103,6 +120,22 @@
         <argument
             android:name="itemPosition"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemListEditFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.ItemListEditFragment"
+        android:label="fragment_item_list_edit"
+        tools:layout="@layout/fragment_item_list_edit" >
+        <argument
+            android:name="Listing"
+            app:argType="com.example.reconstructv2.Models.ListingFull" />
+        <argument
+            android:name="focusedItemIndex"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_itemListEditFragment_to_createListingFragment"
+            app:destination="@id/createListingFragment" />
     </fragment>
 
 </navigation>
