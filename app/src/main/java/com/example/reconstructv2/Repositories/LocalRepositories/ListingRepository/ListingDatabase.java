@@ -47,7 +47,7 @@ public abstract class ListingDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            listingDAO.addListing(new Listing("RAndom listing ID","Randpom Autrhor id","BIG TITLE", "body 1 2 3", "2002-07-15T10:30:05.000Z","2002-07-15T10:30:05.000Z","some Address",true, "someID"));
+            listingDAO.addListing(new Listing("RAndom listing ID","Randpom Autrhor id","BIG TITLE", "body 1 2 3", "2002-07-15T10:30:05.000Z","2002-07-15T10:30:05.000Z",2.0,2.0 ,true, "defaultID"));
 
             return null;
         }

@@ -33,5 +33,7 @@
     <string name="samplePhoneNumber">1234</string>
     <string name="username_field">Username Field</string>
     <string name="listing_creation_exit_dialouge">sup bitch , tryna leave without saving huh?</string>
+    <string name="dateEntryText">Please Select the Ending Date</string>
+    <string name="defaultImageId">dafaultID</string>
 
 </resources>

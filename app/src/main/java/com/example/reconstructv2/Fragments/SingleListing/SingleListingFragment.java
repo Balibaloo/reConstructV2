@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -93,12 +94,9 @@ public class SingleListingFragment extends Fragment {
     }
 
     private void setRefreshListener(){
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshLayout.setRefreshing(true);
-                getListingRequest(listingID);
-            }
+        refreshLayout.setOnRefreshListener(() -> {
+            refreshLayout.setRefreshing(true);
+            getListingRequest(listingID);
         });
     }
 
@@ -161,39 +159,36 @@ public class SingleListingFragment extends Fragment {
     };
 
     private void initViewModel(){
-        viewModel = ViewModelProviders.of(this).get(SingleListingViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SingleListingViewModel.class);
     }
 
     private void getListingRequest(String listingID){
         viewModel.fetchListing(getContext(),listingID);
+        viewModel.getListingLiveData().observe(getViewLifecycleOwner(), response -> {
+            refreshLayout.setRefreshing(false);
+
+            if (response.getIsSuccesfull()){
+                listingData = response.getListing();
+                setListing(listingData);
+                recyclerAdapter.setListingItems(listingData.getItemList());
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     private void setLiveDataObservers(){
-        viewModel.getBaseAPIResponseLiveData().observe(this, new Observer<BaseAPIResponse>() {
-            @Override
-            public void onChanged(BaseAPIResponse response) {
-                refreshLayout.setRefreshing(false);
+        viewModel.getBaseAPIResponseLiveData().observe(getViewLifecycleOwner(), response -> {
+            refreshLayout.setRefreshing(false);
 
-                if (response.getIsSuccesfull()){
-                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
+            if (response.getIsSuccesfull()){
+                Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
         });
 
 
-        viewModel.getListingLiveData().observe(this, new Observer<SingleListingAPIResponse>() {
-            @Override
-            public void onChanged(SingleListingAPIResponse response) {
-                refreshLayout.setRefreshing(false);
 
-                if (response.getIsSuccesfull()){
-                    listingData = response.getListing();
-                    setListing(listingData);
-                    recyclerAdapter.setListingItems(listingData.getItemList());
-                }
-            }
-        });
 
     }
 
@@ -201,9 +196,14 @@ public class SingleListingFragment extends Fragment {
         titleTextView.setText(listing.getTitle());
         bodyTextView.setText(listing.getBody());
 
-        String rootURL = getContext().getResources().getString(R.string.ROOTURL);
-        String imageUrl = rootURL + "/getImage?imageID=" + listing.getMainImageID();
-        Picasso.get().load(imageUrl).into(listingImage);
+        try {
+            String rootURL = getContext().getResources().getString(R.string.ROOTURL);
+            String imageUrl = rootURL + "/getImage?imageID=" + listing.getMainImageID();
+            Picasso.get().load(imageUrl).into(listingImage);
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+
 
 
     }

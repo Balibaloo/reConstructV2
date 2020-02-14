@@ -1,6 +1,7 @@
 package com.example.reconstructv2.Fragments.Home;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reconstructv2.Models.Listing;
@@ -48,17 +50,28 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         holder.textViewTitle.setText(currListing.getTitle());
         holder.textViewBody.setText(currListing.getBody());
 
-        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
-        System.out.println("LISTING IMAGE ID = "+ currListing.getMainImageID());
-        String imageUrl = rootURL + "/getImage?imageID=" + currListing.getMainImageID();
-        Picasso.get().load(imageUrl).into(holder.listingImage);
+        if (!currListing.getIsActive()){
+            holder.container.setCardBackgroundColor(mContext.getResources().getColor(R.color.colourUnAvailable));
+        }
+
+        loadImageInto(holder.listingImage,currListing.getMainImageID());
+    }
+
+    private void loadImageInto(ImageView iamgeView, String imageID) {
+        try {
+            String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+
+            String imageUrl = rootURL + "/getImage?imageID=" + imageID;
+            Picasso.get().load(imageUrl).into(iamgeView);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     @Override
     public int getItemCount() {
         return listings.size();
     }
-
 
     public void setListings(List<Listing> listings) {
         this.listings = listings;
@@ -69,20 +82,19 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         private TextView textViewTitle;
         private TextView textViewBody;
         private ImageView listingImage;
+        private CardView container;
 
         public ListingHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.text_view_title);
             textViewBody = itemView.findViewById(R.id.text_view_body);
             listingImage = itemView.findViewById(R.id.imageViewListing);
+            container = itemView.findViewById(R.id.listing_card_container);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = getAdapterPosition();
-                    if (listener != null && pos != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(listings.get(pos));
-                    }
+            itemView.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (listener != null && pos != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(listings.get(pos));
                 }
             });
         }

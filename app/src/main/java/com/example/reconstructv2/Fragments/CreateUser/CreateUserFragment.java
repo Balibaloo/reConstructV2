@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
@@ -93,7 +94,7 @@ public class CreateUserFragment extends Fragment {
     }
 
     private void initViewModel(){
-        viewModel = ViewModelProviders.of(this).get(CreateUserViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CreateUserViewModel.class);
     }
 
     private void initViews(View view){

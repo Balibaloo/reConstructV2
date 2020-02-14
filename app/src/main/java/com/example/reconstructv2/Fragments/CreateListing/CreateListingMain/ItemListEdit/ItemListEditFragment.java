@@ -1,4 +1,4 @@
-package com.example.reconstructv2.Fragments.CreateListing;
+package com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.ItemListEdit;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -23,12 +22,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.reconstructv2.Fragments.SingleItem.SingleItemHorizontalAdapter;
 import com.example.reconstructv2.Helpers.UserInfo;
-import com.example.reconstructv2.Models.ApiResponses.ImageIDAPIResponse;
 import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
@@ -51,7 +47,8 @@ public class ItemListEditFragment extends Fragment {
 
     private FloatingActionButton backButton;
 
-    private Integer currListingImagewaidja;
+    private Integer currListingPosition;
+    private Integer currListingImagePosition;
 
     private ItemListEditViewModel viewModel;
 
@@ -76,13 +73,15 @@ public class ItemListEditFragment extends Fragment {
 
         final View view = getView();
 
+
+
         initViews(view);
         initViewModel();
         configureRecyclerViewAdapter();
         setOnClickListeners();
         setLiveDataObservers();
 
-        currListingImagewaidja = 0;
+        currListingPosition = 0;
         listing = ItemListEditFragmentArgs.fromBundle(getArguments()).getListing();
         Integer itemPos = ItemListEditFragmentArgs.fromBundle(getArguments()).getFocusedItemIndex();
         recyclerAdapter.setListingItems(listing.getItemList());
@@ -97,42 +96,37 @@ public class ItemListEditFragment extends Fragment {
     }
 
     private void initViewModel(){
-        viewModel = ViewModelProviders.of(this).get(ItemListEditViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ItemListEditViewModel.class);
     }
 
     private void configureRecyclerViewAdapter(){
-        recyclerAdapter = new EditListingItemAdapter(getContext(), new EditListingItemAdapter.OnEditTextChanged() {
-            @Override
-            public void onTextChanged(int position, String charSeq, String field) {
-                List<ListingItem> tempList = listing.getItemList();
-                ListingItem editedItem = tempList.get(position);
+        recyclerAdapter = new EditListingItemAdapter(getActivity(), (position, charSeq, field) -> {
+            List<ListingItem> tempList = listing.getItemList();
+            ListingItem editedItem = tempList.get(position);
 
-                if (field == "title") {
-                    editedItem.setName(charSeq);
-                } else if (field == "body") {
-                    editedItem.setDescription(charSeq);
-                }
-
-                tempList.set(position, editedItem);
-                listing.setItemList(tempList);
-
+            if (field.equals("title")) {
+                editedItem.setName(charSeq);
+            } else if (field.equals("body")) {
+                editedItem.setDescription(charSeq);
             }
-        }, new EditListingItemAdapter.OnImageUploadRequest() {
-            @Override
-            public void onImageUploadRequest(int itemPos) {
-                if (UserInfo.getIsLoggedIn(getContext())){
-                    Boolean hasWritePermissions = ContextCompat.checkSelfPermission(getContext(),WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                    if (hasWritePermissions){
-                        System.out.println("Has write permissions == "+ hasWritePermissions);
-                        currListingImagewaidja = itemPos;
-                        pickImage();
-                    } else {
-                        System.out.println("requesting permissions");
-                        ActivityCompat.requestPermissions(getActivity(),new String[]{}, 1144);
-                    }
+
+            tempList.set(position, editedItem);
+            listing.setItemList(tempList);
+
+        }, (itemPos, imagePos)-> {
+            if (UserInfo.getIsLoggedIn(getContext())){
+                Boolean hasWritePermissions = ContextCompat.checkSelfPermission(getContext(),WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                if (hasWritePermissions){
+
+                    currListingPosition = itemPos;
+                    currListingImagePosition = imagePos;
+                    pickImage();
+
                 } else {
-                    Toast.makeText(getContext(), "you need to be logged in to upload an image", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(getActivity(),new String[]{}, 1144);
                 }
+            } else {
+                Toast.makeText(getContext(), "you need to be logged in to upload an image", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -145,32 +139,26 @@ public class ItemListEditFragment extends Fragment {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(horisontalRecyclerView);
 
-        recyclerAdapter.setLongClickListener(new EditListingItemAdapter.OnLongPressListener() {
-            @Override
-            public void onLongPress(ListingItem listingItem) {
-                Toast.makeText(getContext(), "are you sure you want to delete this item?", Toast.LENGTH_SHORT).show();
-            }
-        });
+        recyclerAdapter.setLongClickListener(listingItem -> Toast.makeText(getContext(), "are you sure you want to delete this item?", Toast.LENGTH_SHORT).show());
     }
 
     private void setOnClickListeners(){
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ItemListEditFragmentDirections.ActionItemListEditFragmentToCreateListingFragment action = ItemListEditFragmentDirections.actionItemListEditFragmentToCreateListingFragment();
-                action.setListingArgument(listing);
-                Navigation.findNavController(getView()).navigate(action);
-            }
+        backButton.setOnClickListener(v -> {
+            ItemListEditFragmentDirections.ActionItemListEditFragmentToCreateListingFragment action = ItemListEditFragmentDirections.actionItemListEditFragmentToCreateListingFragment();
+            action.setListingArgument(listing);
+            Navigation.findNavController(getView()).navigate(action);
         });
-
-
     }
 
     private void setLiveDataObservers(){
-        viewModel.getImageIDAPIResponse().observe(getViewLifecycleOwner(), new Observer<ImageIDAPIResponse>() {
-            @Override
-            public void onChanged(ImageIDAPIResponse imageIDAPIResponse) {
+        viewModel.getImageIDAPIResponse().observe(getViewLifecycleOwner(), imageIDAPIResponse -> {
+            if (imageIDAPIResponse.getIsSuccesfull()){
 
+                listing.setListingItemImage(currListingPosition, currListingImagePosition ,imageIDAPIResponse.getImageID());
+                recyclerAdapter.setListingItems(listing.getItemList());
+
+            } else {
+                Toast.makeText(getContext(), imageIDAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -186,10 +174,8 @@ public class ItemListEditFragment extends Fragment {
 
         // fetch result from image selection
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK){
-            listing.addListingItemImage(currListingImagewaidja,data.getDataString());
-            recyclerAdapter.setListingItems(listing.getItemList());
-        }
-    }
+            viewModel.uploadImageRequest(data.getData());
+        }}
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

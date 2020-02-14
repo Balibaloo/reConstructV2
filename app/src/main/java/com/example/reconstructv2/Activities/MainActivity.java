@@ -7,33 +7,35 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment;
-import com.example.reconstructv2.Fragments.CreateListing.ItemListEditFragment;
+import com.example.reconstructv2.Fragments.AccountManagement.AccountMenu.AccountMenuFragment;
+import com.example.reconstructv2.Fragments.AccountManagement.RecentlyViewedListings.recentlyViewedListings;
+import com.example.reconstructv2.Fragments.AccountManagement.UserListings.userListingsFragment;
+import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingFragment;
+import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.ItemListEdit.ItemListEditFragment;
+import com.example.reconstructv2.Fragments.CreateListing.createListingLocationFragment;
 import com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment;
 import com.example.reconstructv2.Fragments.CreateUser.FinishCreateUserFragment;
 import com.example.reconstructv2.Fragments.LogIn.LogInFragment;
 import com.example.reconstructv2.Fragments.Results.ResultsFragment;
 import com.example.reconstructv2.Fragments.SingleItem.SingleItemViewFragment;
+import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.R;
-import com.example.reconstructv2.Fragments.AccountView.AccountViewFragment;
+import com.example.reconstructv2.Fragments.AccountManagement.AccountView.AccountViewFragment;
 import com.example.reconstructv2.Fragments.Home.HomeFragment;
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
 import com.google.android.material.navigation.NavigationView;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,20 +44,27 @@ public class MainActivity extends AppCompatActivity
         HomeFragment.OnFragmentInteractionListener,
         SingleListingFragment.OnFragmentInteractionListener,
         SingleItemViewFragment.OnFragmentInteractionListener,
+        AccountMenuFragment.OnFragmentInteractionListener,
         AccountViewFragment.OnFragmentInteractionListener,
         CreateListingFragment.OnFragmentInteractionListener,
+        createListingLocationFragment.OnFragmentInteractionListener,
         ItemListEditFragment.OnFragmentInteractionListener,
         LogInFragment.OnFragmentInteractionListener,
         CreateUserFragment.OnFragmentInteractionListener,
         FinishCreateUserFragment.OnFragmentInteractionListener,
         ResultsFragment.OnFragmentInteractionListener,
+        recentlyViewedListings.OnFragmentInteractionListener,
+        userListingsFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
     private List<Integer> fragmentsToConfirmLeave = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment);
+    private List<Integer> topLevelFragments = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment,R.id.singleListingFragment, R.id.accountMenuFragment);
     private Boolean userConfirmedLeave;
+
+    private Integer currFragmentId;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -80,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         final NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
 
         // check if user has confirmed leaving the create listing fragment
-        if (userIsLeavingUnsafeFragment(navController)) {
+        if (userIsLeaving(navController,fragmentsToConfirmLeave)) {
             if (!userConfirmedLeave){
                 createMenuNavigationAlert(menuItem);
                 return true;
@@ -107,11 +116,16 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 case (R.id.nav_to_account):{
-                    Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.accountViewFragment);
+                    Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.accountMenuFragment);
                     break;
                 }
                 case R.id.nav_to_create_listing:{
-                    Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.createListingFragment);
+                    if (UserInfo.getIsLoggedIn(getApplication())){
+                        Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.createListingFragment);
+                    } else {
+                        Toast.makeText(this, "You need to be logged in to create a listing", Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
                 }
 
@@ -147,7 +161,15 @@ public class MainActivity extends AppCompatActivity
         final NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
 
         // checks if the user is trying to leave an unsafe fragment
-        if (userIsLeavingUnsafeFragment(navController)) {
+        if (userIsLeaving(navController,fragmentsToConfirmLeave)
+                &&
+                userIsLeaving(navController,topLevelFragments)) {
+            createHomeNavigateAlert(navController);
+            return true;
+        } else if (userIsLeaving(navController,topLevelFragments)){
+            navController.navigate(R.id.homeFragment2);
+            return true;
+        } else if (userIsLeaving(navController,fragmentsToConfirmLeave)){
             createBackNavigateAlert(navController);
             return true;
         } else {
@@ -165,20 +187,24 @@ public class MainActivity extends AppCompatActivity
         alert.setMessage(R.string.listing_creation_exit_dialouge)
                 .setCancelable(false);
 
-        alert.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                navigateUp(navcontroller);
-
-            }}).setPositiveButtonIcon(getResources()
+        alert.setNegativeButton("Discard", (dialog, which) -> navigateUp(navcontroller)).setPositiveButtonIcon(getResources()
                 .getDrawable(R.drawable.ic_check_white_24dp));
 
-        alert.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+        alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
-            }}).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
+        alert.show();
+    }
+
+    private void createHomeNavigateAlert(final NavController navcontroller){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+
+        alert.setMessage(R.string.listing_creation_exit_dialouge)
+                .setCancelable(false);
+
+        alert.setNegativeButton("Discard", (dialog, which) -> navcontroller.navigate(R.id.homeFragment2)).setPositiveButtonIcon(getResources()
+                .getDrawable(R.drawable.ic_check_white_24dp));
+
+        alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
         alert.show();
     }
@@ -189,30 +215,26 @@ public class MainActivity extends AppCompatActivity
         alert.setMessage(R.string.listing_creation_exit_dialouge)
                 .setCancelable(false);
 
-        alert.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                userConfirmedLeave = true;
-                onNavigationItemSelected(menuItem);
+        alert.setNegativeButton("Discard", (dialog, which) -> {
+            userConfirmedLeave = true;
+            onNavigationItemSelected(menuItem);
 
-            }}).setPositiveButtonIcon(getResources()
+        }).setPositiveButtonIcon(getResources()
                 .getDrawable(R.drawable.ic_check_white_24dp));
 
-        alert.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-
-            }}).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
+        alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
         alert.show();
 
     }
 
-    private boolean userIsLeavingUnsafeFragment(final NavController navController){
-        Integer currFragmentId = navController.getCurrentDestination().getId();
-        return fragmentsToConfirmLeave.contains(currFragmentId);
+    private boolean userIsLeaving(final NavController navController, List list){
+        currFragmentId = navController.getCurrentDestination().getId();
+        System.out.println("user is leaving " + currFragmentId);
+        System.out.println("listing frag id  = " + R.id.createListingFragment);
+        return list.contains(currFragmentId);
     }
+
 
 
     @Override

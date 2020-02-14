@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    tools:context=".Fragments.AccountManagement.AccountMenu.AccountMenuFragment">
+
+    <Button
+        android:id="@+id/accountSettingButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:text="Edit Account Details" />
+
+    <Button
+        android:id="@+id/changePasswordButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:text="Change Password" />
+
+    <Button
+        android:id="@+id/viewUserListingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:background="@color/colourSelected"
+        android:text="View Your Listings" />
+
+    <Button
+        android:id="@+id/viewWatchedListingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:text="View Your Watched Listings" />
+
+    <Button
+        android:id="@+id/viewRecentlyViewedListingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:background="@color/colourSelected"
+        android:text="View Recently Viewed Listings" />
+
+    <Button
+        android:id="@+id/viewDesiredItemsButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:text="View In-Demand items" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="74sp"
+        android:text="Log Out"
+        />
+
+</LinearLayout>

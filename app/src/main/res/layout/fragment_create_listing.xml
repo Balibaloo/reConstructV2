@@ -14,10 +14,10 @@
 
         <TextView
             android:id="@+id/create_listing_date_TextView"
-            android:layout_width="190dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:ems="10"
-            android:text="Please Select the Ending Date"
+            android:text="@string/dateEntryText"
             app:layout_constraintBottom_toTopOf="@+id/create_listing_item_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"

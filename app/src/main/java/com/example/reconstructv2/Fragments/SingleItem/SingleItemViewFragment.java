@@ -78,27 +78,21 @@ public class SingleItemViewFragment extends Fragment {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(horisontalRecyclerView);
 
-        recyclerAdapter.setOnLongItemCLickListener(new SingleItemHorizontalAdapter.OnLongClickListener() {
-            @Override
-            public void onLongItemClick(ListingItem listingItem) {
-                if (listingItem.getAvailable()){
-                    listingItem.toggleIsSelected();
-                    recyclerAdapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(getContext(), "this item is un available", Toast.LENGTH_SHORT).show();
-                }
+        recyclerAdapter.setOnLongItemCLickListener(listingItem -> {
+            if (listingItem.getAvailable()){
+                listingItem.toggleIsSelected();
+                recyclerAdapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(getContext(), "this item is un available", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setOnClickListeners(){
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SingleItemViewFragmentDirections.ActionSingleItemViewFragmentToSingleListingFragment action = SingleItemViewFragmentDirections.actionSingleItemViewFragmentToSingleListingFragment(listing,null);
-                action.setShouldRefresh(false);
-                Navigation.findNavController(getView()).navigate(action);
-            }
+        backButton.setOnClickListener(v -> {
+            SingleItemViewFragmentDirections.ActionSingleItemViewFragmentToSingleListingFragment action = SingleItemViewFragmentDirections.actionSingleItemViewFragmentToSingleListingFragment(listing,null);
+            action.setShouldRefresh(false);
+            Navigation.findNavController(getView()).navigate(action);
         });
     }
 

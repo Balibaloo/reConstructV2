@@ -46,10 +46,14 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     public void onBindViewHolder(@NonNull ListingItemHolder holder, int position){
 
         ListingItem currItem = listingItems.get(position);
-
-        loadImageInto(holder.itemImage,currItem.getImageIDArray()[0]);
+        try {
+            loadImageInto(holder.itemImage,currItem.getImageIDArray().get(0));
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
         holder.TextViewname.setText(currItem.getName());
         holder.TextViewdescription.setText(currItem.getDescription());
+
 
         if(!currItem.getAvailable()){
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_available);
@@ -62,10 +66,15 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
     }
 
     private void loadImageInto(ImageView iamgeView,String imageID){
-        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+        try{
+            String rootURL = mContext.getResources().getString(R.string.ROOTURL);
 
-        String imageUrl = rootURL + "/getImage?imageID=" + imageID;
-        Picasso.get().load(imageUrl).into(iamgeView);
+            String imageUrl = rootURL + "/getImage?imageID=" + imageID;
+            Picasso.get().load(imageUrl).into(iamgeView);
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+
     }
 
     @Override

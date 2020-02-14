@@ -33,22 +33,12 @@ public class HomeViewModel extends AndroidViewModel {
 
     }
 
-
-
     public LiveData<List<Listing>> getAllListings() {
         return allListings;
     }
 
-    public MutableLiveData<ListingListAPIResponse> getListingListAPIResponse(){
-        return listingListAPIResponse;
-    }
-
     public void insert(Listing listing) {
         repository.insert(listing);
-    }
-
-    public void deleteAll() {
-        repository.deleteAll();
     }
 
     public void insertList(List<Listing> listings) {
@@ -57,7 +47,19 @@ public class HomeViewModel extends AndroidViewModel {
         }
     }
 
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 
+
+
+    public MutableLiveData<ListingListAPIResponse> getListingListAPIResponse(){
+        return listingListAPIResponse;
+    }
+
+    public void fetchSearchResults(String searchQuery,Integer pageNum){
+        apiRepository.getFilteredListings(searchQuery,pageNum);
+    }
 
     public void fetchFrontPageListingsRequest(){
         apiRepository.getFrontPageListings();

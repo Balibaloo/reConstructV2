@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 
@@ -12,28 +14,46 @@ import java.io.Serializable;
 public class Listing implements Serializable {
     @PrimaryKey
     @NonNull
+    @SerializedName("listingID")
     private String listingID;
+
+    @SerializedName("authorID")
     private String authorID;
+
+    @SerializedName("title")
     private String title;
+
+    @SerializedName("body")
     private String body;
+
+    @SerializedName("post_date")
     private String post_date;
+
+    @SerializedName("end_date")
     private String end_date;
-    private String location;
+
+    @SerializedName("location_lat")
+    private Double location_lat;
+
+    @SerializedName("location_lon")
+    private Double location_lon;
+
+    @SerializedName("mainImageID")
     private String mainImageID;
 
-
-    @ColumnInfo(name = "isActive")
+    @SerializedName("isActive")
     private Boolean isActive;
 
-    public Listing(String listingID, String authorID, String title, String body, String post_date, String end_date, String location, Boolean isActive, String mainImageID) {
+    public Listing(String listingID, String authorID, String title, String body, String post_date, String end_date, Double location_lat, Double location_lon, Boolean isActive, String mainImageID) {
         this.listingID = listingID;
         this.authorID = authorID;
-        this.title = title;
-        this.body = body;
+        this.title = title != null ? title : "";
+        this.body = body != null ? body : "";
         this.post_date = post_date;
         this.end_date = end_date;
-        this.location = location;
-        this.isActive = isActive;
+        this.location_lat = location_lat;
+        this.location_lon = location_lon;
+        this.isActive = isActive == null ? true : isActive;
         this.mainImageID = mainImageID;
     }
 
@@ -65,11 +85,15 @@ public class Listing implements Serializable {
         return end_date;
     }
 
-    public String getLocation() {
-        return location;
+    public Double getLocation_lat() {
+        return location_lat;
     }
 
-    public Boolean getActive() {
+    public Double getLocation_lon() {
+        return location_lon;
+    }
+
+    public Boolean getIsActive() {
         return isActive;
     }
 
@@ -97,12 +121,16 @@ public class Listing implements Serializable {
         this.end_date = end_date;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public void setMainImageID(String mainImageID) {
         this.mainImageID = mainImageID;
+    }
+
+    public void setLocation_lat(Double location_lat) {
+        this.location_lat = location_lat;
+    }
+
+    public void setLocation_lon(Double location_lon) {
+        this.location_lon = location_lon;
     }
 
     public void setActive(Boolean active) {

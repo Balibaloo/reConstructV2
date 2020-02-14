@@ -14,7 +14,6 @@ public class ListingListAPIResponse extends BaseAPIResponse{
     public ListingListAPIResponse(@Nullable Boolean isSuccesfull)
     {
         super(isSuccesfull);
-        System.out.println("child class received = " + isSuccesfull);
     }
 
     public List<Listing> getListings() {

@@ -13,6 +13,7 @@ import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.Models.ListingFull;
+import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.Models.ListingToCreate;
 import com.example.reconstructv2.Models.User;
 import com.google.gson.JsonObject;
@@ -41,7 +42,7 @@ public interface APIService {
     @GET("/auth")
     Call<BaseAPIResponse> testConnectionAuthenticated(@Header("authorization") String AuthHeaderToken);
 
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////// TESTS
 
     @GET("/checkUniqueUsername")
     Call<CheckAvailableAPIResponse> checkUsernameUnique(@Query("username") String username);
@@ -49,7 +50,7 @@ public interface APIService {
     @GET("/checkUniqueEmail")
     Call<CheckAvailableAPIResponse> checkEmailUnique(@Query("email") String email);
 
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////// LISTINGS
 
     @POST("/auth/createListing")
     Call<ListingIDAPIResponse> createListing(@Header("authorization") String AuthHeaderToken,
@@ -84,6 +85,9 @@ public interface APIService {
     @GET("/getFrontPageListings")
     Call<ListingListAPIResponse> getFrontPageListings(@Query("pageNum") Integer pageNum);
 
+    @GET("/getUserListings")
+    Call<ListingListAPIResponse> getUserListings(@Query("userID") String userID);
+
     @GET("/getFilteredListings")
     Call<ListingListAPIResponse> getFilteredListings(@Query("searchString") String searchString,
                                                      @Query("pageNum") Integer pageNum);
@@ -91,7 +95,7 @@ public interface APIService {
     @GET("/getDesiredItems")
     Call<DesiredItemsAPIResponse> getDesiredItems(@Query("pageNum") Integer pageNum);
 
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////// USER MANAGEMENT
 
     @GET("/auth/login")
     Call<UserTokenAPIResponse> login(@Header("authorization") String AuthHeaderUP);
@@ -116,7 +120,7 @@ public interface APIService {
 
     @DELETE("/auth/deleteImage")
     Call<BaseAPIResponse> deleteImageFromServer(@Header("authorization") String AuthHeaderToken,
-                                                @Query("imageID")String imageID );
+                                                @Query("imageID")List<String> imageID );
 
     @DELETE("/auth/deleteListing")
     Call<BaseAPIResponse> deleteListing(@Header("authorization") String AuthHeaderToken,

@@ -1,15 +1,18 @@
 package com.example.reconstructv2.Models;
 
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.reconstructv2.R;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ListingItem implements Serializable {
@@ -29,22 +32,23 @@ public class ListingItem implements Serializable {
     @SerializedName("takenByUserID")
     private String takenByUserID;
 
-    @SerializedName("tagList")
-    private String[] tagList;
-
-    @SerializedName("imageArray")
-    private String[] imageIDArray;
+    @SerializedName("images")
+    private List<String> imageIDArray;
 
     private Boolean isSelected;
 
-    public ListingItem(String itemID, @Nullable String name, String description, Boolean isAvailable, String takenByUserID, String[] tagList, String[] imageIDArray) {
-        this.ItemID = itemID;
-        this.name = (name == null ? "item name" : name);
-        this.description = description != null ? description : "description";
+    public ListingItem(String itemID, @Nullable String name, String description, Boolean isAvailable, String takenByUserID, List<String> imageIDArray) {
+        this.ItemID = itemID != null ? itemID : "defaultID";
+        this.name = (name != null ? name : "");
+        this.description = description != null ? description : "";
         this.isAvailable = isAvailable != null ? isAvailable : true;
         this.takenByUserID = takenByUserID;
-        this.tagList = tagList != null ? tagList : new String[]{"defaultImage"};
-        this.imageIDArray = imageIDArray != null ? imageIDArray : new String[]{"temp id"};
+
+        if (imageIDArray == null){
+            this.imageIDArray = new ArrayList<>();
+        } else {
+            this.imageIDArray = imageIDArray;
+        }
         this.isSelected = false;
     }
 
@@ -53,8 +57,16 @@ public class ListingItem implements Serializable {
         return ItemID;
     }
 
-    public String[] getImageIDArray() {
+    public List<String> getImageIDArray() {
         return imageIDArray;
+    }
+
+    public void setImageToArray(Integer pos ,String imageID){
+        if (this.imageIDArray.isEmpty()){
+            this.imageIDArray.add(imageID);
+        } else {
+            this.imageIDArray.set(pos, imageID);
+        }
     }
 
     public String getName() {
@@ -71,10 +83,6 @@ public class ListingItem implements Serializable {
 
     public String getTakenByUserID() {
         return takenByUserID;
-    }
-
-    public String[] getTagList() {
-        return tagList;
     }
 
     public void toggleIsSelected() {
@@ -106,11 +114,7 @@ public class ListingItem implements Serializable {
         this.takenByUserID = takenByUserID;
     }
 
-    public void setTagList(String[] tagList) {
-        this.tagList = tagList;
-    }
-
-    public void setImageIDArray(String[] imageIDArray) {
+    public void setImageIDArray(List<String> imageIDArray) {
         this.imageIDArray = imageIDArray;
     }
 

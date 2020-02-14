@@ -47,9 +47,14 @@ public class SingleItemHorizontalAdapter extends RecyclerView.Adapter<SingleItem
         ListingItem currItem = listingItems.get(position);
         holder.titleTextView.setText(currItem.getName());
 
-        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
-        String imageUrl = rootURL + "/getImage?imageID=" + currItem.getImageIDArray()[0];
-        Picasso.get().load(imageUrl).into(holder.itemImageView);
+        try {
+            String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+            String imageUrl = rootURL + "/getImage?imageID=" + currItem.getImageIDArray().get(0);
+            Picasso.get().load(imageUrl).into(holder.itemImageView);
+
+        } catch (Exception e ){
+            System.out.println(e.toString());
+        }
 
         holder.bodyTextView.setText(currItem.getDescription());
 

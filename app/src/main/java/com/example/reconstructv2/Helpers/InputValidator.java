@@ -1,6 +1,7 @@
 package com.example.reconstructv2.Helpers;
 
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
 
@@ -101,13 +102,12 @@ public class InputValidator {
             phoneEditText.setError("Field cannot be empty");
             return false;
 
-        } else if (!(phoneNumber.length() < 12)) {
-            phoneEditText.setError(capitalisedName + " needs to be less than 12 digits");
-            return false;
-
-
         } else if (!(phoneNumber.length() > 8)) {
             phoneEditText.setError(capitalisedName + " needs to be more than 8 digits");
+            return false;
+
+        } else if (!(phoneNumber.length() < 12)) {
+            phoneEditText.setError(capitalisedName + " needs to be less than 12 digits");
             return false;
 
         } else {
@@ -116,5 +116,36 @@ public class InputValidator {
         }
 
     }
+
+
+    public static boolean validateItemText(EditText editText, String attributeName){
+
+        if (editText.getText().length() == 0){
+            editText.setError(attributeName + " field cannot be empty");
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean validateItemText(TextView editText, String attributeName){
+
+        if (editText.getText().length() == 0){
+            editText.setError(attributeName + " field cannot be empty");
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean validateItemText(String text){
+        if (text.length() == 0){
+            return false;
+        } else {
+            return false;
+        }
+
+    }
+
 
 }

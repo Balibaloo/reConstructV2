@@ -1,5 +1,6 @@
 package com.example.reconstructv2.Models.ApiResponses;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
@@ -14,5 +15,11 @@ public class ListingIDAPIResponse extends BaseAPIResponse {
 
     public String getListingID() {
         return listingID;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return super.toString() + "listingID = " + listingID + "|";
     }
 }

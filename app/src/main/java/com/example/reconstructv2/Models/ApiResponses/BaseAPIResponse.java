@@ -1,5 +1,6 @@
 package com.example.reconstructv2.Models.ApiResponses;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
@@ -32,11 +33,21 @@ public class BaseAPIResponse {
 
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public void setIsSuccesfull(Boolean succesfull) {
         isSuccesfull = succesfull;
     }
 
     public Boolean getIsSuccesfull() {
         return isSuccesfull;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "testVar = " + testVariable + " |message = " + message+ "|isSuccesfull = " + isSuccesfull;
     }
 }

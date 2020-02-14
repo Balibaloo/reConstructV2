@@ -1,11 +1,9 @@
-package com.example.reconstructv2.Fragments.CreateListing;
+package com.example.reconstructv2.Fragments.CreateListing.CreateListingMain;
 
 import android.app.Application;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -13,17 +11,10 @@ import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.ImageIDAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.ListingIDAPIResponse;
-import com.example.reconstructv2.Models.Listing;
 import com.example.reconstructv2.Models.ListingFull;
-import com.example.reconstructv2.Models.ListingToCreate;
 import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class CreateListingViewModel extends AndroidViewModel {
 
@@ -64,7 +55,7 @@ public class CreateListingViewModel extends AndroidViewModel {
         apiRepository.saveImageonServer("Bearer " + UserInfo.getToken(getApplication()),imageUri);
     }
 
-    public void deleteImageRequest(String imageID){
+    public void deleteImageRequest(List<String> imageID){
         apiRepository.deleteImage("Bearer " + UserInfo.getToken(getApplication()), imageID);
 
     }

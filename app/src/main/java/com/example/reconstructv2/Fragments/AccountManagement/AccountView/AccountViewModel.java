@@ -1,4 +1,4 @@
-package com.example.reconstructv2.Fragments.AccountView;
+package com.example.reconstructv2.Fragments.AccountManagement.AccountView;
 
 import android.app.Application;
 import android.content.Context;

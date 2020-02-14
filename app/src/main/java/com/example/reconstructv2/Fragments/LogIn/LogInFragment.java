@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -65,7 +66,7 @@ public class LogInFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
 
-        logInViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
+        logInViewModel = new ViewModelProvider(this).get(LogInViewModel.class);
 
         initViews(view);
         setOnClickListeners();
@@ -86,51 +87,30 @@ public class LogInFragment extends Fragment {
     }
 
     private void setOnClickListeners(){
-        logInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = usernameTextEdit.getText().toString();
-                String password = passwordTextEdit.getText().toString();
-                String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),username,password);
+        logInButton.setOnClickListener(v -> {
+            String username = usernameTextEdit.getText().toString();
+            String password = passwordTextEdit.getText().toString();
+            String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),username,password);
 
-                sendLogInRequest(username,saltedHashedPassword);
-            }
+            sendLogInRequest(username,saltedHashedPassword);
         });
 
-        constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                KeyboardHelper.hideSoftKeyboard(getActivity());
+        constraintLayout.setOnClickListener(v -> KeyboardHelper.hideSoftKeyboard(getActivity()));
+
+        logInSkipButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.homeFragment2));
+
+        createAccountButton.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(R.id.createUserFragment));
+
+
+        passwordTextEdit.setOnEditorActionListener((v, actionId, event) -> {
+            Boolean handled = false;
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
+                // call on click listener
+                logInButton.callOnClick();
+                handled = true;
             }
-        });
+            return handled;
 
-        logInSkipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.homeFragment2);
-            }
-        });
-
-        createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(getView()).navigate(R.id.createUserFragment);
-            }
-        });
-
-
-        passwordTextEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Boolean handled = false;
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
-                    // call on click listener
-                    logInButton.callOnClick();
-                    handled = true;
-                }
-                return handled;
-
-            }
         });
     }
 

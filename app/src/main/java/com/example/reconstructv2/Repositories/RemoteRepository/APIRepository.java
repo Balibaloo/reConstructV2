@@ -1,14 +1,12 @@
 package com.example.reconstructv2.Repositories.RemoteRepository;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.loader.content.CursorLoader;
 
@@ -28,25 +26,14 @@ import com.example.reconstructv2.Models.User;
 import com.google.gson.JsonObject;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.functions.Action1;
-import rx.functions.FuncN;
 
 
 public class APIRepository {
@@ -81,7 +68,6 @@ public class APIRepository {
         this.userTokenAPIResponseMutableLiveData = new MutableLiveData<>();
         this.desiredItemsAPIResponseMutableLiveData = new MutableLiveData<>();
         this.imageIDAPIResponseMutableLiveData = new MutableLiveData<>();
-
 
 
     }
@@ -131,6 +117,8 @@ public class APIRepository {
         return imageIDAPIResponseMutableLiveData;
     }
 
+    //----------------------------------------------------------------------------------------------
+
     public void testConnectionNoAuth() {
         apiService.testConnection().enqueue(new Callback<BaseAPIResponse>() {
             @Override
@@ -140,13 +128,18 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -160,13 +153,18 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue((response.body()));
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
 
@@ -181,14 +179,19 @@ public class APIRepository {
                     CheckUsernameAvailableAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(new CheckAvailableAPIResponse(false));
+
+                    CheckAvailableAPIResponse tempResponse = new CheckAvailableAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(tempResponse);
                 }
 
             }
 
             @Override
             public void onFailure(Call<CheckAvailableAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                CheckAvailableAPIResponse tempResponse = new CheckAvailableAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                CheckUsernameAvailableAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -202,19 +205,23 @@ public class APIRepository {
                     CheckEmailAvailableAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(new CheckAvailableAPIResponse(false));
+                    CheckAvailableAPIResponse tempResponse = new CheckAvailableAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    CheckUsernameAvailableAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<CheckAvailableAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                CheckAvailableAPIResponse tempResponse = new CheckAvailableAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                CheckUsernameAvailableAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
 
     public void createListing(String AuthHeaderToken, ListingFull listing) {
-        apiService.createListing(AuthHeaderToken,listing).enqueue(new Callback<ListingIDAPIResponse>() {
+        apiService.createListing(AuthHeaderToken, listing).enqueue(new Callback<ListingIDAPIResponse>() {
             @Override
             public void onResponse(Call<ListingIDAPIResponse> call, Response<ListingIDAPIResponse> response) {
                 if (response.isSuccessful()) {
@@ -222,13 +229,18 @@ public class APIRepository {
                     listingIDAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    listingIDAPIResponseMutableLiveData.setValue(new ListingIDAPIResponse(false));
+                    ListingIDAPIResponse tempResponse = new ListingIDAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    listingIDAPIResponseMutableLiveData.setValue(tempResponse);
+
                 }
             }
 
             @Override
             public void onFailure(Call<ListingIDAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                ListingIDAPIResponse tempResponse = new ListingIDAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                listingIDAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -242,13 +254,17 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -262,13 +278,17 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -282,13 +302,17 @@ public class APIRepository {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
+                    ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    listingListAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                listingListAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -302,13 +326,17 @@ public class APIRepository {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
+                    ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    listingListAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                listingListAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -323,13 +351,17 @@ public class APIRepository {
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    singleListingAPIResponseMutableLiveData.setValue(new SingleListingAPIResponse(false));
+                    SingleListingAPIResponse tempResponse = new SingleListingAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    singleListingAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<SingleListingAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                SingleListingAPIResponse tempResponse = new SingleListingAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                singleListingAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
 
@@ -344,20 +376,24 @@ public class APIRepository {
                     singleListingAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    singleListingAPIResponseMutableLiveData.setValue(new SingleListingAPIResponse(false));
+                    SingleListingAPIResponse tempResponse = new SingleListingAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    singleListingAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<SingleListingAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                SingleListingAPIResponse tempResponse = new SingleListingAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                singleListingAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
 
-    public void reserveItems(String AuthHeaderToken, List<JsonObject> listingItems){
+    public void reserveItems(String AuthHeaderToken, List<JsonObject> listingItems) {
 
-        apiService.reserveItemsRequest(AuthHeaderToken,listingItems).enqueue(new Callback<BaseAPIResponse>() {
+        apiService.reserveItemsRequest(AuthHeaderToken, listingItems).enqueue(new Callback<BaseAPIResponse>() {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
                 System.out.println(response.toString());
@@ -366,13 +402,17 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -381,18 +421,50 @@ public class APIRepository {
         apiService.getFrontPageListings(0).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
+                
                 if (response.isSuccessful()) {
                     response.body().setIsSuccesfull(true);
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
+                    ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    listingListAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                listingListAPIResponseMutableLiveData.setValue(tempResponse);
+            }
+
+
+        });
+    }
+
+    public void getUserListings(String userID) {
+        apiService.getUserListings(userID).enqueue(new Callback<ListingListAPIResponse>() {
+            @Override
+            public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
+                
+                if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
+                    listingListAPIResponseMutableLiveData.setValue(response.body());
+                } else {
+                    RequestErrorHandler.displayErrorMessage(mContext, response);
+                    ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    listingListAPIResponseMutableLiveData.setValue(tempResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
+                ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                listingListAPIResponseMutableLiveData.setValue(tempResponse);
             }
 
 
@@ -403,18 +475,21 @@ public class APIRepository {
         apiService.getFilteredListings(searchString, pageNum).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(Call<ListingListAPIResponse> call, Response<ListingListAPIResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     listingListAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    listingListAPIResponseMutableLiveData.setValue(new ListingListAPIResponse(false));
+                    ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    listingListAPIResponseMutableLiveData.setValue(tempResponse);
                 }
-
             }
 
             @Override
             public void onFailure(Call<ListingListAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                ListingListAPIResponse tempResponse = new ListingListAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                listingListAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -428,19 +503,23 @@ public class APIRepository {
                     desiredItemsAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    desiredItemsAPIResponseMutableLiveData.setValue(new DesiredItemsAPIResponse(false));
+                    DesiredItemsAPIResponse tempResponse = new DesiredItemsAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    desiredItemsAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<DesiredItemsAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                DesiredItemsAPIResponse tempResponse = new DesiredItemsAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                desiredItemsAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
 
-    public void login(String Username,String saltedHashedPassword) {
-        String base64EncodedUP = AuthenticationHelper.getHeaderB64(Username,saltedHashedPassword);
+    public void login(String Username, String saltedHashedPassword) {
+        String base64EncodedUP = AuthenticationHelper.getHeaderB64(Username, saltedHashedPassword);
 
         apiService.login(base64EncodedUP).enqueue(new Callback<UserTokenAPIResponse>() {
             @Override
@@ -450,13 +529,17 @@ public class APIRepository {
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    userTokenAPIResponseMutableLiveData.setValue(new UserTokenAPIResponse(false));
+                    UserTokenAPIResponse tempResponse = new UserTokenAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    userTokenAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<UserTokenAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                UserTokenAPIResponse tempResponse = new UserTokenAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                userTokenAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -470,13 +553,17 @@ public class APIRepository {
                     userAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    userAPIResponseMutableLiveData.setValue(new UserAPIResponse(false));
+                    UserAPIResponse tempResponse = new UserAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    userAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<UserAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                UserAPIResponse tempResponse = new UserAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                userAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -490,13 +577,17 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
@@ -511,40 +602,48 @@ public class APIRepository {
                     userTokenAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    userTokenAPIResponseMutableLiveData.setValue(new UserTokenAPIResponse(false));
+                    UserTokenAPIResponse tempResponse = new UserTokenAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    userTokenAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<UserTokenAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                UserTokenAPIResponse tempResponse = new UserTokenAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                userTokenAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
 
-    public void saveUser(String authHeaderToken,User user){
-        apiService.saveUser(authHeaderToken,user).enqueue(new Callback<BaseAPIResponse>() {
+    public void saveUser(String authHeaderToken, User user) {
+        apiService.saveUser(authHeaderToken, user).enqueue(new Callback<BaseAPIResponse>() {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
 
     public void saveImageonServer(String authHeader, Uri imageUri) {
 
-        String[] proj = { MediaStore.Images.Media.DATA };
+        String[] proj = {MediaStore.Images.Media.DATA};
 
         CursorLoader cursorLoader = new CursorLoader(
                 mContext,
@@ -557,43 +656,54 @@ public class APIRepository {
         File imageFile = new File(cursor.getString(column_index));
 
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
-        MultipartBody.Part body =MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", imageFile.getName(), requestFile);
 
         apiService.saveImageOnServer(authHeader, body).enqueue(new Callback<ImageIDAPIResponse>() {
             @Override
             public void onResponse(Call<ImageIDAPIResponse> call, Response<ImageIDAPIResponse> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     response.body().setIsSuccesfull(true);
                     imageIDAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    imageIDAPIResponseMutableLiveData.setValue(new ImageIDAPIResponse(false));
+                    ImageIDAPIResponse tempResponse = new ImageIDAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    imageIDAPIResponseMutableLiveData.setValue(tempResponse);
                 }
 
             }
 
             @Override
             public void onFailure(Call<ImageIDAPIResponse> call, Throwable t) {
-
+                ImageIDAPIResponse tempResponse = new ImageIDAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                imageIDAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }
 
-    public void deleteImage(String authHeader, String imageID) {
+    public void deleteImage(String authHeader, List<String> imageIDs) {
 
-        apiService.deleteImageFromServer(authHeader,imageID).enqueue(new Callback<BaseAPIResponse>() {
+        apiService.deleteImageFromServer(authHeader, imageIDs).enqueue(new Callback<BaseAPIResponse>() {
             @Override
             public void onResponse(Call<BaseAPIResponse> call, Response<BaseAPIResponse> response) {
-                if (response.body().getIsSuccesfull()){
+                System.out.println(response.toString());
+                if (response.isSuccessful()) {
+                    response.body().setIsSuccesfull(true);
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(response.body());
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
 
@@ -608,13 +718,17 @@ public class APIRepository {
                     baseAPIResponseMutableLiveData.setValue(response.body());
                 } else {
                     RequestErrorHandler.displayErrorMessage(mContext, response);
-                    baseAPIResponseMutableLiveData.setValue(new BaseAPIResponse(false));
+                    BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                    tempResponse.setMessage(response.message());
+                    baseAPIResponseMutableLiveData.setValue(tempResponse);
                 }
             }
 
             @Override
             public void onFailure(Call<BaseAPIResponse> call, Throwable t) {
-                System.out.println(t);
+                BaseAPIResponse tempResponse = new BaseAPIResponse(false);
+                tempResponse.setMessage(t.getMessage());
+                baseAPIResponseMutableLiveData.setValue(tempResponse);
             }
         });
     }

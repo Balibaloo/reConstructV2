@@ -1,7 +1,6 @@
-package com.example.reconstructv2.Fragments.CreateListing;
+package com.example.reconstructv2.Fragments.CreateListing.CreateListingMain;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdapter.ListingItemHolder>{
     private List<ListingItem> listingItems = new ArrayList<>();
@@ -48,15 +47,17 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
 
         ListingItem currItem = listingItems.get(position);
 
-        try {
-            Uri imageUri = Uri.parse(currItem.getImageIDArray()[0]);
-            holder.itemImage.setImageURI(imageUri);
-        } catch(Exception e) {
-            loadImageInto(holder.itemImage,currItem.getImageIDArray()[0]);
+        if (currItem.getImageIDArray().isEmpty()){
+            holder.itemImage.setImageResource(R.drawable.ic_default_image);
+        } else {
+            loadImageInto(holder.itemImage,currItem.getImageIDArray().get(0));
         }
 
         holder.TextViewname.setText(currItem.getName());
         holder.TextViewdescription.setText(currItem.getDescription());
+
+        InputValidator.validateItemText(holder.TextViewname,"name");
+        InputValidator.validateItemText(holder.TextViewdescription, "description");
 
         if(!currItem.getAvailable()){
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_available);
@@ -69,10 +70,15 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
     }
 
     private void loadImageInto(ImageView iamgeView, String imageID){
-        String rootURL = mContext.getResources().getString(R.string.ROOTURL);
+        try{
+            String rootURL = mContext.getResources().getString(R.string.ROOTURL);
 
-        String imageUrl = rootURL + "/getImage?imageID=" + imageID;
-        Picasso.get().load(imageUrl).into(iamgeView);
+            String imageUrl = rootURL + "/getImage?imageID=" + imageID;
+            Picasso.get().load(imageUrl).into(iamgeView);
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+
     }
 
     @Override
@@ -86,6 +92,12 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
     public void addListingItem(ListingItem item){
         this.listingItems.add(item);
         notifyDataSetChanged();
+    }
+
+
+
+    public ListingItem getItem(ListingItem position){
+        return this.listingItems.get(this.listingItems.indexOf(position));
     }
 
     class ListingItemHolder extends RecyclerView.ViewHolder {
@@ -102,27 +114,21 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
             TextViewdescription = itemView.findViewById(R.id.item_bodyTextView);
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (listener != null && pos != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(listingItems.get(pos));
-                    }
+            itemView.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                if (listener != null && pos != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(listingItems.get(pos));
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (longClickListener != null && pos != RecyclerView.NO_POSITION) {
-                        longClickListener.onLongPress(listingItems.get(pos));
+            itemView.setOnLongClickListener(v -> {
+                int pos = getAdapterPosition();
+                if (longClickListener != null && pos != RecyclerView.NO_POSITION) {
+                    longClickListener.onLongPress(listingItems.get(pos));
 
-                    }
-
-                    return true;
                 }
+
+                return true;
             });
         }
 
@@ -144,4 +150,3 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
     }
 
 }
-

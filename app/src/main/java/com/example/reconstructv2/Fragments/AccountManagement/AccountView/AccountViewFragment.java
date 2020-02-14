@@ -1,4 +1,4 @@
-package com.example.reconstructv2.Fragments.AccountView;
+package com.example.reconstructv2.Fragments.AccountManagement.AccountView;
 
 import android.content.Context;
 import android.net.Uri;
@@ -17,7 +17,7 @@ import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
@@ -109,7 +109,7 @@ public class AccountViewFragment extends Fragment {
     }
 
     private void initViewModel(){
-        accountViewModel = ViewModelProviders.of(this).get(AccountViewModel.class);
+        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
     }
 
     private void setOnClickListeners(){

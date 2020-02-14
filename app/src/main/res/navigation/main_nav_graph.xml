@@ -36,12 +36,12 @@
         app:destination="@id/singleListingFragment" />
     <fragment
         android:id="@+id/accountViewFragment"
-        android:name="com.example.reconstructv2.Fragments.AccountView.AccountViewFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountView.AccountViewFragment"
         android:label="fragment_account_view"
         tools:layout="@layout/fragment_account_view" />
     <fragment
         android:id="@+id/createListingFragment"
-        android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingFragment"
         android:label="fragment_create_listing"
         tools:layout="@layout/fragment_create_listing" >
         <action
@@ -60,12 +60,19 @@
             app:argType="string[]"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_createListingFragment_to_createListingLocationFragment2"
+            app:destination="@id/createListingLocationFragment" />
     </fragment>
     <fragment
         android:id="@+id/logInFragment"
         android:name="com.example.reconstructv2.Fragments.LogIn.LogInFragment"
         android:label="fragment_log_in"
-        tools:layout="@layout/fragment_log_in" />
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFragment_to_resetPasswordFragment"
+            app:destination="@id/resetPasswordFragment" />
+    </fragment>
     <fragment
         android:id="@+id/createUserFragment"
         android:name="com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment"
@@ -123,7 +130,7 @@
     </fragment>
     <fragment
         android:id="@+id/itemListEditFragment"
-        android:name="com.example.reconstructv2.Fragments.CreateListing.ItemListEditFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.ItemListEdit.ItemListEditFragment"
         android:label="fragment_item_list_edit"
         tools:layout="@layout/fragment_item_list_edit" >
         <argument
@@ -137,5 +144,91 @@
             android:id="@+id/action_itemListEditFragment_to_createListingFragment"
             app:destination="@id/createListingFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/accountMenuFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountMenu.AccountMenuFragment"
+        android:label="fragment_account_menu"
+        tools:layout="@layout/fragment_account_menu" >
+        <action
+            android:id="@+id/action_accountMenuFragment_to_accountViewFragment"
+            app:destination="@id/accountViewFragment" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_userListings"
+            app:destination="@id/userListings" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_watchedListingsFragment"
+            app:destination="@id/watchedListingsFragment" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_recentlyViewedListings"
+            app:destination="@id/recentlyViewedListings" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_desiredItemsFragment"
+            app:destination="@id/desiredItemsFragment" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_logoutFragment"
+            app:destination="@id/logoutFragment" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_accountViewFragment"
+        app:destination="@id/accountViewFragment" />
+    <fragment
+        android:id="@+id/createListingLocationFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.createListingLocationFragment"
+        android:label="fragment_create_listing_location"
+        tools:layout="@layout/fragment_create_listing_location" >
+        <argument
+            android:name="listingArgument"
+            app:argType="com.example.reconstructv2.Models.ListingFull" />
+        <action
+            android:id="@+id/action_createListingLocationFragment_to_createListingFinish"
+            app:destination="@id/createListingFinish" />
+    </fragment>
+    <fragment
+        android:id="@+id/createListingFinish"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingFinish"
+        android:label="fragment_create_listing_finish"
+        tools:layout="@layout/fragment_create_listing_finish" >
+        <argument
+            android:name="listingArg"
+            app:argType="com.example.reconstructv2.Models.ListingFull" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountFragments.changePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/userListings"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.UserListings.userListingsFragment"
+        android:label="fragment_user_listings"
+        tools:layout="@layout/fragment_user_listings" />
+    <fragment
+        android:id="@+id/watchedListingsFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountFragments.watchedListingsFragment"
+        android:label="fragment_watched_listings"
+        tools:layout="@layout/fragment_watched_listings" />
+    <fragment
+        android:id="@+id/recentlyViewedListings"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.RecentlyViewedListings.recentlyViewedListings"
+        android:label="fragment_recently_viewed_listings"
+        tools:layout="@layout/fragment_recently_viewed_listings" />
+    <fragment
+        android:id="@+id/desiredItemsFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountFragments.desiredItemsFragment"
+        android:label="fragment_desired_items"
+        tools:layout="@layout/fragment_desired_items" />
+    <fragment
+        android:id="@+id/logoutFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.LogOut.LogoutFragment"
+        android:label="fragment_logout"
+        tools:layout="@layout/fragment_log_out" />
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.example.reconstructv2.Fragments.LogIn.resetPasswordFragment"
+        android:label="fragment_reset_password"
+        tools:layout="@layout/fragment_reset_password" />
 
 </navigation>
