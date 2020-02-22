@@ -1,0 +1,7 @@
+INPUT VALIDATOR
+ add validation for email
+ add a list of characters that cannot be in any field
+
+
+Api Repository
+    fetch listings per page from some high level source

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class CheckAvailableAPIResponse extends BaseAPIResponse {
 
-    @SerializedName("is_unused")
+    @SerializedName("isAvailable")
     private Boolean is_unused;
 
     public CheckAvailableAPIResponse(@Nullable Boolean isSuccesfull) {

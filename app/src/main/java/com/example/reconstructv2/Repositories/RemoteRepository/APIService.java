@@ -34,7 +34,10 @@ import retrofit2.http.Query;
 import io.reactivex.Observable;
 
 
+// set urls available on the server with data required for each destination
 public interface APIService {
+
+    // Test Connections
 
     @GET("/")
     Call<BaseAPIResponse> testConnection();
@@ -42,15 +45,15 @@ public interface APIService {
     @GET("/auth")
     Call<BaseAPIResponse> testConnectionAuthenticated(@Header("authorization") String AuthHeaderToken);
 
-    ///////////////////////////////////////////////////////// TESTS
+    // Avaliability Checks
 
-    @GET("/checkUniqueUsername")
+    @GET("/checkUsernameAvailable")
     Call<CheckAvailableAPIResponse> checkUsernameUnique(@Query("username") String username);
 
-    @GET("/checkUniqueEmail")
+    @GET("/checkEmailAvailable")
     Call<CheckAvailableAPIResponse> checkEmailUnique(@Query("email") String email);
 
-    ///////////////////////////////////////////////////////// LISTINGS
+    // Listingss
 
     @POST("/auth/createListing")
     Call<ListingIDAPIResponse> createListing(@Header("authorization") String AuthHeaderToken,
@@ -69,7 +72,8 @@ public interface APIService {
 
     @GET("/auth/getRecentListings")
     Call<ListingListAPIResponse> getRecentListings(@Header("authorization") String AuthHeaderToken,
-                                                   @Query("pageNum") Integer pageNum);
+                                                   @Query("pageNum") Integer pageNum,
+                                                   @Query("listingsPerPage") Integer listingsPerPage);
 
     @GET("/auth/getListing")
     Call<SingleListingAPIResponse> getListingAuthenticated(@Header("authorization") String AuthHeaderToken,
@@ -79,23 +83,29 @@ public interface APIService {
     Call<BaseAPIResponse> reserveItemsRequest(@Header("authorization") String AuthHeaderToken,
                                               @Query("listingItemIDList") List<JsonObject> listingItemIDs);
 
-    @GET("/getListingNoAuth")
+    @GET("/getListing")
     Call<SingleListingAPIResponse> getListingNoAuth(@Query("listingID") String listingID);
 
     @GET("/getFrontPageListings")
-    Call<ListingListAPIResponse> getFrontPageListings(@Query("pageNum") Integer pageNum);
+    Call<ListingListAPIResponse> getFrontPageListings(@Query("pageNum") Integer pageNum,
+                                                      @Query("listingsPerPage") Integer listingsPerPage );
 
     @GET("/getUserListings")
     Call<ListingListAPIResponse> getUserListings(@Query("userID") String userID);
 
     @GET("/getFilteredListings")
     Call<ListingListAPIResponse> getFilteredListings(@Query("searchString") String searchString,
-                                                     @Query("pageNum") Integer pageNum);
+                                                     @Query("pageNum") Integer pageNum,
+                                                     @Query("listingsPerPage") Integer listingsPerPage);
 
     @GET("/getDesiredItems")
-    Call<DesiredItemsAPIResponse> getDesiredItems(@Query("pageNum") Integer pageNum);
+    Call<DesiredItemsAPIResponse> getDesiredItems(@Query("pageNum") Integer pageNum,
+                                                  @Query("listingsPerPage") Integer listingsPerPage);
 
-    ///////////////////////////////////////////////////////// USER MANAGEMENT
+    // User Management
+
+    @POST("/createAccount")
+    Call<UserTokenAPIResponse> createAccount(@Body User user);
 
     @GET("/auth/login")
     Call<UserTokenAPIResponse> login(@Header("authorization") String AuthHeaderUP);
@@ -107,10 +117,11 @@ public interface APIService {
     Call<BaseAPIResponse> changeWantedTags(@Header("authorization") String AuthHeaderToken,
                                            @Query("new_tags") List<String> new_tags);
 
-    @POST("/createAccount")
-    Call<UserTokenAPIResponse> createAccount(@Body User user);
+    @GET("/auth/getWatchedListings")
+    Call<ListingListAPIResponse> getWatchedListings(@Header("authorization") String AuthHeaderToken)
 
-    @POST("/auth/update_user_data")
+
+    @POST("/auth/updateUserData")
     Call<BaseAPIResponse> saveUser(@Header("authorization") String AuthHeaderToken,
                                    @Body User user);
     @Multipart

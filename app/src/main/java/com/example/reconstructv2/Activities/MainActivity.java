@@ -60,11 +60,17 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private List<Integer> fragmentsToConfirmLeave = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment);
+    // a list of fragments that require a popup dialouge
+    // to confirm that the user wants to leave
+    // because data may be lost
+    private List<Integer> fragmentsToConfirmLeave = 
+        Arrays.asList(R.id.createListingFragment,R.id.createUserFragment);
+    
+    // a list of top level fragments
+    // when the back button is pressed
+    // the app should navigate to the home fragment
+    // as opposed to popping the backstack
     private List<Integer> topLevelFragments = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment,R.id.singleListingFragment, R.id.accountMenuFragment);
-    private Boolean userConfirmedLeave;
-
-    private Integer currFragmentId;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -73,40 +79,54 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-
-
+        setContentView(R.layout.activity_main); // display the main activity layout
 
         init();
     }
 
+    private void init(){
+        drawerLayout = findViewById(R.id.drawer_layout); // find the reference to the drawer layout
+
+        // find the reference to the navigation menu in the drawer layout
+        navigationView = findViewById(R.id.nav_view); 
+
+
+        // initialises navController and drawerLayour with navController
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        NavigationUI.setupActionBarWithNavController(this,navController,drawerLayout); 
+        NavigationUI.setupWithNavController(navigationView,navController);
+        navigationView.setNavigationItemSelectedListener(this);
+
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
         final NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
 
-        // check if user has confirmed leaving the create listing fragment
+        // check if the user is leaving an unsafe fragment
         if (userIsLeaving(navController,fragmentsToConfirmLeave)) {
-            if (!userConfirmedLeave){
-                createMenuNavigationAlert(menuItem);
-                return true;
-            }
+
+            // create an alert to check if the user wants to leave
+            createMenuNavigationAlert(menuItem);
+            return true;
         }
 
+        // if the user is not leaving an unsafe fragment then handle the navigation
         handleMenuItemPress(menuItem);
         return true;
     }
 
+    // handles drawer menu items being selected
     private void handleMenuItemPress(MenuItem menuItem){
-        // handles drawer menu items being selected
+        
+        // check that the user is not trying to navigate to a fragment they are already in
         if (isValidDestination(menuItem.getItemId())){
-            switch (menuItem.getItemId()) {
 
+            switch (menuItem.getItemId()) {
                 case (R.id.nav_to_home):{
-                    // clear backstack on navigation to home
+                    // if the user tries to navigate to the home fragment
+                    // clear the backstack and navigate to the home fragment
                     NavOptions navOptions = new NavOptions.Builder()
                             .setPopUpTo(R.id.main_nav_graph,true).build();
 
@@ -116,13 +136,23 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 case (R.id.nav_to_account):{
-                    Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.accountMenuFragment);
+                    // navigate to the account fragment
+                    Navigation.findNavController(this,R.id.nav_host_fragment)
+                        .navigate(R.id.accountMenuFragment);
                     break;
                 }
+
                 case R.id.nav_to_create_listing:{
+
+                    // users must be logged in to create a listing
                     if (UserInfo.getIsLoggedIn(getApplication())){
-                        Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.createListingFragment);
+                        // if the user is logged in
+                        // navigate to the fragment
+                        Navigation.findNavController(this,R.id.nav_host_fragment)
+                            .navigate(R.id.createListingFragment);
+
                     } else {
+                        // if the user is not logged in display a toast
                         Toast.makeText(this, "You need to be logged in to create a listing", Toast.LENGTH_SHORT).show();
                     }
 
@@ -130,113 +160,138 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 case R.id.nav_to_log_in:{
-                    Navigation.findNavController(this,R.id.nav_host_fragment).navigate(R.id.logInFragment);
+                    // navigate to the log in fragment
+                    Navigation.findNavController(this,R.id.nav_host_fragment)
+                        .navigate(R.id.logInFragment);
                 }
 
             }}
 
-        menuItem.setChecked(true);
-        drawerLayout.closeDrawer(GravityCompat.START);
+        // menuItem.setChecked(true);
+        drawerLayout.closeDrawer(GravityCompat.START); // hide the drawer layout
     }
 
-    private void init(){
-        // initialises navController and drawerLayour with navController
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-
-        NavigationUI.setupActionBarWithNavController(this,navController,drawerLayout);
-        NavigationUI.setupWithNavController(navigationView,navController);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        userConfirmedLeave = false;
-    }
-
+    
+    // check that the user is not trying to navigate to a fragment that theyre already in
     private boolean isValidDestination(int Destination){
-      return Destination != Navigation.findNavController(this,R.id.nav_host_fragment)
+        return Destination != Navigation.findNavController(this,R.id.nav_host_fragment)
               .getCurrentDestination().getId();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
+        // when the user presses the back button
 
+        // find the navigation controller
         final NavController navController = Navigation.findNavController(this,R.id.nav_host_fragment);
 
         // checks if the user is trying to leave an unsafe fragment
         if (userIsLeaving(navController,fragmentsToConfirmLeave)
                 &&
                 userIsLeaving(navController,topLevelFragments)) {
+            // if the user is leaving an unsafe top level fragment
             createHomeNavigateAlert(navController);
             return true;
+
         } else if (userIsLeaving(navController,topLevelFragments)){
+            // if the user is leaving a top level fragment
+            // navigate to the home fragment
             navController.navigate(R.id.homeFragment2);
             return true;
+
         } else if (userIsLeaving(navController,fragmentsToConfirmLeave)){
+            // if the user is leaving an unsafe fragment
             createBackNavigateAlert(navController);
             return true;
         } else {
+            // pop the backstack
             return NavigationUI.navigateUp(navController,drawerLayout);
         }
     }
 
+    // pop the backstack and navigate back
     private void navigateUp(NavController navController){
         NavigationUI.navigateUp(navController,drawerLayout);
     }
 
+    // create an alert to check if the user wants to navigate back
     private void createBackNavigateAlert(final NavController navcontroller){
+
+        // create new alert
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
+        // set alert the message
         alert.setMessage(R.string.listing_creation_exit_dialouge)
-                .setCancelable(false);
+                .setCancelable(true);
 
+        // if the user wishes to leave, navigate back
         alert.setNegativeButton("Discard", (dialog, which) -> navigateUp(navcontroller)).setPositiveButtonIcon(getResources()
                 .getDrawable(R.drawable.ic_check_white_24dp));
 
+        // if the user cancels, hide the allert
         alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
+        // show the alert
         alert.show();
     }
 
+    // create an alert to check if the user wants to navigate to the home fragment
     private void createHomeNavigateAlert(final NavController navcontroller){
+
+        // create a new allert
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
+        // set the alert message
         alert.setMessage(R.string.listing_creation_exit_dialouge)
-                .setCancelable(false);
+                .setCancelable(true);
 
+        // if the user wants to leave, navigate to the home fragment
         alert.setNegativeButton("Discard", (dialog, which) -> navcontroller.navigate(R.id.homeFragment2)).setPositiveButtonIcon(getResources()
                 .getDrawable(R.drawable.ic_check_white_24dp));
 
+        // if the user calcels, hide the dialouge
         alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
+        // hide the allert
         alert.show();
     }
 
+    // create an alert to check if the user wants to navigate to a fragment    
     private void createMenuNavigationAlert(final MenuItem menuItem){
+
+        // create a new alert
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
+        // set the alert message
         alert.setMessage(R.string.listing_creation_exit_dialouge)
                 .setCancelable(false);
 
+        // if the user wants to leave, handle the menu item press
         alert.setNegativeButton("Discard", (dialog, which) -> {
-            userConfirmedLeave = true;
-            onNavigationItemSelected(menuItem);
+            handleMenuItemPress(menuItem);
+        }).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
-        }).setPositiveButtonIcon(getResources()
-                .getDrawable(R.drawable.ic_check_white_24dp));
+        // if the user calcels, hide the dialouge
+        alert.setPositiveButton("Cancel", (dialog, which) -> {
+            dialog.cancel();
+        }).setPositiveButtonIcon(getResources().getDrawable(R.drawable.ic_check_white_24dp));
 
-        alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
-
+        // show the alert
         alert.show();
 
     }
 
-    private boolean userIsLeaving(final NavController navController, List list){
-        currFragmentId = navController.getCurrentDestination().getId();
-        System.out.println("user is leaving " + currFragmentId);
-        System.out.println("listing frag id  = " + R.id.createListingFragment);
-        return list.contains(currFragmentId);
+    // check if user is leaving a fragment in a list of fragments
+    private boolean userIsLeaving(final NavController navController, List fragmentList){
+
+        // get the fragment the user is currently leaving
+        Integer currFragmentId = navController.getCurrentDestination().getId();
+
+        // return weather the fragment is in the list
+        return fragmentList.contains(currFragmentId);
     }
 
-
-
+    // callback method when starting activities for results
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

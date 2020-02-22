@@ -19,23 +19,24 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+// a recycler adapter that handles listing items in a recyclerView
 public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.ListingItemHolder>{
+
     private List<ListingItem> listingItems = new ArrayList<>();
     private OnClickListener listener;
     private OnLongPressListener longClickListener;
 
     private Context mContext;
 
-
+    // the constructor saves an application context
     public ListingItemAdapter(Context context){
         this.mContext = context;
     }
 
-
     @NonNull
     @Override
     public ListingItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        //Creates and returns a ListingHolder, the layout used in the recycler view
+        //Creates and returns a ListingItemHolder, the layout used in the recycler view
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listing_item_card_small, parent, false);
         return new ListingItemHolder(itemView);
@@ -90,7 +91,9 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
         notifyDataSetChanged();
     }
 
+    // class that handles each item in the recyclerview individualy
     class ListingItemHolder extends RecyclerView.ViewHolder {
+
         private CardView itemLayout;
         private TextView TextViewname;
         private TextView TextViewdescription;
@@ -98,6 +101,8 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
 
         public ListingItemHolder(@NonNull View itemView){
             super(itemView);
+
+            // create references to all the elements in each itemview
             itemLayout = itemView.findViewById(R.id.item_cardView);
             itemImage = itemView.findViewById(R.id.item_imageView);
             TextViewname = itemView.findViewById(R.id.item_nameTextView);
@@ -107,7 +112,9 @@ public class ListingItemAdapter extends RecyclerView.Adapter<ListingItemAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     int pos = getAdapterPosition();
+                    
                     if (listener != null && pos != RecyclerView.NO_POSITION) {
                         listener.onItemClick(listingItems.get(pos));
                     }
