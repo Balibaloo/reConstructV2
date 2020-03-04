@@ -6,6 +6,9 @@ import com.example.reconstructv2.Models.ListingFull;
 import com.google.gson.annotations.SerializedName;
 
 public class SingleListingAPIResponse extends BaseAPIResponse {
+
+    //@SerializedName annotation indicates the annotated member should be serialized to JSON with the provided name value as its field name.
+
     @SerializedName("listing")
     private ListingFull listing;
 

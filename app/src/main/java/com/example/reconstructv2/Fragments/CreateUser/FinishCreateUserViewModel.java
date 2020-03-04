@@ -32,13 +32,8 @@ public class FinishCreateUserViewModel extends AndroidViewModel {
         return userTokenAPIResponse;
     }
 
-    public void createUserRequest(User user) {
+    public void sendCreateUserRequest(User user) {
         apiRepository.createAccount(user);
     }
 
-    public MutableLiveData<BaseAPIResponse> getBaseAPIResponse(){
-        return baseAPIResponse;
-    }
-
-    public void testConnectionRequest() {apiRepository.testConnectionNoAuth();}
 }

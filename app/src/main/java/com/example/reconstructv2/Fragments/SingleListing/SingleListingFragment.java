@@ -1,8 +1,10 @@
 package com.example.reconstructv2.Fragments.SingleListing;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +18,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
 import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -47,7 +52,11 @@ public class SingleListingFragment extends Fragment {
     private TextView titleTextView;
     private TextView bodyTextView;
     private ImageView listingImage;
+
+    private Button viewAuthorAcountButton;
+    private Button viewLocationButton;
     private Button reserveButton;
+
 
     private SingleListingViewModel viewModel;
 
@@ -90,7 +99,10 @@ public class SingleListingFragment extends Fragment {
 
         refreshLayout = view.findViewById(R.id.singleListingSwipeRefreshLayout);
         listingImage = view.findViewById(R.id.singleListingImageView);
+
         reserveButton = view.findViewById(R.id.singleListingReserveButton);
+        viewAuthorAcountButton = view.findViewById(R.id.singleListing_ViewUserAccountButton);
+        viewLocationButton = view.findViewById(R.id.singleListing_ViewListingLocationButton);
     }
 
     private void setRefreshListener(){
@@ -101,17 +113,27 @@ public class SingleListingFragment extends Fragment {
     }
 
     private void setOnClickListeners(){
-        reserveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listingData instanceof ListingFull) {
-                    refreshLayout.setRefreshing(true);
-                    viewModel.reserveItemsRequest(getContext(),listingData);
-                } else {
-                    Toast.makeText(getContext() , "please wait for the listing to be fetched from the server", Toast.LENGTH_SHORT).show();
-                }
+        reserveButton.setOnClickListener(v -> {
+            if (listingData instanceof ListingFull) {
+                refreshLayout.setRefreshing(true);
+                viewModel.reserveItemsRequest(getContext(),listingData);
+            } else {
+                Toast.makeText(getContext() , "please wait for the listing to be fetched from the server", Toast.LENGTH_SHORT).show();
             }
         });
+
+        viewAuthorAcountButton.setOnClickListener(v -> {
+            MainNavGraphDirections.ActionGlobalAccountViewFragment3 action = MainNavGraphDirections.actionGlobalAccountViewFragment3(listingData.getAuthorID());
+            Navigation.findNavController(getView()).navigate(action);
+
+        });
+
+        viewLocationButton.setOnClickListener(v -> {
+            SingleListingFragmentDirections.ActionSingleListingFragmentToLocationViewFragment action = SingleListingFragmentDirections.actionSingleListingFragmentToLocationViewFragment( new LatLng(listingData.getLocation_lat(),listingData.getLocation_lon()));
+            Navigation.findNavController(getView()).navigate(action);
+        });
+
+
     }
 
     private void configureRecyclerViewAdapter(){
@@ -133,27 +155,21 @@ public class SingleListingFragment extends Fragment {
           }
       }).attachToRecyclerView(itemRecyclerView);
 
-      recyclerAdapter.setOnItemCLickListener(new ListingItemAdapter.OnClickListener() {
-          @Override
-          public void onItemClick(ListingItem listingItem) {
-              Integer itemPosition = listingData.getItemList().indexOf(listingItem);
-              SingleListingFragmentDirections.ActionSingleListingFragmentToSingleItemViewFragment action = SingleListingFragmentDirections.actionSingleListingFragmentToSingleItemViewFragment(listingData,itemPosition);
-              Navigation.findNavController(getView()).navigate(action);
-          }
+      recyclerAdapter.setOnItemCLickListener(listingItem -> {
+          Integer itemPosition = listingData.getItemList().indexOf(listingItem);
+          SingleListingFragmentDirections.ActionSingleListingFragmentToSingleItemViewFragment action = SingleListingFragmentDirections.actionSingleListingFragmentToSingleItemViewFragment(listingData,itemPosition);
+          Navigation.findNavController(getView()).navigate(action);
       });
 
-      recyclerAdapter.setLongClickListener(new ListingItemAdapter.OnLongPressListener() {
-          @Override
-          public void onLongPress(ListingItem listingItem) {
-              // check if available
-              if (listingItem.getAvailable()){
-                  listingItem.toggleIsSelected();
-                  recyclerAdapter.notifyDataSetChanged();
-              } else {
-                  Toast.makeText(getContext(), "this item is un available", Toast.LENGTH_SHORT).show();
-              }
-
+      recyclerAdapter.setLongClickListener(listingItem -> {
+          // check if available
+          if (listingItem.getAvailable()){
+              listingItem.toggleIsSelected();
+              recyclerAdapter.notifyDataSetChanged();
+          } else {
+              Toast.makeText(getContext(), "this item is un available", Toast.LENGTH_SHORT).show();
           }
+
       });
 
     };

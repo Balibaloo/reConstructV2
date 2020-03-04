@@ -17,6 +17,8 @@ import java.util.List;
 
 public class ListingItem implements Serializable {
 
+    //@SerializedName annotation indicates the annotated member should be serialized to JSON with the provided name value as its field name.
+
     @SerializedName("listingItemID")
     private String ItemID;
 
@@ -122,4 +124,9 @@ public class ListingItem implements Serializable {
         isSelected = selected;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "{" + ItemID + "," + name + "," + description + "}";
+    }
 }

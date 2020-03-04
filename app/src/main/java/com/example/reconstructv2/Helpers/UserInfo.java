@@ -14,6 +14,7 @@ public class UserInfo {
     private final static String TOKEN_KEY = "userToken";
     private final static String USERID_KEY = "UserID";
     private final static String IS_LOGGED_IN_KEY =  "isLoggedIn";
+    private final static String USERNAME_KEY = "username";
 
 
     public static String getToken(Context c){
@@ -43,6 +44,15 @@ public class UserInfo {
         return prefs.getBoolean(IS_LOGGED_IN_KEY, false);
     }
 
+    public static String getUsername(Context c){
+
+        // get shared preference object
+        SharedPreferences prefs = c.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        // return the value of is_logged_in
+        return prefs.getString(USERNAME_KEY, null);
+    }
+
     public static void setToken(Context c,String token){
 
         // get shared preference object
@@ -66,11 +76,16 @@ public class UserInfo {
         // open shared preferences with an editor
         SharedPreferences.Editor editor = prefs.edit();
 
-        // write new value for token
+        // write new value for username
         editor.putString(USERID_KEY, userID);
         
         // save changes
         editor.apply();
+    }
+
+    public static String getAuthenticationHeader(Context c){
+        return "Bearer " + UserInfo.getToken(c);
+
     }
 
     
@@ -89,6 +104,22 @@ public class UserInfo {
 
         // save changes
         editor.apply();
+    }
+
+    public static void setUsername(Context c, String username){
+
+        // get shared preference object
+        SharedPreferences prefs = c.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        // open shared preferences with an editor
+        SharedPreferences.Editor editor = prefs.edit();
+
+        // write new value for username
+        editor.putString(USERNAME_KEY, username);
+
+        // save changes
+        editor.apply();
+
     }
 
     

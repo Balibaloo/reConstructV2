@@ -37,26 +37,23 @@ public class AccountMenuFragment extends Fragment {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
+
 
         initViews(view);
         setOnClickListeners();
     }
 
+
+    // set on click listeners on each button
+    // to navigate to the desired destination
     private void setOnClickListeners() {
 
         changeAccountButton.setOnClickListener(v -> {
             if (userIsLoggedIn()) {
-                Navigation.findNavController(v).navigate(AccountMenuFragmentDirections.actionGlobalAccountViewFragment());
+                Navigation.findNavController(v).navigate(AccountMenuFragmentDirections.actionAccountMenuFragmentToAccountEditFragment(UserInfo.getSelfUserID(getActivity())));
             }
         });
 
@@ -95,6 +92,7 @@ public class AccountMenuFragment extends Fragment {
         });
     }
 
+    // get if a user is logged in
     private boolean userIsLoggedIn() {
         if (UserInfo.getIsLoggedIn(getActivity())) {
             return true;
@@ -105,6 +103,7 @@ public class AccountMenuFragment extends Fragment {
 
     }
 
+    // get references to all xml objects
     private void initViews(View view) {
         changeAccountButton = view.findViewById(R.id.accountSettingButton);
         changePasswordButton = view.findViewById(R.id.changePasswordButton);
@@ -116,12 +115,16 @@ public class AccountMenuFragment extends Fragment {
     }
 
 
+
+    // inflate the correct layout for this fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account_menu, container, false);
     }
+
+
 
     @Override
     public void onAttach(@NonNull Context context) {

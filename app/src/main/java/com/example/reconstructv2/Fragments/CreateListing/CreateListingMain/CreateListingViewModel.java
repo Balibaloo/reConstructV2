@@ -34,7 +34,7 @@ public class CreateListingViewModel extends AndroidViewModel {
 
     }
 
-
+    // getters
     public MutableLiveData<ListingIDAPIResponse> getListingIDAPIResponse() {
         return listingIDAPIResponse;
     }
@@ -47,16 +47,18 @@ public class CreateListingViewModel extends AndroidViewModel {
         return baseAPIResponse;
     }
 
-    public void createListingRequest(ListingFull listing) {
-        apiRepository.createListing("Bearer " + UserInfo.getToken(getApplication()),listing);
+
+    // requests to server
+    public void sendCreateListingRequest(ListingFull listing) {
+        apiRepository.createListing(UserInfo.getAuthenticationHeader(getApplication()),listing);
     }
 
-    public void uploadImageRequest(Uri imageUri){
-        apiRepository.saveImageonServer("Bearer " + UserInfo.getToken(getApplication()),imageUri);
+    public void sendUploadImageRequest(Uri imageUri){
+        apiRepository.saveImageOnServer(UserInfo.getAuthenticationHeader(getApplication()),imageUri);
     }
 
-    public void deleteImageRequest(List<String> imageID){
-        apiRepository.deleteImage("Bearer " + UserInfo.getToken(getApplication()), imageID);
+    public void sendDeleteImageRequest(List<String> imageID){
+        apiRepository.deleteImage(UserInfo.getAuthenticationHeader(getApplication()), imageID);
 
     }
 

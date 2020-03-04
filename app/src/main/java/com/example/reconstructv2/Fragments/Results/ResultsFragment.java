@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingFragmentDirections;
 import com.example.reconstructv2.R;
 
 
@@ -49,33 +50,57 @@ public class ResultsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
 
-        toHomeButton = view.findViewById(R.id.toHomeButton);
-        retryButton = view.findViewById(R.id.retryButton);
-        textView = view.findViewById(R.id.resultTextView);
+
+        initViews(view);
 
         textView.setText(ResultsFragmentArgs.fromBundle(getArguments()).getMessage());
 
+        // if the previous operation was successful, hide the retry button
         if (ResultsFragmentArgs.fromBundle(getArguments()).getIsSuccess()){
             retryButton.setVisibility(View.INVISIBLE);
+
+
         } else {
+            // show the retry button
             retryButton.setVisibility(View.VISIBLE);
-            retryButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Integer retryDestination = ResultsFragmentArgs.fromBundle(getArguments()).getRetryDestination();
-                    Navigation.findNavController(view).navigate(retryDestination);
+
+            retryButton.setOnClickListener(v -> {
+
+                // get bundle arguments
+                ResultsFragmentArgs arguments = ResultsFragmentArgs.fromBundle(getArguments());
+
+                Integer retryDestination = arguments.getRetryDestination();
+
+
+                switch (retryDestination) {
+                    case (R.id.createListingFragment):{
+
+                        // if the retry destination is the create listing fragment
+                        // add the listing argument from the temporary listing field
+                        // this is so that if the request failed, the user can continue editing their listing
+
+                        ResultsFragmentDirections.ActionResultsFragmentToCreateListingFragment action = ResultsFragmentDirections.actionResultsFragmentToCreateListingFragment();
+                        action.setListingArgument(arguments.getTemporaryListing());
+                        Navigation.findNavController(view).navigate(action);
+
+                        break;
+
+                    } default:{
+                        Navigation.findNavController(view).navigate(retryDestination);
+                    }
+
                 }
+
             });}
 
-        toHomeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.homeFragment2);
-            }
-        });
+        // navigate home
+        toHomeButton.setOnClickListener(v -> Navigation.findNavController(view).navigate(R.id.homeFragment2));
+    }
 
-
-
+    private void initViews(View view) {
+        toHomeButton = view.findViewById(R.id.toHomeButton);
+        retryButton = view.findViewById(R.id.retryButton);
+        textView = view.findViewById(R.id.resultTextView);
 
     }
 

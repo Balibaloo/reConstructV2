@@ -23,11 +23,13 @@ public class LogInViewModel extends AndroidViewModel {
         userTokenAPIResponseMutableLiveData = apiRepository.getUserTokenAPIResponseMutableLiveData();
     }
 
+
     public MutableLiveData<UserTokenAPIResponse> getUserTokenAPIResponseMutableLiveData() {
         return userTokenAPIResponseMutableLiveData;
     }
 
-    public void fetchLogInUser(String username, String saltedHashedPassword){
+
+    public void sendLogInRequest(String username, String saltedHashedPassword){
         apiRepository.login(username,saltedHashedPassword);
     }
 }

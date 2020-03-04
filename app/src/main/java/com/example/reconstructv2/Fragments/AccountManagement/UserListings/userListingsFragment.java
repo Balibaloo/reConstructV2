@@ -9,12 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -37,10 +35,6 @@ public class userListingsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static userListingsFragment newInstance(String param1, String param2) {
-        return new userListingsFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +47,7 @@ public class userListingsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_recently_viewed_listings, container, false);
     }
 
+    // method that gets called when the fragment is ready
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -62,10 +57,29 @@ public class userListingsFragment extends Fragment {
         initViewModel();
         initRecyclerView();
         setOnRefreshListener();
+        setLiveDataObservers();
+
+        // fetch user listings
+        viewModel.sendFetchUserListingsRequest();
+
     }
 
+    private void setLiveDataObservers() {
+        viewModel.getListingListAPIResponse().observe(getViewLifecycleOwner(),
+                response -> {
+                    refreshLayout.setRefreshing(false);
+
+                    if (response.getIsSuccesfull()) {
+                        recyclerAdapter.setListings(response.getListings());
+                    } else {
+                        Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
     private void setOnRefreshListener() {
-        refreshLayout.setOnRefreshListener(() -> viewModel.fetchUserListingsRequest());
+        refreshLayout.setOnRefreshListener(() -> viewModel.sendFetchUserListingsRequest());
     }
 
     private void initViewModel() {
@@ -77,42 +91,22 @@ public class userListingsFragment extends Fragment {
         refreshLayout = view.findViewById(R.id.recently_viewed_refresh_layout);
     }
 
+
+
     private void initRecyclerView() {
+
         recyclerAdapter = new ListingAdapter(getContext());
         listingRecyclerView.setAdapter(recyclerAdapter);
 
         listingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        listingRecyclerView.setHasFixedSize(true);
-
-        viewModel.fetchUserListingsRequest();
-        viewModel.getListingListAPIResponse().observe(getViewLifecycleOwner(),
-                response -> {
-                    refreshLayout.setRefreshing(false);
-                    if (response.getIsSuccesfull()) {
-                        recyclerAdapter.setListings(response.getListings());
-                    } else {
-                        Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-        }).attachToRecyclerView(listingRecyclerView);
+        listingRecyclerView.setHasFixedSize(true); // improves performance
 
         recyclerAdapter.setOnItemClickListener(listing -> {
             MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(null, listing.getListingID());
             Navigation.findNavController(getView()).navigate(action);
         });
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -124,6 +118,7 @@ public class userListingsFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
+
 
     @Override
     public void onDetach() {

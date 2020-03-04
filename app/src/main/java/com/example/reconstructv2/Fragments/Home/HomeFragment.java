@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -57,22 +55,17 @@ public class HomeFragment extends Fragment {
         setLiveDataObservers();
         configureRecyclerViewAdapter();
         setViewListeners();
-        refreshFrontPageListings();
+        fetchFrontPageListings();
 
     }
 
-    private void refreshFrontPageListings() {
-        homeViewModel.fetchFrontPageListingsRequest();
+    private void fetchFrontPageListings() {
+        homeViewModel.sendFrontPageListingsRequest();
         refreshLayout.setRefreshing(true);
     }
 
     private void setViewListeners() {
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshFrontPageListings();
-            }
-        });
+        refreshLayout.setOnRefreshListener(() -> fetchFrontPageListings());
     }
 
     private void setOnClickListeners(){
@@ -81,9 +74,10 @@ public class HomeFragment extends Fragment {
 
     private void setLiveDataObservers() {
         homeViewModel.getListingListAPIResponse().observe(getViewLifecycleOwner(), response -> {
+
             refreshLayout.setRefreshing(false);
+
             if (response.getIsSuccesfull()) {
-                homeViewModel.deleteAll();
                 recyclerAdapter.setListings(response.getListings());
 
             } else {
@@ -106,26 +100,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void configureRecyclerViewAdapter() {
+
         recyclerAdapter = new ListingAdapter(getContext());
         listingRecyclerView.setAdapter(recyclerAdapter);
 
         listingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        listingRecyclerView.setHasFixedSize(true);
+        listingRecyclerView.setHasFixedSize(true); // (improves performance)
 
-        homeViewModel.getAllListings().observe(getViewLifecycleOwner(), listings -> recyclerAdapter.setListings(listings));
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-        }).attachToRecyclerView(listingRecyclerView);
-
+        // navigate to single listing view
         recyclerAdapter.setOnItemClickListener(listing -> {
             MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(null, listing.getListingID());
             Navigation.findNavController(getView()).navigate(action);
@@ -134,13 +116,15 @@ public class HomeFragment extends Fragment {
 
 
     private void sendSearchRequest() {
-        refreshLayout.setRefreshing(true);
-        if (searchBar.getText().toString().equals("")) {
-            homeViewModel.fetchFrontPageListingsRequest();
-        } else {
-            homeViewModel.fetchSearchResults(searchBar.getText().toString(), 0);
-        }
 
+        refreshLayout.setRefreshing(true);
+
+        // if the user does not provide a search string, just fetch front page listings
+        if (searchBar.getText().toString().equals("")) {
+            homeViewModel.sendFrontPageListingsRequest();
+        } else {
+            homeViewModel.sendSearchRequest(searchBar.getText().toString(), 0);
+        }
     }
 
 

@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -34,10 +32,6 @@ public class recentlyViewedListings extends Fragment {
 
     public recentlyViewedListings() {
         // Required empty public constructor
-    }
-
-    public static recentlyViewedListings newInstance(String param1, String param2) {
-        return new recentlyViewedListings();
     }
 
     @Override
@@ -61,6 +55,10 @@ public class recentlyViewedListings extends Fragment {
         initViewModel();
         initRecyclerView();
         setOnRefreshListener();
+        setLiveDataObservers();
+
+        // send request to server
+        viewModel.fetchRecentlyViewedListingsRequest();
     }
 
     private void setOnRefreshListener() {
@@ -72,45 +70,40 @@ public class recentlyViewedListings extends Fragment {
     }
 
     private void initViews(View view) {
+        // get references to layout objects
         listingRecyclerView = view.findViewById(R.id.recently_viewed_recycler_view);
         refreshLayout = view.findViewById(R.id.recently_viewed_refresh_layout);
     }
 
     private void initRecyclerView() {
+
+        // create a new adapter instance and set it on the recyclerview
         recyclerAdapter = new ListingAdapter(getContext());
         listingRecyclerView.setAdapter(recyclerAdapter);
 
         listingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         listingRecyclerView.setHasFixedSize(true);
 
-        viewModel.fetchRecentlyViewedListingsRequest();
+        // navigate to single listing view on item press
+        recyclerAdapter.setOnItemClickListener(listing -> {
+            MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(null, listing.getListingID());
+            Navigation.findNavController(getView()).navigate(action);
+        });
+    }
+
+
+    private void setLiveDataObservers() {
         viewModel.getListingListAPIResponse().observe(getViewLifecycleOwner(),
                 response -> {
-            refreshLayout.setRefreshing(false);
+
+                    // stop refreshing and handle the response
+                    refreshLayout.setRefreshing(false);
                     if (response.getIsSuccesfull()) {
                         recyclerAdapter.setListings(response.getListings());
                     } else {
                         Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-        }).attachToRecyclerView(listingRecyclerView);
-
-        recyclerAdapter.setOnItemClickListener(listing -> {
-            MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(null, listing.getListingID());
-            Navigation.findNavController(getView()).navigate(action);
-        });
     }
 
     @Override

@@ -23,9 +23,7 @@ public class AuthenticationHelper {
             String concatString = password + username;
 
             // hash the concatenated string with the master salt
-            String saltedHashedPassword = new String(md.digest(concatString.getBytes()));
-
-            return saltedHashedPassword;
+            return new String(md.digest(concatString.getBytes()));
         }
 
         catch (NoSuchAlgorithmException e) {
@@ -45,9 +43,8 @@ public class AuthenticationHelper {
         String AuthHeaderUP = Username + ":" + saltedHashedPassword;
 
         // base 64 encode the header string
-        String base64EncodedUP =  "Basic " + Base64.encodeToString(AuthHeaderUP.getBytes(),Base64.NO_WRAP);
 
-        return base64EncodedUP;
+        return "Basic " + Base64.encodeToString(AuthHeaderUP.getBytes(),Base64.NO_WRAP);
 
     }
 }

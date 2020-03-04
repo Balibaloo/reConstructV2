@@ -10,16 +10,16 @@
     android:background="@drawable/custom_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/accountViewContainer"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="301dp"
+            android:layout_height="447dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/textSaveUserCredentials"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -31,8 +31,6 @@
                 android:orientation="horizontal">
 
 
-
-
                 <TextView
                     android:id="@+id/textViewAccViewUsername"
                     android:layout_width="wrap_content"
@@ -40,32 +38,25 @@
 
                     android:text="Username"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/editTextAccViewUsername"
+                    app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewUsername"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/editTextAccViewUsername"
+                <TextView
+                    android:id="@+id/viewTextAccviewUsername"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="27dp"
                     android:ems="10"
 
+                    android:gravity="center"
                     android:inputType="textPersonName"
                     android:text="Username"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/accViewIconUsernameStatus"
-                    app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:id="@+id/accViewIconUsernameStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colourImageBackground"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.476"
-                    app:srcCompat="@android:drawable/stat_notify_sync" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -80,68 +71,30 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewAccViewEmail"
+                    android:id="@+id/textviewAccViewEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/editTextAccViewEmail"
+                    app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewEmail"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/editTextAccViewEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/viewTextAccviewEmail"
+                    android:layout_width="232dp"
+                    android:layout_height="27dp"
                     android:ems="10"
-                    android:inputType="textEmailAddress"
+
+                    android:gravity="center"
                     android:text="Email"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/accViewIcoEmailStatus"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textColor="#000000"
 
-                <ImageView
-                    android:id="@+id/accViewIcoEmailStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colourImageBackground"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/stat_notify_sync" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/accountViewSpacing" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewAccViewFirstName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="First Name"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/editTextAccViewFirstName"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/editTextAccViewFirstName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:text="First Name"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -156,22 +109,64 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewAccViewLastName"
+                    android:id="@+id/textViewAccviewFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First Name"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewFirstName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/viewTextAccviewFirstName"
+                    android:layout_width="224dp"
+                    android:layout_height="27dp"
+                    android:ems="10"
+
+                    android:gravity="center"
+                    android:text="First Name"
+                    android:textColor="#000000"
+
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/accountViewSpacing" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewAccviewLastName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Last Name"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/editTextAccViewLastName"
+                    app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewLastName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/editTextAccViewLastName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/viewTextAccviewLastName"
+                    android:layout_width="226dp"
+                    android:layout_height="27dp"
                     android:ems="10"
-                    android:inputType="textPersonName"
+
+                    android:gravity="center"
                     android:text="Last Name"
+                    android:textColor="#000000"
+
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -189,53 +184,35 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/textViewAccViewPhoneNumber"
+                    android:id="@+id/textViewAccviewPhoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Phone Number"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/editTextAccViewPhoneNumber"
+                    app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewPhoneNumber"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/editTextAccViewPhoneNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+
+                <TextView
+                    android:id="@+id/viewTextAccviewPhoneNumber"
+                    android:layout_width="201dp"
+                    android:layout_height="27dp"
                     android:ems="10"
-                    android:inputType="phone"
+
+                    android:gravity="center"
                     android:text="@string/samplePhoneNumber"
+                    android:textColor="#000000"
+
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/changePasswordAccountViewTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Change Password?"
-            android:textColor="@color/colourSelected"
-            app:layout_constraintBottom_toTopOf="@+id/textSaveUserCredentials"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/textSaveUserCredentials"
-            android:layout_width="160dp"
-            android:layout_height="58dp"
-            android:layout_marginBottom="36dp"
-            android:text="save changes"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

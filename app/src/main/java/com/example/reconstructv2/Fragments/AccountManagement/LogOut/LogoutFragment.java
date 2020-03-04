@@ -6,23 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.reconstructv2.Helpers.UserInfo;
+import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class LogoutFragment extends Fragment {
 
     Button logOutButton;
     Button cancelButton;
+
+    LogoutViewModel viewModel;
 
     public LogoutFragment() {
         // Required empty public constructor
@@ -41,9 +41,15 @@ public class LogoutFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
 
-
+        initViewModel();
         initViews(view);
         setOnClickListeners();
+        setLiveDataObservers();
+    }
+
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this).get(LogoutViewModel.class);
+
     }
 
     private void initViews(View view) {
@@ -52,11 +58,35 @@ public class LogoutFragment extends Fragment {
     }
 
     private void setOnClickListeners() {
-        logOutButton.setOnClickListener(v -> {
-            UserInfo.logOut(getContext());
-            Navigation.findNavController(getView()).navigate(R.id.homeFragment2);
-        });
 
-        cancelButton.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(R.id.accountMenuFragment));
+        logOutButton.setOnClickListener(v -> viewModel.sendLogOutRequest());
+
+        // go back
+        cancelButton.setOnClickListener(v -> Navigation.findNavController(getView()).navigateUp());
+    }
+
+    private void setLiveDataObservers() {
+
+        viewModel.getBaseAPIResponseMutableLiveData().observe(getViewLifecycleOwner(), baseAPIResponse -> {
+
+            // create a new action to the results fragment
+            MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment();
+            action.setIsSuccess(baseAPIResponse.getIsSuccesfull());
+            action.setMessage(baseAPIResponse.getMessage());
+
+            if (baseAPIResponse.getIsSuccesfull()) {
+
+                // log out localy
+                UserInfo.logOut(getContext());
+
+
+            } else {
+                action.setRetryDestination(R.id.logoutFragment);
+            }
+
+            // navigate
+            Navigation.findNavController(getView()).navigate(action);
+
+        });
     }
 }

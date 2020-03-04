@@ -25,13 +25,15 @@ public class ItemListEditViewModel extends AndroidViewModel {
 
     }
 
+    // getter
 
     public MutableLiveData<ImageIDAPIResponse> getImageIDAPIResponse() {
         return imageIDAPIResponse;
     }
 
+    // send requests
 
-    public void uploadImageRequest(Uri imageUri){
-        apiRepository.saveImageonServer("Bearer " + UserInfo.getToken(getApplication()),imageUri);
+    public void sendUploadImageRequest(Uri imageUri){
+        apiRepository.saveImageOnServer(UserInfo.getAuthenticationHeader(getApplication()),imageUri);
     }
 }

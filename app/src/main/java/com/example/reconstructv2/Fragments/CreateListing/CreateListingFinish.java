@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -12,11 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingMainViewModel;
+import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingViewModel;
 import com.example.reconstructv2.MainNavGraphDirections;
 import com.example.reconstructv2.Models.ListingFull;
 import com.example.reconstructv2.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
 
@@ -24,9 +24,9 @@ import java.util.Objects;
 public class CreateListingFinish extends Fragment {
 
     private ListingFull listingArg;
-    private FloatingActionButton floatingActionButton;
+    private Button finishButton;
 
-    private CreateListingMainViewModel viewModel;
+    private CreateListingViewModel viewModel;
 
     public CreateListingFinish() {
         // Required empty public constructor
@@ -41,13 +41,13 @@ public class CreateListingFinish extends Fragment {
         listingArg = CreateListingFinishArgs.fromBundle(Objects.requireNonNull(getArguments())).getListingArg();
 
         // initialise the view model
-        viewModel = new ViewModelProvider(this).get(CreateListingMainViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CreateListingViewModel.class);
 
         // get the view of the floating action button
-        floatingActionButton = getView().findViewById(R.id.finishCreateListingFAB);
+        finishButton = getView().findViewById(R.id.finishCreateListingFAB);
 
         // set an onClickListener on the floating action button
-        floatingActionButton.setOnClickListener(v -> {
+        finishButton.setOnClickListener(v -> {
 
             // create an alert to make sure the user wants to upload the listing
             final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
@@ -60,18 +60,26 @@ public class CreateListingFinish extends Fragment {
             ).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
             alert.setPositiveButton("Upload", (dialog, which) -> {
+
                 // upload the listing
-                viewModel.createListingRequest(listingArg);
+                viewModel.sendCreateListingRequest(listingArg);
                 viewModel.getListingIDAPIResponse().observe(getViewLifecycleOwner(), listingIDAPIResponse -> {
 
-                    // navigate to the results framgment with the results
+                    // navigate to the results fragment with the results
                     if (listingIDAPIResponse.getIsSuccesfull()){
                         MainNavGraphDirections.ActionGlobalSingleListingFragment action = MainNavGraphDirections.actionGlobalSingleListingFragment(null,listingIDAPIResponse.getListingID());
                         Navigation.findNavController(getView()).navigate(action);
+
                     } else {
-                        MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createListingFragment);
+
+                        MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment();
+
+                        action.setRetryDestination(R.id.createListingFragment);
+                        action.setTemporaryListing(listingArg); // save the listing so that the user progress is not lost
                         action.setIsSuccess(false);
                         action.setMessage(listingIDAPIResponse.getMessage());
+
+
                         Navigation.findNavController(getView()).navigate(action);
                     }
 

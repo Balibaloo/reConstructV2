@@ -6,6 +6,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ListingToCreate implements Serializable {
+
+    //@SerializedName annotation indicates the annotated member should be serialized to JSON with the provided name value as its field name.
+
     private String authorID;
     private String title;
     private String body;

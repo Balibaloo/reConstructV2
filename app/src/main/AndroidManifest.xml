@@ -28,15 +28,11 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
 
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/AppTheme"
-            />
-
-        <activity android:name=".Activities.EditListingItemActivity"
-            android:theme="@style/AppTheme"/>
 
         <activity android:name=".Activities.MainActivity"
-            android:label="Reconstruct App">
+            android:label="Reconstruct App"
+            android:windowSoftInputMode="adjustNothing"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -4,20 +4,13 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.reconstructv2.Models.ApiResponses.ListingListAPIResponse;
-import com.example.reconstructv2.Models.Listing;
-import com.example.reconstructv2.Repositories.LocalRepositories.ListingRepository.ListingRepository;
 import com.example.reconstructv2.Repositories.RemoteRepository.APIRepository;
-
-import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
 
-    private ListingRepository repository;
-    private LiveData<List<Listing>> allListings;
 
     private APIRepository apiRepository;
 
@@ -25,43 +18,25 @@ public class HomeViewModel extends AndroidViewModel {
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
-        repository = new ListingRepository(application);
-        allListings = repository.getAllListings();
 
         apiRepository = new APIRepository(application);
         listingListAPIResponse = apiRepository.getListingListAPIResponseMutableLiveData();
 
     }
 
-    public LiveData<List<Listing>> getAllListings() {
-        return allListings;
-    }
+    // getter
 
-    public void insert(Listing listing) {
-        repository.insert(listing);
-    }
-
-    public void insertList(List<Listing> listings) {
-        for (Listing listing : listings) {
-            repository.insert(listing);
-        }
-    }
-
-    public void deleteAll() {
-        repository.deleteAll();
-    }
-
-
-
-    public MutableLiveData<ListingListAPIResponse> getListingListAPIResponse(){
+    public MutableLiveData<ListingListAPIResponse> getListingListAPIResponse() {
         return listingListAPIResponse;
     }
 
-    public void fetchSearchResults(String searchQuery,Integer pageNum){
-        apiRepository.getFilteredListings(searchQuery,pageNum);
+
+    // send requests to server
+    public void sendSearchRequest(String searchQuery, Integer pageNum) {
+        apiRepository.getFilteredListings(searchQuery, pageNum);
     }
 
-    public void fetchFrontPageListingsRequest(){
+    public void sendFrontPageListingsRequest() {
         apiRepository.getFrontPageListings();
     }
 }

@@ -34,6 +34,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
     @Override
     public ListingHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Creates and returns a ListingHolder, the layout used in the recycler view
+
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listing_card, parent, false);
         return new ListingHolder(itemView);
@@ -44,19 +45,24 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
 
     @Override
     public void onBindViewHolder(@NonNull ListingHolder holder, int position) {
+
         // puts data from listing object into ListingHolder views
+
         Listing currListing = listings.get(position);
 
         holder.textViewTitle.setText(currListing.getTitle());
         holder.textViewBody.setText(currListing.getBody());
 
+
+        // set item status colour
         if (!currListing.getIsActive()){
-            holder.container.setCardBackgroundColor(mContext.getResources().getColor(R.color.colourUnAvailable));
+            holder.container.setBackgroundResource(R.drawable.listing_item_un_available);
         }
 
         loadImageInto(holder.listingImage,currListing.getMainImageID());
     }
 
+    // load an image id into an image view
     private void loadImageInto(ImageView iamgeView, String imageID) {
         try {
             String rootURL = mContext.getResources().getString(R.string.ROOTURL);
@@ -79,6 +85,8 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
     }
 
     class ListingHolder extends RecyclerView.ViewHolder {
+        // holds listing layout views
+
         private TextView textViewTitle;
         private TextView textViewBody;
         private ImageView listingImage;

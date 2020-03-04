@@ -10,10 +10,11 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
-@Entity(tableName = "listing_table")
+
 public class Listing implements Serializable {
-    @PrimaryKey
-    @NonNull
+
+    //@SerializedName annotation indicates the annotated member should be serialized to JSON with the provided name value as its field name.
+
     @SerializedName("listingID")
     private String listingID;
 
@@ -51,11 +52,13 @@ public class Listing implements Serializable {
         this.body = body != null ? body : "";
         this.post_date = post_date;
         this.end_date = end_date;
-        this.location_lat = location_lat;
-        this.location_lon = location_lon;
+        this.location_lat = location_lat != null ? location_lat : 0.0;
+        this.location_lon = location_lon != null ? location_lon : 0.0;
         this.isActive = isActive == null ? true : isActive;
         this.mainImageID = mainImageID;
     }
+
+    // Getters
 
     public String getMainImageID() {
         return mainImageID;
@@ -96,6 +99,8 @@ public class Listing implements Serializable {
     public Boolean getIsActive() {
         return isActive;
     }
+
+    // Setters
 
     public void setListingID(@NonNull String listingID) {
         this.listingID = listingID;

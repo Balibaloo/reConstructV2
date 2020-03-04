@@ -45,20 +45,25 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
     @Override
     public void onBindViewHolder(@NonNull ListingItemHolder holder, int position){
 
+
         ListingItem currItem = listingItems.get(position);
 
+        // if the listing item doesent have an image, load the default image
         if (currItem.getImageIDArray().isEmpty()){
             holder.itemImage.setImageResource(R.drawable.ic_default_image);
         } else {
             loadImageInto(holder.itemImage,currItem.getImageIDArray().get(0));
         }
 
-        holder.TextViewname.setText(currItem.getName());
-        holder.TextViewdescription.setText(currItem.getDescription());
+        // set view data
+        holder.TextViewName.setText(currItem.getName());
+        holder.TextViewDescription.setText(currItem.getDescription());
 
-        InputValidator.validateItemText(holder.TextViewname,"name");
-        InputValidator.validateItemText(holder.TextViewdescription, "description");
+        // validate input
+        InputValidator.validateItemText(holder.TextViewName,"name");
+        InputValidator.validateItemText(holder.TextViewDescription, "description");
 
+        // set colours based on item status
         if(!currItem.getAvailable()){
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_available);
         } else if (currItem.getIsSelected()) {
@@ -69,6 +74,7 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
 
     }
 
+    // load an image into an image view
     private void loadImageInto(ImageView iamgeView, String imageID){
         try{
             String rootURL = mContext.getResources().getString(R.string.ROOTURL);
@@ -84,34 +90,35 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
     @Override
     public int getItemCount()  {return listingItems.size();}
 
+
     public void setListingItems(List<ListingItem> items){
         this.listingItems =  items;
         notifyDataSetChanged();
     }
 
-    public void addListingItem(ListingItem item){
-        this.listingItems.add(item);
-        notifyDataSetChanged();
+    public void deleteItem(Integer position){
+        listingItems.remove((int) position);
+
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position,listingItems.size());
+
     }
 
-
-
-    public ListingItem getItem(ListingItem position){
-        return this.listingItems.get(this.listingItems.indexOf(position));
-    }
-
+    // holds listing item xml object references
     class ListingItemHolder extends RecyclerView.ViewHolder {
+
         private CardView itemLayout;
-        private TextView TextViewname;
-        private TextView TextViewdescription;
+        private TextView TextViewName;
+        private TextView TextViewDescription;
         private ImageView itemImage;
 
         public ListingItemHolder(@NonNull View itemView){
             super(itemView);
+
             itemLayout = itemView.findViewById(R.id.item_cardView);
             itemImage = itemView.findViewById(R.id.item_imageView);
-            TextViewname = itemView.findViewById(R.id.item_nameTextView);
-            TextViewdescription = itemView.findViewById(R.id.item_bodyTextView);
+            TextViewName = itemView.findViewById(R.id.item_nameTextView);
+            TextViewDescription = itemView.findViewById(R.id.item_bodyTextView);
 
 
             itemView.setOnClickListener(v -> {
@@ -134,6 +141,7 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
 
     }
 
+    // intefraces for event listeners
     public interface OnClickListener{
         void onItemClick(ListingItem listingItem);
     }
@@ -142,10 +150,11 @@ public class CreateListingAdapter extends RecyclerView.Adapter<CreateListingAdap
         void onLongPress(ListingItem listingItem);
     }
 
+    // setters for event listeners
 
     public void setOnItemCLickListener(OnClickListener listener){this.listener = listener;}
 
-    public void setLongClickListener(OnLongPressListener longClickListener) {
+    public void setItemLongClickListener(OnLongPressListener longClickListener) {
         this.longClickListener = longClickListener;
     }
 

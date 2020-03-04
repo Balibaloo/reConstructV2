@@ -1,7 +1,6 @@
 package com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.ItemListEdit;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -20,69 +18,110 @@ import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.Helpers.KeyboardHelper;
 import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.squareup.picasso.Picasso;
+public class EditListingItemAdapter extends RecyclerView.Adapter<EditListingItemAdapter.ListingItemHolder> {
 
-public class EditListingItemAdapter extends RecyclerView.Adapter<EditListingItemAdapter.ListingItemHolder>{
     private List<ListingItem> listingItems = new ArrayList<>();
-    private EditListingItemAdapter.OnClickListener listener;
-    private EditListingItemAdapter.OnLongPressListener longClickListener;
 
-    private OnEditTextChanged onEditTextChanged;
-    private OnImageUploadRequest onImageUploadRequest;
+    private EditListingItemAdapter.OnLongPressListener longClickListener;
+    private OnImageUploadRequestListener onImageUploadRequestListener;
+    private RecyclerView recyclerView;
+
     private Activity mActivity;
 
-    public EditListingItemAdapter(Activity activity, OnEditTextChanged onEditTextChanged, OnImageUploadRequest onImageUploadRequest){
+    public EditListingItemAdapter(Activity activity, OnImageUploadRequestListener onImageUploadRequestListener, OnLongPressListener onLongPressListener, RecyclerView recyclerView) {
         this.mActivity = activity;
-        this.onEditTextChanged = onEditTextChanged;
-        this.onImageUploadRequest = onImageUploadRequest;
+        this.longClickListener = onLongPressListener;
+        this.onImageUploadRequestListener = onImageUploadRequestListener;
+        this.recyclerView = recyclerView;
     }
+
 
     @NonNull
     @Override
-    public EditListingItemAdapter.ListingItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        //Creates and returns a ListingHolder, the layout used in the recycler view
+    public EditListingItemAdapter.ListingItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        //Creates and returns a ListingHolder, the layout used in the recycler view
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listing_item_card_full_edit, parent, false);
 
         return new EditListingItemAdapter.ListingItemHolder(itemView);
     }
 
+
+    // sets up each individual item in the recycler view
     @Override
-    public void onBindViewHolder(@NonNull EditListingItemAdapter.ListingItemHolder holder, final int position){
+    public void onBindViewHolder(@NonNull EditListingItemAdapter.ListingItemHolder holder, final int position) {
 
         ListingItem currItem = listingItems.get(position);
 
-        if (currItem.getImageIDArray().isEmpty()){
+        if (currItem.getImageIDArray().isEmpty()) {
+            // if no image is found, load the default image
             holder.itemImage.setImageResource(R.drawable.ic_default_image);
         } else {
-            loadImageInto(holder.itemImage,currItem.getImageIDArray().get(0));
+            // load image into image view
+            loadImageInto(holder.itemImage, currItem.getImageIDArray().get(0));
         }
 
+        // set text on fields
         holder.TextEditTitle.setText(currItem.getName());
         holder.TextEditDescription.setText(currItem.getDescription());
 
-        InputValidator.validateItemText(holder.TextEditTitle,"name");
-        InputValidator.validateItemText(holder.TextEditDescription,"description");
+        // validate the input text
+        InputValidator.validateItemText(holder.TextEditTitle, "name");
+        InputValidator.validateItemText(holder.TextEditDescription, "description");
 
-
-        if (position == listingItems.size()-1){
+        // if the current item is the last item, display the add item button
+        if (position == listingItems.size() - 1) {
             holder.addItemButton.setVisibility(View.VISIBLE);
         } else {
             holder.addItemButton.setVisibility(View.GONE);
         }
 
-        if(!currItem.getAvailable()){
+        // sets the item background colour based on the items status
+        if (!currItem.getAvailable()) {
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_un_available);
+
         } else if (currItem.getIsSelected()) {
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_selected);
+
         } else {
             holder.itemLayout.setBackgroundResource(R.drawable.listing_item_base);
         }
+
+        // adds a new item to the end of the item list
+        holder.addItemButton.setOnClickListener(v -> {
+            listingItems.add(new ListingItem(
+                    "temporary id",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            ));
+
+
+            // notify that data has changed and scroll to the new item
+            notifyItemInserted(listingItems.size() - 1);
+            if (listingItems.size() > 1) {
+                notifyItemChanged(listingItems.size() - 2);
+            }
+            recyclerView.scrollToPosition(listingItems.size() - 1);
+        });
+
+        // set a long click listener on the item layout
+        holder.itemView.setOnLongClickListener(v -> {
+            longClickListener.onLongPress(listingItems.get(position));
+            return false;
+        });
+
+        // set on click listeners
+        holder.itemImage.setOnClickListener(v -> onImageUploadRequestListener.onImageUploadRequest(position, 0));
+        holder.itemLayout.setOnClickListener(v -> KeyboardHelper.hideSoftKeyboard(mActivity));
 
         holder.TextEditTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -97,9 +136,14 @@ public class EditListingItemAdapter extends RecyclerView.Adapter<EditListingItem
 
             @Override
             public void afterTextChanged(Editable s) {
-                onEditTextChanged.onTextChanged(position,s.toString(),"title");
+
+                // update item data
+                ListingItem currItem = listingItems.get(position);
+                currItem.setName(s.toString());
+                listingItems.set(position, currItem);
             }
         });
+
 
         holder.TextEditDescription.addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,46 +158,59 @@ public class EditListingItemAdapter extends RecyclerView.Adapter<EditListingItem
 
             @Override
             public void afterTextChanged(Editable s) {
-                onEditTextChanged.onTextChanged(position,s.toString(),"body");
+
+                // update item data
+                ListingItem currItem = listingItems.get(position);
+                currItem.setDescription(s.toString());
+                listingItems.set(position, currItem);
             }
         });
 
-
-        holder.itemImage.setOnClickListener(v -> onImageUploadRequest.onImageUploadRequest(position,0));
-
-        holder.itemLayout.setOnClickListener(v -> KeyboardHelper.hideSoftKeyboard(mActivity));
-
     }
 
-    private void loadImageInto(ImageView iamgeView, String imageID){
-        try{
+    // load imageID into an image view
+    private void loadImageInto(ImageView imageView, String imageID) {
+        try {
             String rootURL = mActivity.getResources().getString(R.string.ROOTURL);
-
             String imageUrl = rootURL + "/getImage?imageID=" + imageID;
-            Picasso.get().load(imageUrl).into(iamgeView);
-        }catch (Exception e){
+            Picasso.get().load(imageUrl).into(imageView);
+
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 
     }
 
     @Override
-    public int getItemCount()  {return listingItems.size();}
+    public int getItemCount() {
+        return listingItems.size();
+    }
 
-    public void setListingItems(List<ListingItem> items){
-        this.listingItems =  items;
+
+    public void deleteItem(Integer position) {
+        listingItems.remove((int) position);
+
+        // notify data changed
+        notifyItemRemoved(position);
+        notifyItemRangeRemoved(position, listingItems.size());
+    }
+
+    public void setListingItems(List<ListingItem> items) {
+        this.listingItems = items;
         notifyDataSetChanged();
     }
 
-    public List<ListingItem> getListingItems() {
-        return listingItems;
+    public interface OnLongPressListener {
+        void onLongPress(ListingItem listingItem);
     }
 
-    public void addListingItem(ListingItem item){
-        this.listingItems.add(item);
-        notifyDataSetChanged();
+
+    // define interfaces for listeners
+    public interface OnImageUploadRequestListener {
+        void onImageUploadRequest(int itemPos, int imagePos);
     }
 
+    // holds fields for each item in the recyclerview
     class ListingItemHolder extends RecyclerView.ViewHolder {
         private CardView itemLayout;
         private EditText TextEditTitle;
@@ -161,75 +218,17 @@ public class EditListingItemAdapter extends RecyclerView.Adapter<EditListingItem
         private ImageView itemImage;
         private ImageButton addItemButton;
 
-        public ListingItemHolder(@NonNull View itemView){
+        public ListingItemHolder(@NonNull View itemView) {
             super(itemView);
+
+            // get references to the layout objects
             itemLayout = itemView.findViewById(R.id.listing_item_edit_title_CardView);
             itemImage = itemView.findViewById(R.id.listing_item_edit_imageView);
             TextEditTitle = itemView.findViewById(R.id.listing_item_edit_title_editText);
             TextEditDescription = itemView.findViewById(R.id.listing_item_edit_body_editText);
             addItemButton = itemView.findViewById(R.id.addNewItemButton);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (listener != null && pos != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(listingItems.get(pos));
-                    }
-                }
-            });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (longClickListener != null && pos != RecyclerView.NO_POSITION) {
-                        longClickListener.onLongPress(listingItems.get(pos));
-                    }
-
-                    return true;
-                }
-            });
-
-            addItemButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listingItems.add(new ListingItem(
-                            "temporary id",
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                    ));
-                    notifyDataSetChanged();
-                }
-            });
-
         }
 
-    }
-
-    public interface OnEditTextChanged {
-        void onTextChanged(int position, String charSeq,String field);
-    }
-
-    public interface OnClickListener{
-        void onItemClick(ListingItem listingItem);
-    }
-
-    public interface OnLongPressListener{
-        void onLongPress(ListingItem listingItem);
-    }
-
-    public interface OnImageUploadRequest{
-        void onImageUploadRequest(int itemPos,int imagePos);
-    }
-
-    public void setOnItemCLickListener(EditListingItemAdapter.OnClickListener listener){this.listener = listener;}
-
-    public void setLongClickListener(EditListingItemAdapter.OnLongPressListener longClickListener) {
-        this.longClickListener = longClickListener;
     }
 
 

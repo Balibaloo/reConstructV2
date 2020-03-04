@@ -5,9 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -19,21 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.Models.ListingFull;
-import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.util.List;
-
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
 
 public class ItemListEditFragment extends Fragment {
@@ -43,12 +40,12 @@ public class ItemListEditFragment extends Fragment {
     private ListingFull listing;
 
     private EditListingItemAdapter recyclerAdapter;
-    private RecyclerView horisontalRecyclerView;
+    private RecyclerView horizontalRecyclerView;
 
     private FloatingActionButton backButton;
 
-    private Integer currListingPosition;
-    private Integer currListingImagePosition;
+    private Integer currListingItemPosition;
+    private Integer currListingItemImagePosition;
 
     private ItemListEditViewModel viewModel;
 
@@ -61,131 +58,172 @@ public class ItemListEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_item_list_edit, container, false);
     }
 
+    // when the fragment is ready
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         final View view = getView();
-
-
 
         initViews(view);
         initViewModel();
+
         configureRecyclerViewAdapter();
+
         setOnClickListeners();
         setLiveDataObservers();
 
-        currListingPosition = 0;
+        currListingItemPosition = 0;
+
         listing = ItemListEditFragmentArgs.fromBundle(getArguments()).getListing();
+
         Integer itemPos = ItemListEditFragmentArgs.fromBundle(getArguments()).getFocusedItemIndex();
         recyclerAdapter.setListingItems(listing.getItemList());
-        horisontalRecyclerView.scrollToPosition(itemPos);
+
+        horizontalRecyclerView.scrollToPosition(itemPos);
 
     }
 
-    private void initViews(View view){
-        horisontalRecyclerView = view.findViewById(R.id.item_list_edit_recyclerView);
+    private void initViews(View view) {
+
+        horizontalRecyclerView = view.findViewById(R.id.item_list_edit_recyclerView);
         refreshLayout = view.findViewById(R.id.item_list_edit_SwipeRefreshLayout);
         backButton = view.findViewById(R.id.item_list_edit_return_FAB);
     }
 
-    private void initViewModel(){
+
+    private void initViewModel() {
         viewModel = new ViewModelProvider(this).get(ItemListEditViewModel.class);
     }
 
-    private void configureRecyclerViewAdapter(){
-        recyclerAdapter = new EditListingItemAdapter(getActivity(), (position, charSeq, field) -> {
-            List<ListingItem> tempList = listing.getItemList();
-            ListingItem editedItem = tempList.get(position);
+    private void configureRecyclerViewAdapter() {
 
-            if (field.equals("title")) {
-                editedItem.setName(charSeq);
-            } else if (field.equals("body")) {
-                editedItem.setDescription(charSeq);
-            }
+        recyclerAdapter = new EditListingItemAdapter(getActivity(),
 
-            tempList.set(position, editedItem);
-            listing.setItemList(tempList);
+                // on image upload request
+                (itemPos, imagePos) -> {
+                    if (UserInfo.getIsLoggedIn(getContext())) {
 
-        }, (itemPos, imagePos)-> {
-            if (UserInfo.getIsLoggedIn(getContext())){
-                Boolean hasWritePermissions = ContextCompat.checkSelfPermission(getContext(),WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-                if (hasWritePermissions){
+                        // check if we have permissions to read local storage
+                        Boolean hasReadPermissions = ContextCompat.checkSelfPermission(getContext(), READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                        if (hasReadPermissions) {
 
-                    currListingPosition = itemPos;
-                    currListingImagePosition = imagePos;
-                    pickImage();
+                            // save item and image positions so that when the request is receive
+                            // the image id can be written to the correct location
+                            currListingItemPosition = itemPos;
+                            currListingItemImagePosition = imagePos;
 
-                } else {
-                    ActivityCompat.requestPermissions(getActivity(),new String[]{}, 1144);
-                }
-            } else {
-                Toast.makeText(getContext(), "you need to be logged in to upload an image", Toast.LENGTH_SHORT).show();
-            }
-        });
+                            // start an activity to pick an image from library
+                            pickImage();
 
-        horisontalRecyclerView.setAdapter(recyclerAdapter);
+                        } else {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{READ_EXTERNAL_STORAGE}, 1144);
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "you need to be logged in to upload an image", Toast.LENGTH_SHORT).show();
+                    }
+                },
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
-        horisontalRecyclerView.setLayoutManager(layoutManager);
-        horisontalRecyclerView.setHasFixedSize(true);
+                // on item long press
+                listingItem -> {
 
+                    Integer itemIndex = listing.getItemList().indexOf(listingItem);
+
+
+                    // create new alert
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+
+                    // set alert the message
+                    alert.setMessage("are you sure you want to delete this item?")
+                            .setCancelable(true);
+
+                    // if the user wishes to delete the item
+                    alert.setNegativeButton("Discard", (dialog, which) -> {
+                        recyclerAdapter.deleteItem(itemIndex);
+                    }).setPositiveButtonIcon(getResources()
+                            .getDrawable(R.drawable.ic_check_white_24dp));
+
+                    // if the user cancels, hide the alert
+                    alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
+
+                    // show the alert
+                    alert.show();
+
+                }, horizontalRecyclerView);
+
+        horizontalRecyclerView.setAdapter(recyclerAdapter);
+
+        // set a new layout manager
+        horizontalRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        horizontalRecyclerView.setHasFixedSize(true); // (improves performance)
+
+        // create a snap helper so that items snap to positions on the screen
         SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(horisontalRecyclerView);
-
-        recyclerAdapter.setLongClickListener(listingItem -> Toast.makeText(getContext(), "are you sure you want to delete this item?", Toast.LENGTH_SHORT).show());
+        helper.attachToRecyclerView(horizontalRecyclerView);
     }
 
-    private void setOnClickListeners(){
+
+    private void setOnClickListeners() {
         backButton.setOnClickListener(v -> {
+
+            // create a new navigation action
             ItemListEditFragmentDirections.ActionItemListEditFragmentToCreateListingFragment action = ItemListEditFragmentDirections.actionItemListEditFragmentToCreateListingFragment();
             action.setListingArgument(listing);
+
+            // navigate
             Navigation.findNavController(getView()).navigate(action);
         });
     }
 
-    private void setLiveDataObservers(){
-        viewModel.getImageIDAPIResponse().observe(getViewLifecycleOwner(), imageIDAPIResponse -> {
-            if (imageIDAPIResponse.getIsSuccesfull()){
+    private void setLiveDataObservers() {
 
-                listing.setListingItemImage(currListingPosition, currListingImagePosition ,imageIDAPIResponse.getImageID());
-                recyclerAdapter.setListingItems(listing.getItemList());
+        viewModel.getImageIDAPIResponse().observe(getViewLifecycleOwner(),
+                imageIDAPIResponse -> {
+                    if (imageIDAPIResponse.getIsSuccesfull()) {
 
-            } else {
-                Toast.makeText(getContext(), imageIDAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                        // saves image id to the location defined in on image upload request
+                        listing.setListingItemImage(currListingItemPosition, currListingItemImagePosition, imageIDAPIResponse.getImageID());
+                        recyclerAdapter.notifyItemChanged(currListingItemPosition);
+
+                    } else {
+                        Toast.makeText(getContext(), imageIDAPIResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    public void pickImage(){
-        CropImage.startPickImageActivity(getContext(),this);
+    public void pickImage() {
+        CropImage.startPickImageActivity(getContext(), this);
     }
 
 
+    // when activities return with results
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // fetch result from image selection
-        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK){
-            viewModel.uploadImageRequest(data.getData());
-        }}
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == RESULT_OK) {
+            // send upload request
+            viewModel.sendUploadImageRequest(data.getData());
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == 1144 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        // check if the permissions were granted
+        if (requestCode == 1144 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             pickImage();
         }
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -203,6 +241,7 @@ public class ItemListEditFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

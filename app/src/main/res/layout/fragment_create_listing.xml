@@ -7,22 +7,24 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/create_listing_container"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/custom_background">
+        android:background="@drawable/custom_background"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/create_listing_date_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10sp"
+            android:layout_marginBottom="10sp"
             android:ems="10"
             android:text="@string/dateEntryText"
             app:layout_constraintBottom_toTopOf="@+id/create_listing_item_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_listing_main_imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/create_listing_bodyTextEdit" />
 
         <EditText
             android:id="@+id/create_listing_title_EditText"
@@ -32,6 +34,7 @@
             android:ems="10"
             android:hint="Title"
             android:inputType="textPersonName"
+            android:singleLine="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,8 +47,34 @@
             android:background="@color/colourImageBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_listing_title_EditText"
-             />
+            app:layout_constraintTop_toBottomOf="@+id/create_listing_title_EditText" />
+
+
+        <EditText
+            android:id="@+id/create_listing_bodyTextEdit"
+            style="@style/Widget.MaterialComponents.TextInputEditText.FilledBox.Dense"
+            android:layout_width="341dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:ems="10"
+            android:hint="Description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_listing_main_imageView" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_listing_submit_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:rotation="270"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@android:drawable/arrow_down_float" />
 
         <Button
             android:id="@+id/create_listing_add_item_button"
@@ -58,35 +87,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/create_listing_item_recyclerView"
-            android:layout_width="295dp"
-            android:layout_height="308dp"
+            android:layout_width="305dp"
+            android:layout_height="262dp"
+            android:layout_marginBottom="20sp"
             app:layout_constraintBottom_toTopOf="@+id/create_listing_add_item_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_listing_main_imageView"
-            tools:listitem="@layout/listing_item_card_small">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/create_listing_submit_Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:rotation="270"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/arrow_down_float"
-            android:focusable="true" />
-
-
-
+            tools:listitem="@layout/listing_item_card_small" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

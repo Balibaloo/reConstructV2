@@ -6,16 +6,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+
+    //@SerializedName annotation indicates the annotated member should be serialized to JSON with the provided name value as its field name.
+
     @Nullable
     private String password;
 
     @SerializedName("username")
     private String username;
 
-    @SerializedName("fName")
+    @SerializedName("first_name")
     private String first_name;
 
-    @SerializedName("lName")
+    @SerializedName("last_name")
     private String last_name;
 
     @SerializedName("email")
@@ -23,7 +26,6 @@ public class User {
 
     @SerializedName("phone")
     private Integer phone;
-
 
 
     public User(String username, @Nullable String password, String  first_name, String last_name, String email, Integer phone){

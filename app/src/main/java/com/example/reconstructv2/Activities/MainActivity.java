@@ -18,20 +18,22 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.reconstructv2.Fragments.AccountManagement.AccountView.AccountViewFragment;
 import com.example.reconstructv2.Fragments.AccountManagement.AccountMenu.AccountMenuFragment;
 import com.example.reconstructv2.Fragments.AccountManagement.RecentlyViewedListings.recentlyViewedListings;
 import com.example.reconstructv2.Fragments.AccountManagement.UserListings.userListingsFragment;
 import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingFragment;
 import com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.ItemListEdit.ItemListEditFragment;
-import com.example.reconstructv2.Fragments.CreateListing.createListingLocationFragment;
+import com.example.reconstructv2.Fragments.CreateListing.CreateListingLocationFragment;
 import com.example.reconstructv2.Fragments.CreateUser.CreateUserFragment;
 import com.example.reconstructv2.Fragments.CreateUser.FinishCreateUserFragment;
 import com.example.reconstructv2.Fragments.LogIn.LogInFragment;
 import com.example.reconstructv2.Fragments.Results.ResultsFragment;
-import com.example.reconstructv2.Fragments.SingleItem.SingleItemViewFragment;
+import com.example.reconstructv2.Fragments.SingleListing.LocationViewFragment;
+import com.example.reconstructv2.Fragments.SingleListing.SingleItem.SingleItemViewFragment;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.R;
-import com.example.reconstructv2.Fragments.AccountManagement.AccountView.AccountViewFragment;
+import com.example.reconstructv2.Fragments.AccountManagement.AccountEdit.AccountEditFragment;
 import com.example.reconstructv2.Fragments.Home.HomeFragment;
 import com.example.reconstructv2.Fragments.SingleListing.SingleListingFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -45,9 +47,9 @@ public class MainActivity extends AppCompatActivity
         SingleListingFragment.OnFragmentInteractionListener,
         SingleItemViewFragment.OnFragmentInteractionListener,
         AccountMenuFragment.OnFragmentInteractionListener,
-        AccountViewFragment.OnFragmentInteractionListener,
+        AccountEditFragment.OnFragmentInteractionListener,
         CreateListingFragment.OnFragmentInteractionListener,
-        createListingLocationFragment.OnFragmentInteractionListener,
+        CreateListingLocationFragment.OnFragmentInteractionListener,
         ItemListEditFragment.OnFragmentInteractionListener,
         LogInFragment.OnFragmentInteractionListener,
         CreateUserFragment.OnFragmentInteractionListener,
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity
         ResultsFragment.OnFragmentInteractionListener,
         recentlyViewedListings.OnFragmentInteractionListener,
         userListingsFragment.OnFragmentInteractionListener,
+        AccountViewFragment.OnFragmentInteractionListener,
+        LocationViewFragment.OnFragmentInteractionListener,
         NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
@@ -172,11 +176,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     
-    // check that the user is not trying to navigate to a fragment that theyre already in
+    // check that the user is not trying to navigate to a fragment that they're already in
     private boolean isValidDestination(int Destination){
         return Destination != Navigation.findNavController(this,R.id.nav_host_fragment)
               .getCurrentDestination().getId();
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -238,7 +243,7 @@ public class MainActivity extends AppCompatActivity
     // create an alert to check if the user wants to navigate to the home fragment
     private void createHomeNavigateAlert(final NavController navcontroller){
 
-        // create a new allert
+        // create a new alert
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
         // set the alert message
@@ -252,7 +257,7 @@ public class MainActivity extends AppCompatActivity
         // if the user calcels, hide the dialouge
         alert.setPositiveButton("Cancel", (dialog, which) -> dialog.cancel()).setNegativeButtonIcon(getResources().getDrawable(R.drawable.ic_cross_red_24dp));
 
-        // hide the allert
+        // hide the alert
         alert.show();
     }
 
@@ -300,5 +305,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public interface safeNavBack{
+        void navBackWithItems();
     }
 }

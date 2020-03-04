@@ -110,6 +110,9 @@ public interface APIService {
     @GET("/auth/login")
     Call<UserTokenAPIResponse> login(@Header("authorization") String AuthHeaderUP);
 
+    @GET("/auth/logout")
+    Call<BaseAPIResponse> logout(@Header("authorization") String AuthHeaderUP);
+
     @GET("/getUserProfile")
     Call<UserAPIResponse> getUserProfile(@Query("userID") String userID);
 
@@ -118,12 +121,18 @@ public interface APIService {
                                            @Query("new_tags") List<String> new_tags);
 
     @GET("/auth/getWatchedListings")
-    Call<ListingListAPIResponse> getWatchedListings(@Header("authorization") String AuthHeaderToken)
+    Call<ListingListAPIResponse> getWatchedListings(@Header("authorization") String AuthHeaderToken);
 
 
     @POST("/auth/updateUserData")
     Call<BaseAPIResponse> saveUser(@Header("authorization") String AuthHeaderToken,
-                                   @Body User user);
+                                   @Body User user );
+
+    @POST("/auth/sendChangePasswordRequest")
+    Call<BaseAPIResponse> updatePassword(@Header("authorization") String AuthHeaderToken,
+                                         @Query("newPassword") String newPassword);
+
+
     @Multipart
     @POST("/auth/saveImage")
     Call<ImageIDAPIResponse> saveImageOnServer(@Header("authorization") String AuthHeaderToken,

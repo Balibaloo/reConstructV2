@@ -30,15 +30,22 @@
             android:name="listingID"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_singleListingFragment_to_locationViewFragment"
+            app:destination="@id/locationViewFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_singleListingFragment"
         app:destination="@id/singleListingFragment" />
     <fragment
-        android:id="@+id/accountViewFragment"
-        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountView.AccountViewFragment"
-        android:label="fragment_account_view"
-        tools:layout="@layout/fragment_account_view" />
+        android:id="@+id/accountEditFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountEdit.AccountEditFragment"
+        android:label="fragment_account_edit"
+        tools:layout="@layout/fragment_account_edit">
+        <argument
+            android:name="userID"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/createListingFragment"
         android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.CreateListingFragment"
@@ -111,12 +118,21 @@
             android:defaultValue="Default Message" />
         <argument
             android:name="retryDestination"
-            app:argType="integer" />
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="temporaryListing"
+            app:argType="com.example.reconstructv2.Models.ListingFull"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_resultsFragment_to_createListingFragment"
+            app:destination="@id/createListingFragment" />
     </fragment>
     <action android:id="@+id/action_global_resultsFragment" app:destination="@id/resultsFragment" />
     <fragment
         android:id="@+id/singleItemViewFragment"
-        android:name="com.example.reconstructv2.Fragments.SingleItem.SingleItemViewFragment"
+        android:name="com.example.reconstructv2.Fragments.SingleListing.SingleItem.SingleItemViewFragment"
         android:label="SingleItemViewFragment" >
         <action
             android:id="@+id/action_singleItemViewFragment_to_singleListingFragment"
@@ -128,6 +144,7 @@
             android:name="itemPosition"
             app:argType="integer" />
     </fragment>
+
     <fragment
         android:id="@+id/itemListEditFragment"
         android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingMain.ItemListEdit.ItemListEditFragment"
@@ -150,9 +167,6 @@
         android:label="fragment_account_menu"
         tools:layout="@layout/fragment_account_menu" >
         <action
-            android:id="@+id/action_accountMenuFragment_to_accountViewFragment"
-            app:destination="@id/accountViewFragment" />
-        <action
             android:id="@+id/action_accountMenuFragment_to_changePasswordFragment"
             app:destination="@id/changePasswordFragment" />
         <action
@@ -170,13 +184,13 @@
         <action
             android:id="@+id/action_accountMenuFragment_to_logoutFragment"
             app:destination="@id/logoutFragment" />
+        <action
+            android:id="@+id/action_accountMenuFragment_to_accountEditFragment"
+            app:destination="@id/accountEditFragment" />
     </fragment>
-    <action
-        android:id="@+id/action_global_accountViewFragment"
-        app:destination="@id/accountViewFragment" />
     <fragment
         android:id="@+id/createListingLocationFragment"
-        android:name="com.example.reconstructv2.Fragments.CreateListing.createListingLocationFragment"
+        android:name="com.example.reconstructv2.Fragments.CreateListing.CreateListingLocationFragment"
         android:label="fragment_create_listing_location"
         tools:layout="@layout/fragment_create_listing_location" >
         <argument
@@ -197,7 +211,7 @@
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"
-        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountFragments.changePasswordFragment"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.ChangePassword.changePasswordFragment"
         android:label="fragment_change_password"
         tools:layout="@layout/fragment_change_password" />
     <fragment
@@ -227,8 +241,27 @@
         tools:layout="@layout/fragment_log_out" />
     <fragment
         android:id="@+id/resetPasswordFragment"
-        android:name="com.example.reconstructv2.Fragments.LogIn.resetPasswordFragment"
+        android:name="com.example.reconstructv2.Fragments.ResetPassword.ResetPasswordFragment"
         android:label="fragment_reset_password"
         tools:layout="@layout/fragment_reset_password" />
+    <fragment
+        android:id="@+id/accountViewFragment3"
+        android:name="com.example.reconstructv2.Fragments.AccountManagement.AccountView.AccountViewFragment"
+        android:label="fragment_account_view"
+        tools:layout="@layout/fragment_account_view" >
+        <argument android:name="userID" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_accountViewFragment3"
+        app:destination="@id/accountViewFragment3" />
+    <fragment
+        android:id="@+id/locationViewFragment"
+        android:name="com.example.reconstructv2.Fragments.SingleListing.LocationViewFragment"
+        android:label="fragment_location_view"
+        tools:layout="@layout/fragment_location_view" >
+        <argument
+            android:name="location"
+            app:argType="com.google.android.gms.maps.model.LatLng" />
+    </fragment>
 
 </navigation>

@@ -8,30 +8,25 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reconstructv2.Helpers.AuthenticationHelper;
 import com.example.reconstructv2.Helpers.InputValidator;
+import com.example.reconstructv2.Helpers.KeyboardHelper;
 import com.example.reconstructv2.Helpers.UserInfo;
 import com.example.reconstructv2.MainNavGraphDirections;
-import com.example.reconstructv2.Models.ApiResponses.UserTokenAPIResponse;
 import com.example.reconstructv2.Models.User;
 import com.example.reconstructv2.R;
 
@@ -82,24 +77,12 @@ public class FinishCreateUserFragment extends Fragment {
         setOnClickListeners();
         setLiveDataObservers();
 
-        phoneNumberEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Boolean handled = false;
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    // call on click listener
-                    submitButton.callOnClick();
-                    handled = true;
-                }
-
-                return handled;
-            }
-        });
-
-
+        KeyboardHelper.submitOnEnterKey(phoneNumberEditText,submitButton);
 
     }
 
+
+    // validate all input values
     private boolean validateAll() {
         return (InputValidator.validateName(firstNameEditText, "first name")
                 &&
@@ -107,6 +90,7 @@ public class FinishCreateUserFragment extends Fragment {
                 &&
                 InputValidator.validatePhone(phoneNumberEditText, "phone number"));
     }
+
 
     private void initViews(View view){
         swipeRefreshLayout = view.findViewById(R.id.finishCreateUserSwipeRefreshLayout);
@@ -123,20 +107,26 @@ public class FinishCreateUserFragment extends Fragment {
         finishCreateUserViewModel = new ViewModelProvider(this).get(FinishCreateUserViewModel.class);
     }
 
+
     private void sendCreateRequest() {
 
+        // get values from the passed values
         String username = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getUsername();
         String password = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getPassword();
+        String email = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getEmail();
+
         String first_name = firstNameEditText.getText().toString();
         String last_name = lastNameEditText.getText().toString();
-        String email = FinishCreateUserFragmentArgs.fromBundle(getArguments()).getEmail();
         Integer phone = Integer.parseInt(phoneNumberEditText.getText().toString());
 
+        // salt and hash the password
         String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),password,username);
+
+        // create a new user
         User newUser = new User(username, saltedHashedPassword, first_name, last_name, email, phone);
 
         swipeRefreshLayout.setRefreshing(true);
-        finishCreateUserViewModel.createUserRequest(newUser);
+        finishCreateUserViewModel.sendCreateUserRequest(newUser);
     }
 
     private void setOnTextChangedListeners(){
@@ -194,55 +184,45 @@ public class FinishCreateUserFragment extends Fragment {
     }
 
     private void setOnClickListeners(){
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateAll()) {
-                    sendCreateRequest();
-                } else {
-                    Toast.makeText(getContext(), "Please check that the data entered is correct", Toast.LENGTH_SHORT).show();
-                }
-
+        submitButton.setOnClickListener(v -> {
+            if (validateAll()) {
+                sendCreateRequest();
+            } else {
+                Toast.makeText(getContext(), "Please check that the data entered is correct", Toast.LENGTH_SHORT).show();
             }
+
         });
 
 
         constraintLayoutContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideSoftKeyboard(getActivity());
+                KeyboardHelper.hideSoftKeyboard(getActivity());
             }
         });
 
     }
+
 
     private void setLiveDataObservers(){
-        finishCreateUserViewModel.getUserTokenAPIResponse().observe(this, new Observer<UserTokenAPIResponse>() {
-            @Override
-            public void onChanged(UserTokenAPIResponse response) {
-                swipeRefreshLayout.setRefreshing(false);
 
-                if (response.getIsSuccesfull()) {
-                    UserInfo.setIsLoggedIn(getContext(),true);
-                    UserInfo.setToken(getContext(),response.getUserToken());
+        finishCreateUserViewModel.getUserTokenAPIResponse().observe(getViewLifecycleOwner(), response -> {
+            swipeRefreshLayout.setRefreshing(false);
 
-                    MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment(R.id.createUserFragment);
-                    action.setIsSuccess(true);
-                    action.setMessage(response.getMessage());
+            MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment();
 
-                    Navigation.findNavController(getView()).navigate(action);
-                }
+            action.setRetryDestination(R.id.createUserFragment);
+            action.setIsSuccess(response.getIsSuccesfull());
+            action.setMessage(response.getMessage());
+
+            if (response.getIsSuccesfull()) {
+                UserInfo.setIsLoggedIn(getContext(),true);
+                UserInfo.setToken(getContext(),response.getUserToken());
             }
+
+            Navigation.findNavController(getView()).navigate(action);
         });
 
-    }
-
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override

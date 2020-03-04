@@ -21,11 +21,13 @@ public class userListingsViewModel extends AndroidViewModel {
         listingListAPIResponse = apiRepository.getListingListAPIResponseMutableLiveData();
     }
 
+    // getter
     public MutableLiveData<ListingListAPIResponse> getListingListAPIResponse() {
         return listingListAPIResponse;
     }
 
-    public void fetchUserListingsRequest() {
+    // send requests
+    public void sendFetchUserListingsRequest() {
         apiRepository.getUserListings(UserInfo.getSelfUserID(getApplication()));
     }
 }
