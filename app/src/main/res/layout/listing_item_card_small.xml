@@ -12,14 +12,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colourBackgroundBottom">
 
         <ImageView
             android:id="@+id/item_imageView"
-            android:background="@color/colourImageBackground"
             android:layout_width="100sp"
             android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"/>
+            android:background="@color/colourImageBackground"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/item_nameTextView"
@@ -30,19 +31,20 @@
             android:layout_marginTop="10sp"
             android:layout_toEndOf="@+id/item_imageView"
             android:layout_toRightOf="@+id/item_imageView"
-            android:text="Title" />
+            android:text="@string/title"
+            android:textColor="@color/textMain" />
 
         <TextView
             android:id="@+id/item_bodyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/item_imageView"
-            android:layout_toEndOf="@+id/item_imageView"
-            android:layout_marginTop="30sp"
-            android:layout_marginLeft="5sp"
-            android:text="Body"
             android:layout_marginStart="5sp"
-            />
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="30sp"
+            android:layout_toEndOf="@+id/item_imageView"
+            android:layout_toRightOf="@+id/item_imageView"
+            android:text="@string/body"
+            android:textColor="@color/textSecondary" />
 
     </RelativeLayout>
 

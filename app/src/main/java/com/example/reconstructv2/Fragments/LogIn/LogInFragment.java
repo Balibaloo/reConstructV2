@@ -62,8 +62,6 @@ public class LogInFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
 
-
-
         initViews(view);
         initViewModel();
         setOnClickListeners();
@@ -94,7 +92,7 @@ public class LogInFragment extends Fragment {
 
             String username = usernameTextEdit.getText().toString();
             String password = passwordTextEdit.getText().toString();
-            String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),username,password);
+            String saltedHashedPassword = AuthenticationHelper.hashAndSalt(getString(R.string.master_salt),password,username);
 
             sendLogInRequest(username,saltedHashedPassword);
         });
@@ -109,7 +107,6 @@ public class LogInFragment extends Fragment {
         createAccountButton.setOnClickListener(v -> Navigation.findNavController(getView()).navigate(R.id.createUserFragment));
 
         KeyboardHelper.submitOnEnterKey(passwordTextEdit,logInButton);
-
     }
 
     private void sendLogInRequest(String username, String saltedHashedPassword){
@@ -128,7 +125,7 @@ public class LogInFragment extends Fragment {
 
 
             if (response.getIsSuccesfull()) {
-                // if the response is sucessfull
+                // if the response is successful
                 // save user data to shared preferences
                 // navigate to the results fragment
 

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recently_viewed_refresh_layout"
+    android:id="@+id/listing_list_view_refresh_layout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.AccountManagement.RecentlyViewedListings.recentlyViewedListings">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listing_list_view_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recently_viewed_recycler_view"
-        tools:listitem="@layout/listing_card"/>
+        android:background="@drawable/custom_background"
+        tools:listitem="@layout/listing_card" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -2,6 +2,7 @@
 
 
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/accountViewRefreshLayout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -27,7 +28,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
 
@@ -36,7 +37,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Username"
+                    android:text="@string/username"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewUsername"
                     app:layout_constraintStart_toStartOf="parent"
@@ -50,13 +52,14 @@
 
                     android:gravity="center"
                     android:inputType="textPersonName"
-                    android:text="Username"
+                    android:text="@string/username"
 
-                    android:textColor="#000000"
+                    android:textColor="@color/textMain"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextViewEdits" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,7 +77,8 @@
                     android:id="@+id/textviewAccViewEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:text="@string/email"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewEmail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -87,8 +91,8 @@
                     android:ems="10"
 
                     android:gravity="center"
-                    android:text="Email"
-                    android:textColor="#000000"
+                    android:text="@string/email"
+                    android:textColor="@color/textMain"
 
 
                     android:textSize="20sp"
@@ -105,14 +109,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewAccviewFirstName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="First Name"
+                    android:text="@string/first_name"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewFirstName"
                     app:layout_constraintStart_toStartOf="parent"
@@ -125,8 +130,8 @@
                     android:ems="10"
 
                     android:gravity="center"
-                    android:text="First Name"
-                    android:textColor="#000000"
+                    android:text="@string/first_name"
+                    android:textColor="@color/textMain"
 
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -143,14 +148,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewAccviewLastName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Last Name"
+                    android:text="@string/last_name"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewLastName"
                     app:layout_constraintStart_toStartOf="parent"
@@ -163,8 +169,8 @@
                     android:ems="10"
 
                     android:gravity="center"
-                    android:text="Last Name"
-                    android:textColor="#000000"
+                    android:text="@string/last_name"
+                    android:textColor="@color/textMain"
 
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -187,7 +193,8 @@
                     android:id="@+id/textViewAccviewPhoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone Number"
+                    android:text="@string/phone_number"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/viewTextAccviewPhoneNumber"
                     app:layout_constraintStart_toStartOf="parent"
@@ -202,7 +209,7 @@
 
                     android:gravity="center"
                     android:text="@string/samplePhoneNumber"
-                    android:textColor="#000000"
+                    android:textColor="@color/textMain"
 
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"

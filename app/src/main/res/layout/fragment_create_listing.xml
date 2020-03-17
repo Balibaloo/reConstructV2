@@ -20,6 +20,7 @@
             android:layout_marginBottom="10sp"
             android:ems="10"
             android:text="@string/dateEntryText"
+            android:textColor="@color/textSecondary"
             app:layout_constraintBottom_toTopOf="@+id/create_listing_item_recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
@@ -35,6 +36,8 @@
             android:hint="Title"
             android:inputType="textPersonName"
             android:singleLine="false"
+            android:textColor="@color/textMain"
+            android:textColorHint="@color/textSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -58,6 +61,8 @@
             android:layout_marginTop="20sp"
             android:ems="10"
             android:hint="Description"
+            android:textColor="@color/textMain"
+            android:textColorHint="@color/textSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/create_listing_main_imageView" />
@@ -72,6 +77,7 @@
             android:clickable="true"
             android:focusable="true"
             android:rotation="270"
+            app:backgroundTint="@color/buttonBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/arrow_down_float" />
@@ -83,6 +89,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginBottom="16dp"
+            android:background="@color/buttonBackground"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
             android:text="add item to listing"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

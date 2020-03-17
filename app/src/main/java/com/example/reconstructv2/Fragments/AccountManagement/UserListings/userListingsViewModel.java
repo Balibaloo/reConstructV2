@@ -27,7 +27,7 @@ public class userListingsViewModel extends AndroidViewModel {
     }
 
     // send requests
-    public void sendFetchUserListingsRequest() {
-        apiRepository.getUserListings(UserInfo.getSelfUserID(getApplication()));
+    public void sendFetchUserListingsRequest(Integer pageNumber) {
+        apiRepository.getUserListings(UserInfo.getSelfUserID(getApplication()),pageNumber);
     }
 }

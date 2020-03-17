@@ -32,11 +32,11 @@ public class HomeViewModel extends AndroidViewModel {
 
 
     // send requests to server
-    public void sendSearchRequest(String searchQuery, Integer pageNum) {
-        apiRepository.getFilteredListings(searchQuery, pageNum);
+    public void sendSearchRequest(String searchQuery, double rangeLimit, double userLat, double userLon, String postDateSortType, String endDataSortType, String distanceSort, Integer pageNum) {
+        apiRepository.getFilteredListings(searchQuery, rangeLimit, userLat, userLon, postDateSortType, endDataSortType, distanceSort, pageNum);
     }
 
-    public void sendFrontPageListingsRequest() {
-        apiRepository.getFrontPageListings();
+    public void sendFrontPageListingsRequest( double rangeLimit, double userLat, double userLon, String postDateSortType, String endDataSortType, String distanceSort, Integer pageNum) {
+        apiRepository.getFrontPageListings( rangeLimit,  userLat,  userLon,  postDateSortType,  endDataSortType,  distanceSort,pageNum);
     }
 }

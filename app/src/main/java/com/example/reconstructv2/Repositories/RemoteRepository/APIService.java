@@ -45,7 +45,7 @@ public interface APIService {
     @GET("/auth")
     Call<BaseAPIResponse> testConnectionAuthenticated(@Header("authorization") String AuthHeaderToken);
 
-    // Avaliability Checks
+    // Availability Checks
 
     @GET("/checkUsernameAvailable")
     Call<CheckAvailableAPIResponse> checkUsernameUnique(@Query("username") String username);
@@ -68,7 +68,9 @@ public interface APIService {
                                                      @Query("listingID") String listingID);
 
     @GET("/auth/getWatchlist")
-    Call<ListingListAPIResponse> getWatchlist(@Header("authorization") String AuthHeaderToken);
+    Call<ListingListAPIResponse> getWatchlist(@Header("authorization") String AuthHeaderToken,
+                                              @Query("pageNum") Integer pageNum,
+                                              @Query("listingsPerPage") Integer listingsPerPage);
 
     @GET("/auth/getRecentListings")
     Call<ListingListAPIResponse> getRecentListings(@Header("authorization") String AuthHeaderToken,
@@ -87,14 +89,29 @@ public interface APIService {
     Call<SingleListingAPIResponse> getListingNoAuth(@Query("listingID") String listingID);
 
     @GET("/getFrontPageListings")
-    Call<ListingListAPIResponse> getFrontPageListings(@Query("pageNum") Integer pageNum,
-                                                      @Query("listingsPerPage") Integer listingsPerPage );
+    Call<ListingListAPIResponse> getFrontPageListings(
+            @Query("locationFilterLimit") double locationFilterLimit,
+            @Query("userLat") double userLat,
+            @Query("userLon") double userLon,
+            @Query("postDateSortType") String postDateSortType,
+            @Query("endDateSortType") String endDateSortType,
+            @Query("distanceSortType") String distanceSortType,
+            @Query("pageNum") Integer pageNum,
+            @Query("listingsPerPage") Integer listingsPerPage);
 
     @GET("/getUserListings")
-    Call<ListingListAPIResponse> getUserListings(@Query("userID") String userID);
+    Call<ListingListAPIResponse> getUserListings(@Query("userID") String userID,
+                                                 @Query("pageNum") Integer pageNum,
+                                                 @Query("listingsPerPage") Integer listingsPerPage);
 
     @GET("/getFilteredListings")
     Call<ListingListAPIResponse> getFilteredListings(@Query("searchString") String searchString,
+                                                     @Query("locationFilterLimit") double locationFilterLimit,
+                                                     @Query("userLat") double userLat,
+                                                     @Query("userLon") double userLon,
+                                                     @Query("postDateSortType") String postDateSortType,
+                                                     @Query("endDateSortType") String endDateSortType,
+                                                     @Query("distanceSortType") String distanceSortType,
                                                      @Query("pageNum") Integer pageNum,
                                                      @Query("listingsPerPage") Integer listingsPerPage);
 
@@ -121,12 +138,14 @@ public interface APIService {
                                            @Query("new_tags") List<String> new_tags);
 
     @GET("/auth/getWatchedListings")
-    Call<ListingListAPIResponse> getWatchedListings(@Header("authorization") String AuthHeaderToken);
+    Call<ListingListAPIResponse> getWatchedListings(@Header("authorization") String AuthHeaderToken,
+                                                    @Query("pageNum") Integer pageNum,
+                                                    @Query("listingsPerPage") Integer listingsPerPage);
 
 
     @POST("/auth/updateUserData")
     Call<BaseAPIResponse> saveUser(@Header("authorization") String AuthHeaderToken,
-                                   @Body User user );
+                                   @Body User user);
 
     @POST("/auth/sendChangePasswordRequest")
     Call<BaseAPIResponse> updatePassword(@Header("authorization") String AuthHeaderToken,
@@ -136,11 +155,11 @@ public interface APIService {
     @Multipart
     @POST("/auth/saveImage")
     Call<ImageIDAPIResponse> saveImageOnServer(@Header("authorization") String AuthHeaderToken,
-                                 @Part MultipartBody.Part image);
+                                               @Part MultipartBody.Part image);
 
     @DELETE("/auth/deleteImage")
     Call<BaseAPIResponse> deleteImageFromServer(@Header("authorization") String AuthHeaderToken,
-                                                @Query("imageID")List<String> imageID );
+                                                @Query("imageID") List<String> imageID);
 
     @DELETE("/auth/deleteListing")
     Call<BaseAPIResponse> deleteListing(@Header("authorization") String AuthHeaderToken,

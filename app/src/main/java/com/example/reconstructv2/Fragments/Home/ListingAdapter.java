@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,10 @@ import com.example.reconstructv2.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingHolder> {
     private Context mContext;
@@ -25,6 +29,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
 
     private List<Listing> listings = new ArrayList<>();
     private OnClickListener listener;
+    private OnBottomReachedListener onBottomReachedListener;
 
     public ListingAdapter(Context context){
         mContext = context;
@@ -41,14 +46,17 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
     }
 
 
-
-
     @Override
     public void onBindViewHolder(@NonNull ListingHolder holder, int position) {
 
-        // puts data from listing object into ListingHolder views
+        // if the last view is being loaded, call on bottom reached
+        if (position == listings.size() -1 ){
+            onBottomReachedListener.onBottomReached();
+        }
 
         Listing currListing = listings.get(position);
+
+        // puts data from listing object into ListingHolder views
 
         holder.textViewTitle.setText(currListing.getTitle());
         holder.textViewBody.setText(currListing.getBody());
@@ -57,18 +65,20 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         // set item status colour
         if (!currListing.getIsActive()){
             holder.container.setBackgroundResource(R.drawable.listing_item_un_available);
+        } else {
+            holder.container.setBackgroundResource(R.drawable.listing_item_base);
         }
 
         loadImageInto(holder.listingImage,currListing.getMainImageID());
     }
 
     // load an image id into an image view
-    private void loadImageInto(ImageView iamgeView, String imageID) {
+    private void loadImageInto(ImageView imageView, String imageID) {
         try {
             String rootURL = mContext.getResources().getString(R.string.ROOTURL);
 
             String imageUrl = rootURL + "/getImage?imageID=" + imageID;
-            Picasso.get().load(imageUrl).into(iamgeView);
+            Picasso.get().load(imageUrl).into(imageView);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -79,18 +89,24 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         return listings.size();
     }
 
-    public void setListings(List<Listing> listings) {
-        this.listings = listings;
+    public void addListings(List<Listing> listings) {
+        this.listings.addAll(listings);
+
         notifyDataSetChanged();
     }
 
+    public void initListings(){
+        this.listings = new ArrayList<>();
+        notifyDataSetChanged();
+
+    }
     class ListingHolder extends RecyclerView.ViewHolder {
         // holds listing layout views
 
         private TextView textViewTitle;
         private TextView textViewBody;
         private ImageView listingImage;
-        private CardView container;
+        private RelativeLayout container;
 
         public ListingHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,7 +128,15 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ListingH
         void onItemClick(Listing listing);
     }
 
+    public interface OnBottomReachedListener{
+        void onBottomReached();
+    }
+
     public void setOnItemClickListener(OnClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener) {
+        this.onBottomReachedListener = onBottomReachedListener;
     }
 }

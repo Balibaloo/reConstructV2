@@ -1,39 +1,79 @@
 <resources>
     <string name="app_name">ReConstructV2</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="ROOTURL">http://82.3.163.116:8080</string>
+    <string name="master_salt">$2b$10$BjJdSB802DiH35SVuhITvO</string>
 
+    <string name="password_reqirements">The password must have at least 3 of the following : \nAn UpperCase letter\n A lowercase letter \n A digit\n A non alphabetical character</string>
+    <string name="defaultImageId">dafaultID</string>
 
     //menu titles
     <string name="accountTitle">Account</string>
     <string name="homeTitle">Home</string>
     <string name="CreateListing">Create a Listing</string>
 
+    <string name="edit_account_details">Edit Account Details</string>
+    <string name="change_password">Change Password</string>
+    <string name="view_recently_viewed_listings">View Recently Viewed Listings</string>
+    <string name="view_your_listings">View Your Listings</string>
+    <string name="log_out">Log Out</string>
 
-    <string name="password">Password</string>
+
+    // text fields
     <string name="username">Username</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="log_in">Log In</string>
-    <string name="create_account">Create Account</string>
-    <string name="skip_log_in">Skip Log In</string>
-
-
-    <string name="master_salt">$2b$10$BjJdSB802DiH35SVuhITvO</string>
-    <string name="retry_button">Try again?</string>
-    <string name="back_to_homepage_buton">Back To Homepage</string>
+    <string name="password">Password</string>
+    <string name="password_again">Password Again</string>
+    <string name="email">Email</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="phone_number">Phone Number</string>
+
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+
+    <string name="body_placeholder">Body Body Body Body Body Body</string>
+    <string name="item_description">Item Description</string>
+
+    <string name="retry_button">Try again?</string>
+    <string name="back_to_homepage_buton">Back To Homepage</string>
     <string name="submit_button">Submit</string>
-    <string name="email">Email</string>
-    <string name="password_again">Password Again</string>
     <string name="samplePhoneNumber">1234</string>
-    <string name="username_field">Username Field</string>
-    <string name="listing_creation_exit_dialouge">sup bitch , tryna leave without saving huh?</string>
+
+
+    // user prompts
+    <string name="listing_creation_exit_dialouge">Are you sure you want to leave? \n Your changes wil not be saved</string>
+
+
+    <string name="enter_new_password">enter new password</string>
+    <string name="re_enter_the_password">re-enter the password</string>
+
     <string name="dateEntryText">Please Select the Ending Date</string>
-    <string name="defaultImageId">dafaultID</string>
+
+    <string name="please_wait_your_password_is_being_changed">Please wait, your password is being changed</string>
+
+
+    // button text
+    <string name="submit">Submit</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="next">Next</string>
+    <string name="upload">Upload</string>
+
+    <string name="view_listing_location">View Listing Location</string>
+    <string name="view_authors_account">View Authors Account</string>
+    <string name="reserve_selected_items">Reserve Selected Items</string>
+
+    <string name="log_in">Log In</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="create_account">Create Account</string>
+    <string name="skip_log_in">Skip Log In</string>
+
+    <string name="sort_by_post_date">Sort By Post Date</string>
+    <string name="sort_by_end_date">Sort By End Date</string>
+    <string name="sort_by_distance">Sort By Distance</string>
+    <string name="max_distance">Max Distance</string>
+    <string name="newest_oldest">Newest / Oldest</string>
 
 </resources>

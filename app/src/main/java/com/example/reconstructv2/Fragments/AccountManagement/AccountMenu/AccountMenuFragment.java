@@ -24,9 +24,7 @@ public class AccountMenuFragment extends Fragment {
     Button changeAccountButton;
     Button changePasswordButton;
     Button userListingsButton;
-    Button watchedListingsButton;
     Button recentViewedListingsButton;
-    Button desiredItemsButton;
     Button logOutButton;
 
     AccountMenuFragment.OnFragmentInteractionListener mListener;
@@ -40,7 +38,6 @@ public class AccountMenuFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
-
 
         initViews(view);
         setOnClickListeners();
@@ -69,11 +66,6 @@ public class AccountMenuFragment extends Fragment {
             }
         });
 
-        watchedListingsButton.setOnClickListener(v -> {
-            if (userIsLoggedIn()) {
-                Navigation.findNavController(v).navigate(AccountMenuFragmentDirections.actionAccountMenuFragmentToWatchedListingsFragment());
-            }
-        });
 
         recentViewedListingsButton.setOnClickListener(v -> {
             if (userIsLoggedIn()) {
@@ -81,9 +73,6 @@ public class AccountMenuFragment extends Fragment {
             }
         });
 
-        desiredItemsButton.setOnClickListener(v -> {
-            Navigation.findNavController(v).navigate(AccountMenuFragmentDirections.actionAccountMenuFragmentToDesiredItemsFragment());
-        });
 
         logOutButton.setOnClickListener(v -> {
             if (userIsLoggedIn()) {
@@ -108,12 +97,9 @@ public class AccountMenuFragment extends Fragment {
         changeAccountButton = view.findViewById(R.id.accountSettingButton);
         changePasswordButton = view.findViewById(R.id.changePasswordButton);
         userListingsButton = view.findViewById(R.id.viewUserListingsButton);
-        watchedListingsButton = view.findViewById(R.id.viewWatchedListingsButton);
         recentViewedListingsButton = view.findViewById(R.id.viewRecentlyViewedListingsButton);
-        desiredItemsButton = view.findViewById(R.id.viewDesiredItemsButton);
         logOutButton = view.findViewById(R.id.logoutButton);
     }
-
 
 
     // inflate the correct layout for this fragment
@@ -123,7 +109,6 @@ public class AccountMenuFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account_menu, container, false);
     }
-
 
 
     @Override

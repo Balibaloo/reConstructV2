@@ -71,18 +71,12 @@ public class LogoutFragment extends Fragment {
 
             // create a new action to the results fragment
             MainNavGraphDirections.ActionGlobalResultsFragment action = MainNavGraphDirections.actionGlobalResultsFragment();
-            action.setIsSuccess(baseAPIResponse.getIsSuccesfull());
+            action.setIsSuccess(true);
             action.setMessage(baseAPIResponse.getMessage());
 
-            if (baseAPIResponse.getIsSuccesfull()) {
+            // log out localy
+            UserInfo.logOut(getContext());
 
-                // log out localy
-                UserInfo.logOut(getContext());
-
-
-            } else {
-                action.setRetryDestination(R.id.logoutFragment);
-            }
 
             // navigate
             Navigation.findNavController(getView()).navigate(action);

@@ -3,12 +3,17 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colourBackgroundTop">#CFCFCF</color>
+
+    <color name="colourBackgroundTop">#9e9e9e</color>
     <color name="colourBackgroundBottom">#303030</color>
 
     <color name="colourSelected">#cc33ff</color>
     <color name="colourUnAvailable">#ff00</color>
 
+    <color name="buttonBackground">#747475</color>
+    <color name="buttonText">#eaeaea</color>
 
+    <color name="textMain">#ffffff</color>
+    <color name="textSecondary">#eaeaea</color>
     <color name="colourImageBackground">#292929</color>
 </resources>

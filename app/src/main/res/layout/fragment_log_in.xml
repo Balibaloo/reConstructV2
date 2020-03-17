@@ -33,7 +33,9 @@
             android:gravity="center"
             android:hint="@string/username"
             android:importantForAutofill="no"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/textMain"
+            android:textColorHint="@color/textSecondary" />
 
         <EditText
             android:id="@+id/EditTextLogInPassword"
@@ -44,7 +46,9 @@
             android:gravity="center"
             android:hint="@string/password"
             android:importantForAutofill="no"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/textMain"
+            android:textColorHint="@color/textSecondary" />
 
 
         <TextView
@@ -53,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
+            android:visibility="invisible"
 
             android:text="@string/forgot_password"
             android:textColor="#2B91FF" />
@@ -63,7 +68,9 @@
         android:layout_width="152dp"
         android:layout_height="45dp"
         android:layout_marginTop="52dp"
+        android:background="@color/buttonBackground"
         android:text="@string/log_in"
+        android:textColor="@color/textMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,10 +90,12 @@
             android:id="@+id/skip_logIn_Button"
             android:layout_width="145dp"
             android:layout_height="75dp"
-            android:text="@string/skip_log_in" />
+            android:background="@color/buttonBackground"
+            android:text="@string/skip_log_in"
+            android:textColor="@color/textMain" />
 
         <Space
-            android:layout_width="0dp"
+            android:layout_width="20sp"
             android:layout_height="wrap_content"
             android:layout_weight="3" />
 
@@ -94,7 +103,9 @@
             android:id="@+id/create_account_Button"
             android:layout_width="148dp"
             android:layout_height="75dp"
-            android:text="@string/create_account" />
+            android:background="@color/buttonBackground"
+            android:text="@string/create_account"
+            android:textColor="@color/textMain" />
     </LinearLayout>
 
 

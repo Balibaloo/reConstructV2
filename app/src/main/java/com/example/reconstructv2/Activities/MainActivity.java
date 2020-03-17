@@ -32,6 +32,7 @@ import com.example.reconstructv2.Fragments.Results.ResultsFragment;
 import com.example.reconstructv2.Fragments.SingleListing.LocationViewFragment;
 import com.example.reconstructv2.Fragments.SingleListing.SingleItem.SingleItemViewFragment;
 import com.example.reconstructv2.Helpers.UserInfo;
+import com.example.reconstructv2.Models.User;
 import com.example.reconstructv2.R;
 import com.example.reconstructv2.Fragments.AccountManagement.AccountEdit.AccountEditFragment;
 import com.example.reconstructv2.Fragments.Home.HomeFragment;
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    // a list of fragments that require a popup dialouge
+    // a list of fragments that require a popup dialogue
     // to confirm that the user wants to leave
     // because data may be lost
     private List<Integer> fragmentsToConfirmLeave = 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity
     // when the back button is pressed
     // the app should navigate to the home fragment
     // as opposed to popping the backstack
-    private List<Integer> topLevelFragments = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment,R.id.singleListingFragment, R.id.accountMenuFragment);
+    private List<Integer> topLevelFragments = Arrays.asList(R.id.createListingFragment,R.id.createUserFragment, R.id.accountMenuFragment);
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -85,24 +86,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main); // display the main activity layout
 
-        init();
-    }
-
-    private void init(){
         drawerLayout = findViewById(R.id.drawer_layout); // find the reference to the drawer layout
 
         // find the reference to the navigation menu in the drawer layout
-        navigationView = findViewById(R.id.nav_view); 
+        navigationView = findViewById(R.id.nav_view);
 
 
-        // initialises navController and drawerLayour with navController
+        // initialises navController and drawerLayout with navController
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
-        NavigationUI.setupActionBarWithNavController(this,navController,drawerLayout); 
+        NavigationUI.setupActionBarWithNavController(this,navController,drawerLayout);
         NavigationUI.setupWithNavController(navigationView,navController);
         navigationView.setNavigationItemSelectedListener(this);
 
     }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -305,9 +303,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    public interface safeNavBack{
-        void navBackWithItems();
     }
 }

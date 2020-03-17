@@ -15,10 +15,10 @@ public class User {
     @SerializedName("username")
     private String username;
 
-    @SerializedName("first_name")
+    @SerializedName("fName")
     private String first_name;
 
-    @SerializedName("last_name")
+    @SerializedName("lName")
     private String last_name;
 
     @SerializedName("email")

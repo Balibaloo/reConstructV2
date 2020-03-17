@@ -1,10 +1,8 @@
 package com.example.reconstructv2.Fragments.SingleListing;
 
 import android.content.Context;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,15 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.reconstructv2.MainNavGraphDirections;
-import com.example.reconstructv2.Models.ApiResponses.BaseAPIResponse;
-import com.example.reconstructv2.Models.ApiResponses.SingleListingAPIResponse;
 import com.example.reconstructv2.Models.ListingFull;
-import com.example.reconstructv2.Models.ListingItem;
 import com.example.reconstructv2.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
 
 
 public class SingleListingFragment extends Fragment {
@@ -53,10 +43,9 @@ public class SingleListingFragment extends Fragment {
     private TextView bodyTextView;
     private ImageView listingImage;
 
-    private Button viewAuthorAcountButton;
+    private Button viewAuthorAccountButton;
     private Button viewLocationButton;
     private Button reserveButton;
-
 
     private SingleListingViewModel viewModel;
 
@@ -79,12 +68,14 @@ public class SingleListingFragment extends Fragment {
         configureRecyclerViewAdapter();
         setRefreshListener();
 
+        // if the user navigated without a full listing, fetch the whole listing
         if (SingleListingFragmentArgs.fromBundle(getArguments()).getShouldRefresh()) {
-            System.out.println("should refresh");
             listingID = SingleListingFragmentArgs.fromBundle(getArguments()).getListingID();
-            this.getListingRequest(listingID);
+            getListingRequest(listingID);
+
+
         } else {
-            System.out.println("should not refresh");
+            // extract and display the full listing
             listingData = SingleListingFragmentArgs.fromBundle(getArguments()).getListingFullArg();
             listingID = listingData.getListingID();
             setListing(listingData);
@@ -101,11 +92,12 @@ public class SingleListingFragment extends Fragment {
         listingImage = view.findViewById(R.id.singleListingImageView);
 
         reserveButton = view.findViewById(R.id.singleListingReserveButton);
-        viewAuthorAcountButton = view.findViewById(R.id.singleListing_ViewUserAccountButton);
+        viewAuthorAccountButton = view.findViewById(R.id.singleListing_ViewUserAccountButton);
         viewLocationButton = view.findViewById(R.id.singleListing_ViewListingLocationButton);
     }
 
     private void setRefreshListener(){
+
         refreshLayout.setOnRefreshListener(() -> {
             refreshLayout.setRefreshing(true);
             getListingRequest(listingID);
@@ -113,16 +105,21 @@ public class SingleListingFragment extends Fragment {
     }
 
     private void setOnClickListeners(){
+
         reserveButton.setOnClickListener(v -> {
+
+            // check if the full listing has been fethched
             if (listingData instanceof ListingFull) {
                 refreshLayout.setRefreshing(true);
                 viewModel.reserveItemsRequest(getContext(),listingData);
+
             } else {
                 Toast.makeText(getContext() , "please wait for the listing to be fetched from the server", Toast.LENGTH_SHORT).show();
             }
         });
 
-        viewAuthorAcountButton.setOnClickListener(v -> {
+        viewAuthorAccountButton.setOnClickListener(v -> {
+            // navigate to view author account fragment
             MainNavGraphDirections.ActionGlobalAccountViewFragment3 action = MainNavGraphDirections.actionGlobalAccountViewFragment3(listingData.getAuthorID());
             Navigation.findNavController(getView()).navigate(action);
 
@@ -137,30 +134,22 @@ public class SingleListingFragment extends Fragment {
     }
 
     private void configureRecyclerViewAdapter(){
+
       recyclerAdapter = new ListingItemAdapter(getContext());
       itemRecyclerView.setAdapter(recyclerAdapter);
 
       itemRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
       itemRecyclerView.setHasFixedSize(true);
 
-      new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,0) {
-          @Override
-          public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-              return false;
-          }
 
-          @Override
-          public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-          }
-      }).attachToRecyclerView(itemRecyclerView);
-
+      // navigate to single item fragment
       recyclerAdapter.setOnItemCLickListener(listingItem -> {
           Integer itemPosition = listingData.getItemList().indexOf(listingItem);
           SingleListingFragmentDirections.ActionSingleListingFragmentToSingleItemViewFragment action = SingleListingFragmentDirections.actionSingleListingFragmentToSingleItemViewFragment(listingData,itemPosition);
           Navigation.findNavController(getView()).navigate(action);
       });
 
+      // select an item
       recyclerAdapter.setLongClickListener(listingItem -> {
           // check if available
           if (listingItem.getAvailable()){
@@ -171,7 +160,6 @@ public class SingleListingFragment extends Fragment {
           }
 
       });
-
     };
 
     private void initViewModel(){
@@ -190,7 +178,6 @@ public class SingleListingFragment extends Fragment {
                 recyclerAdapter.notifyDataSetChanged();
             }
         });
-
     }
 
     private void setLiveDataObservers(){
@@ -200,15 +187,12 @@ public class SingleListingFragment extends Fragment {
             if (response.getIsSuccesfull()){
                 Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
             }
-
         });
-
-
-
-
     }
 
+    // display a listing
     private void setListing(ListingFull listing){
+
         titleTextView.setText(listing.getTitle());
         bodyTextView.setText(listing.getBody());
 
@@ -219,9 +203,6 @@ public class SingleListingFragment extends Fragment {
         } catch (Exception e){
             System.out.println(e.toString());
         }
-
-
-
     }
 
 

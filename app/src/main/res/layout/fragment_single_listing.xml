@@ -17,10 +17,12 @@
 
             <TextView
                 android:id="@+id/singleListingTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:text="Title"
+                android:layout_width="412dp"
+                android:layout_height="77dp"
+                android:gravity="center"
+                android:padding="10sp"
+                android:text="@string/title"
+                android:textColor="@color/textMain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +32,6 @@
                 android:id="@+id/singleListingImageView"
                 android:layout_width="402dp"
                 android:layout_height="160dp"
-                android:layout_marginTop="32dp"
                 android:background="@color/colourImageBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.444"
@@ -44,7 +45,8 @@
                 android:layout_height="119dp"
                 android:layout_marginTop="64dp"
                 android:background="#5F5959"
-                android:text="Body"
+                android:padding="10sp"
+                android:text="@string/body"
                 android:textColor="@android:color/secondary_text_dark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.493"
@@ -76,14 +78,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:text="View Listing Location" />
+                    android:background="@color/buttonBackground"
+                    android:padding="10sp"
+                    android:text="@string/view_listing_location"
+                    android:textColor="@color/textMain" />
 
                 <Button
                     android:id="@+id/singleListing_ViewUserAccountButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:text="View Authors Account" />
+                    android:background="@color/buttonBackground"
+                    android:padding="10sp"
+                    android:text="@string/view_authors_account"
+                    android:textColor="@color/textMain" />
 
                 <Button
                     android:id="@+id/singleListingReserveButton"
@@ -91,7 +99,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20sp"
-                    android:text="Reserve Selected Items" />
+                    android:background="@color/buttonBackground"
+                    android:padding="10sp"
+                    android:text="@string/reserve_selected_items"
+                    android:textColor="@color/textMain" />
 
             </LinearLayout>
 

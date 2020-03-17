@@ -16,13 +16,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.reconstructv2.Helpers.InputValidator;
 import com.example.reconstructv2.Helpers.KeyboardHelper;
-import com.example.reconstructv2.Models.ApiResponses.CheckAvailableAPIResponse;
 import com.example.reconstructv2.R;
 
 
@@ -33,11 +31,11 @@ public class CreateUserFragment extends Fragment {
 
     private EditText usernameEditText;
     private ImageView usernameStatusIco;
-    private Boolean usernameIsUniqueue;
+    private Boolean usernameIsUnique;
 
     private EditText emailEditText;
     private ImageView emailStatusIco;
-    private Boolean emailIsUniqueue;
+    private Boolean emailIsUnique;
 
     private EditText passwordEditText;
     private EditText passwordAgainEditText;
@@ -69,8 +67,8 @@ public class CreateUserFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         final View view = getView();
 
-        usernameIsUniqueue = null;
-        emailIsUniqueue = null;
+        usernameIsUnique = null;
+        emailIsUnique = null;
 
         initViews(view);
         initViewModel();
@@ -122,14 +120,14 @@ public class CreateUserFragment extends Fragment {
             if (allDataValid()) {
 
                 // if the username hasnt been verified yet
-                if (usernameIsUniqueue == null) {
+                if (usernameIsUnique == null) {
                     viewModel.getUsernameUniqueueRequest(usernameEditText.getText().toString());
                     usernameStatusIco.setImageResource(R.drawable.ic_refresh_white_24dp);
                     // set text view to refresh
                 }
 
                 // if the email hasnt been verified yet
-                if (emailIsUniqueue == null) {
+                if (emailIsUnique == null) {
                     viewModel.getEmailUniqueue(emailEditText.getText().toString());
                     emailStatusIco.setImageResource(R.drawable.ic_refresh_white_24dp);
                     // set text view to refresh
@@ -137,7 +135,8 @@ public class CreateUserFragment extends Fragment {
 
                 // if both fields are unique
                 // navigate to the next fragment with data
-                if (emailIsUniqueue && usernameIsUniqueue) {
+                if (emailIsUnique != null && usernameIsUnique != null)
+                if (emailIsUnique && usernameIsUnique) {
 
                     String username = usernameEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
@@ -156,13 +155,15 @@ public class CreateUserFragment extends Fragment {
         viewModel.getUsernameIsAvailableLiveData().observe(getViewLifecycleOwner(), response -> {
 
             if (response.getIsSuccesfull()) {
+
                 if (response.getIs_unused()) {
                     usernameStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
-                    usernameIsUniqueue = true;
+                    usernameIsUnique = true;
+
                 } else {
                     usernameEditText.setError("This Username is Already in Use");
                     usernameStatusIco.setImageResource(R.drawable.ic_cross_red_24dp);
-                    usernameIsUniqueue = false;
+                    usernameIsUnique = false;
                 }
             } else {
                 Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
@@ -175,11 +176,11 @@ public class CreateUserFragment extends Fragment {
             if (response.getIsSuccesfull()) {
                 if (response.getIs_unused()) {
                     emailStatusIco.setImageResource(R.drawable.ic_check_white_24dp);
-                    emailIsUniqueue = true;
+                    emailIsUnique = true;
                 } else {
                     emailEditText.setError("This Email is Already in Use");
                     emailStatusIco.setImageResource(R.drawable.ic_cross_red_24dp);
-                    emailIsUniqueue = false;
+                    emailIsUnique = false;
                 }
             } else {
                 Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
@@ -204,7 +205,7 @@ public class CreateUserFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 // if the user changes the value of the field, invalidate the is unique check
-                usernameIsUniqueue = null;
+                usernameIsUnique = null;
                 InputValidator.validateUsername(usernameEditText);
             }
         });
@@ -223,7 +224,7 @@ public class CreateUserFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 // if the user changes the value of the field, invalidate the is unique check
-                emailIsUniqueue = null;
+                emailIsUnique = null;
                 InputValidator.validateEmail(emailEditText);
             }
         });

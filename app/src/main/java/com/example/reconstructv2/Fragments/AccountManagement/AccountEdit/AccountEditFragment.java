@@ -84,6 +84,7 @@ public class AccountEditFragment extends Fragment {
 
     // update the user account in the fragment
     public void setUserAccount(User userAccount) {
+
         this.userAccount = userAccount;
         displayUser(userAccount);
     }
@@ -147,7 +148,7 @@ public class AccountEditFragment extends Fragment {
                     }
 
 
-                    // if both asre unique
+                    // if both are unique
                     if (usernameIsUnique == true && emailIsUnique == true) {
 
                         // extract values from fields

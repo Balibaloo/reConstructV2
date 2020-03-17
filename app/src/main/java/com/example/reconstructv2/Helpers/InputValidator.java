@@ -30,23 +30,24 @@ public class InputValidator {
 
 
         // check if the password contains a capital letter
-        if (password.matches("[A-Z]")){
+        if (password.matches(".*[A-Z].*")){
             password_feature_count ++;
         }
 
         // check if the password contains a lowercase letter
-        if (password.matches("[a-z]")){
+        if (password.matches(".*[a-z].*")){
             password_feature_count ++;
         }
 
         // check if the password contains a digit
-        if (password.matches("[0-9]")){
+        if (password.matches(".*[0-9].*")){
             password_feature_count ++;
         }
 
         // check if the password contains a non letter or digit character like @ or -
-        if (password.matches("[^a-z|A-Z|0-9]")){
+        if (password.matches(".*[^a-z|A-Z|0-9].*")){
             password_feature_count ++;
+
         }
 
         // checks if the password contains parts of the username
@@ -64,6 +65,7 @@ public class InputValidator {
             passwordField.setError("the password contains parts of the username");
 
         }else {
+
             passwordField.setError("please check the password requirements");
         }
 
@@ -114,7 +116,7 @@ public class InputValidator {
         // starts with a letter
         // if it contains a . or - or _ character, they must have letters either side
 
-        if (prefix.matches("^[a-z|A-Z]+([.\\-_]?[a-z|A-Z]+)+$")){
+        if (prefix.matches("^[a-zA-Z0-9]+([.\\-_]?[a-zA-Z0-9]+)+$")){
             return true;
         } else {
 

@@ -27,7 +27,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
 
@@ -36,7 +36,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Username"
+                    android:text="@string/username"
+                    android:textColor="@color/textSecondary"
+                    android:textColorHint="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/editTextAccEditUsername"
                     app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +51,8 @@
                     android:ems="10"
 
                     android:inputType="textPersonName"
-                    android:text="Username"
+                    android:text="@string/username"
+                    android:textColor="@color/textMain"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/accEditIconUsernameStatus"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -74,14 +77,16 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textEditAccViewEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email"
+                    android:shadowColor="@color/textSecondary"
+                    android:text="@string/email"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/editTextAccEditEmail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +98,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textEmailAddress"
-                    android:text="Email"
+                    android:text="@string/email"
+                    android:textColor="@color/textMain"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/accEditIcoEmailStatus"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -116,14 +122,17 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewAccEditFirstName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="First Name"
+                    android:shadowColor="@color/textSecondary"
+                    android:text="@string/first_name"
+                    android:textColor="@color/textSecondary"
+                    android:textColorHint="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/editTextAccEditFirstName"
                     app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +144,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="First Name"
+                    android:text="@string/first_name"
+                    android:textColor="@color/textMain"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -150,14 +160,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textViewAccEditLastName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Last Name"
+                    android:text="@string/last_name"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/editTextAccEditLastName"
                     app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +180,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="Last Name"
+                    android:text="@string/last_name"
+                    android:textColor="@color/textMain"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -190,7 +202,8 @@
                     android:id="@+id/textViewAccEditPhoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Phone Number"
+                    android:text="@string/phone_number"
+                    android:textColor="@color/textSecondary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/editTextAccEditPhoneNumber"
                     app:layout_constraintStart_toStartOf="parent"
@@ -202,7 +215,9 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="phone"
+                    android:shadowColor="@color/textMain"
                     android:text="@string/samplePhoneNumber"
+                    android:textColor="@color/textMain"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -216,7 +231,7 @@
             android:id="@+id/changePasswordAccountEditTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change Password?"
+            android:text="@string/change_password"
             android:textColor="@color/colourSelected"
             app:layout_constraintBottom_toTopOf="@+id/textSaveUserCredentials"
             app:layout_constraintEnd_toEndOf="parent"
@@ -228,7 +243,9 @@
             android:layout_width="160dp"
             android:layout_height="58dp"
             android:layout_marginBottom="36dp"
-            android:text="save changes"
+            android:background="@color/buttonBackground"
+            android:text="@string/save_changes"
+            android:textColor="@color/buttonText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -313,8 +313,8 @@ public class APIRepository {
         });
     }
 
-    public void getWatchlist(String AuthHeaderToken) {
-        apiService.getWatchlist(AuthHeaderToken).enqueue(new Callback<ListingListAPIResponse>() {
+    public void getWatchlist(String AuthHeaderToken, Integer pageNumber) {
+        apiService.getWatchlist(AuthHeaderToken, pageNumber, listingsPerPage).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(@NotNull Call<ListingListAPIResponse> call, @NotNull Response<ListingListAPIResponse> response) {
                 if (response.isSuccessful()) {
@@ -439,8 +439,8 @@ public class APIRepository {
     }
 
 
-    public void getFrontPageListings() {
-        apiService.getFrontPageListings(0, listingsPerPage).enqueue(new Callback<ListingListAPIResponse>() {
+    public void getFrontPageListings(double locationFilterLimit, double userLat, double userLon, String postDateSortType, String endDateSortType, String distanceSortType, Integer pageNum) {
+        apiService.getFrontPageListings(locationFilterLimit, userLat, userLon, postDateSortType, endDateSortType, distanceSortType, pageNum, listingsPerPage).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(@NotNull Call<ListingListAPIResponse> call, @NotNull Response<ListingListAPIResponse> response) {
 
@@ -462,13 +462,11 @@ public class APIRepository {
                 tempResponse.setMessage(t.getMessage());
                 listingListAPIResponseMutableLiveData.setValue(tempResponse);
             }
-
-
         });
     }
 
-    public void getUserListings(String userID) {
-        apiService.getUserListings(userID).enqueue(new Callback<ListingListAPIResponse>() {
+    public void getUserListings(String userID, Integer pageNumber) {
+        apiService.getUserListings(userID, pageNumber, listingsPerPage).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(@NotNull Call<ListingListAPIResponse> call, @NotNull Response<ListingListAPIResponse> response) {
 
@@ -489,14 +487,12 @@ public class APIRepository {
                 tempResponse.setMessage(t.getMessage());
                 listingListAPIResponseMutableLiveData.setValue(tempResponse);
             }
-
-
         });
     }
 
 
-    public void getFilteredListings(String searchString, Integer pageNum) {
-        apiService.getFilteredListings(searchString, pageNum, listingsPerPage).enqueue(new Callback<ListingListAPIResponse>() {
+    public void getFilteredListings(String searchString, double locationFilterLimit, double userLat, double userLon, String postDateSortType, String endDateSortType, String distanceSortType, Integer pageNum) {
+        apiService.getFilteredListings(searchString, locationFilterLimit, userLat, userLon, postDateSortType, endDateSortType, distanceSortType, pageNum, listingsPerPage).enqueue(new Callback<ListingListAPIResponse>() {
             @Override
             public void onResponse(@NotNull Call<ListingListAPIResponse> call, @NotNull Response<ListingListAPIResponse> response) {
 

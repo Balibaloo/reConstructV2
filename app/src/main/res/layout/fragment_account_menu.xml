@@ -3,70 +3,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/custom_background"
     android:gravity="center_vertical"
+    android:orientation="vertical"
     tools:context=".Fragments.AccountManagement.AccountMenu.AccountMenuFragment">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/accountSettingButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="74sp"
+            android:background="@color/buttonBackground"
+            android:text="@string/edit_account_details"
+            android:textColor="@color/textMain" />
 
-            <Button
-                android:id="@+id/accountSettingButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#FFA500"
-                android:text="Edit Account Details" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15sp"/>
 
-            <Button
-                android:id="@+id/changePasswordButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#00F000"
-                android:text="Change Password" />
+        <Button
+            android:id="@+id/changePasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="74sp"
+            android:background="@color/buttonBackground"
+            android:text="@string/change_password"
+            android:textColor="@color/textMain" />
 
-            <Button
-                android:id="@+id/viewWatchedListingsButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#F00000"
-                android:text="View Your Watched Listings" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15sp"/>
 
-            <Button
-                android:id="@+id/logoutButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#00F000"
-                android:text="Log Out" />
+        <Button
+            android:id="@+id/viewRecentlyViewedListingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="74sp"
+            android:background="@color/buttonBackground"
+            android:text="@string/view_recently_viewed_listings"
+            android:textColor="@color/textMain" />
 
-            <Button
-                android:id="@+id/viewUserMessagesButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#F00000"
-                android:text="View Your Messages" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15sp"/>
 
-            <Button
-                android:id="@+id/viewDesiredItemsButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#F00000"
-                android:text="View In-Demand items" />
+        <Button
+            android:id="@+id/viewUserListingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="74sp"
+            android:background="@color/buttonBackground"
+            android:text="@string/view_your_listings"
+            android:textColor="@color/textMain" />
 
-            <Button
-                android:id="@+id/viewRecentlyViewedListingsButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#00F000"
-                android:text="View Recently Viewed Listings" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15sp"/>
 
-            <Button
-                android:id="@+id/viewUserListingsButton"
-                android:layout_width="match_parent"
-                android:layout_height="74sp"
-                android:background="#00F000"
-                android:text="View Your Listings" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="74sp"
+            android:background="@color/buttonBackground"
+            android:text="@string/log_out"
+            android:textColor="@color/textMain" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15sp"/>
+
+    </LinearLayout>
 
 </ScrollView>

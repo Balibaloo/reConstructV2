@@ -16,7 +16,8 @@
             android:id="@+id/item_list_edit_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/listing_item_card_full_edit"/>
+            android:background="@drawable/custom_background"
+            tools:listitem="@layout/listing_item_card_full_edit" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/item_list_edit_return_FAB"
@@ -27,15 +28,13 @@
             android:layout_marginBottom="28dp"
             android:clickable="true"
             android:rotation="90"
+            app:backgroundTint="@color/buttonBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@android:drawable/arrow_down_float" />
+            app:srcCompat="@android:drawable/arrow_down_float"
+            android:focusable="true" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

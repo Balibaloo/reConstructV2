@@ -29,6 +29,8 @@ public class userListingsFragment extends Fragment {
     private userListingsViewModel viewModel;
     private SwipeRefreshLayout refreshLayout;
 
+    private Integer pageNumber;
+
     private OnFragmentInteractionListener mListener;
 
     public userListingsFragment() {
@@ -44,7 +46,7 @@ public class userListingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recently_viewed_listings, container, false);
+        return inflater.inflate(R.layout.fragment_listing_list_view, container, false);
     }
 
     // method that gets called when the fragment is ready
@@ -53,15 +55,20 @@ public class userListingsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
 
+        pageNumber = 0;
+
         initViews(view);
         initViewModel();
         initRecyclerView();
         setOnRefreshListener();
         setLiveDataObservers();
 
-        // fetch user listings
-        viewModel.sendFetchUserListingsRequest();
+        sendUserListingsRequest();
+    }
 
+    private void sendUserListingsRequest(){
+
+        viewModel.sendFetchUserListingsRequest(pageNumber);
     }
 
     private void setLiveDataObservers() {
@@ -70,7 +77,14 @@ public class userListingsFragment extends Fragment {
                     refreshLayout.setRefreshing(false);
 
                     if (response.getIsSuccesfull()) {
-                        recyclerAdapter.setListings(response.getListings());
+
+                        // if the end of the results has been reached/ set the page number to -1
+                        if (response.getListings().size() == 0){
+                            pageNumber = -1;
+
+                        } else {
+                            recyclerAdapter.addListings(response.getListings());
+                        }
                     } else {
                         Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -79,7 +93,12 @@ public class userListingsFragment extends Fragment {
 
 
     private void setOnRefreshListener() {
-        refreshLayout.setOnRefreshListener(() -> viewModel.sendFetchUserListingsRequest());
+        refreshLayout.setOnRefreshListener(() -> {
+
+            pageNumber = 0;
+            sendUserListingsRequest();
+
+        });
     }
 
     private void initViewModel() {
@@ -87,8 +106,8 @@ public class userListingsFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        listingRecyclerView = view.findViewById(R.id.recently_viewed_recycler_view);
-        refreshLayout = view.findViewById(R.id.recently_viewed_refresh_layout);
+        listingRecyclerView = view.findViewById(R.id.listing_list_view_recycler_view);
+        refreshLayout = view.findViewById(R.id.listing_list_view_refresh_layout);
     }
 
 
@@ -105,6 +124,18 @@ public class userListingsFragment extends Fragment {
             MainNavGraphDirections.ActionGlobalSingleListingFragment action = SingleListingFragmentDirections.actionGlobalSingleListingFragment(null, listing.getListingID());
             Navigation.findNavController(getView()).navigate(action);
         });
+
+        recyclerAdapter.setOnBottomReachedListener(() -> {
+
+            // if the end of the results hasn't been reached
+            if (pageNumber != -1){
+
+                pageNumber ++;
+                sendUserListingsRequest();
+            }
+        });
+
+        recyclerAdapter.initListings();
     }
 
 

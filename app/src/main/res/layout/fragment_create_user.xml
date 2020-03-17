@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/buttonNext"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,15 +29,16 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/username"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/textMain"
+                android:textColorHint="@color/textSecondary" />
 
             <ImageView
                 android:id="@+id/iconUsernameStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
 
-                android:src="@android:drawable/stat_notify_sync"
-                android:contentDescription="@string/username_field" />
+                android:src="@android:drawable/stat_notify_sync" />
         </LinearLayout>
 
         <Space
@@ -55,11 +56,13 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:textColor="@color/textMain"
+                android:textColorHint="@color/textSecondary" />
 
             <ImageView
                 android:id="@+id/iconEmailStatus"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@android:drawable/stat_notify_sync" />
@@ -75,19 +78,23 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/textMain"
+            android:textColorHint="@color/textSecondary" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="20dp" />
+
         <EditText
             android:id="@+id/editTextCreatePasswordRepeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/password_again"
-            android:inputType="textPassword" />
-
+            android:inputType="textPassword"
+            android:textColor="@color/textMain"
+            android:textColorHint="@color/textSecondary" />
 
 
     </LinearLayout>
@@ -97,10 +104,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="48dp"
-        android:text="@string/submit_button"
+        android:background="@color/buttonBackground"
+        android:text="@string/submit"
+        android:textColor="@color/textMain"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Space
+        android:id="@+id/space2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/password_reqirements"
+        android:textColor="@color/textSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

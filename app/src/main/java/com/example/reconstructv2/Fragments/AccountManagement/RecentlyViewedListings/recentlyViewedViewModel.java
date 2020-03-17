@@ -24,13 +24,13 @@ public class recentlyViewedViewModel extends AndroidViewModel {
         listingListAPIResponse = apiRepository.getListingListAPIResponseMutableLiveData();
     }
 
-    // geter for listingListAPIResponse
+    // getter for listingListAPIResponse
     public MutableLiveData<ListingListAPIResponse> getListingListAPIResponse() {
         return listingListAPIResponse;
     }
 
     // send the request to the server
-    public void fetchRecentlyViewedListingsRequest() {
-        apiRepository.getRecentListings(UserInfo.getAuthenticationHeader(getApplication()),0);
+    public void fetchRecentlyViewedListingsRequest(Integer pageNumber) {
+        apiRepository.getRecentListings(UserInfo.getAuthenticationHeader(getApplication()),pageNumber);
     }
 }
